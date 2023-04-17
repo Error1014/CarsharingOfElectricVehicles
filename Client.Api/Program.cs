@@ -1,4 +1,9 @@
 using Clients.Repository.Context;
+using Clients.Repository.Interfaces;
+using Clients.Repository.Repositories;
+using Clients.Service;
+using Clients.Service.Interfaces;
+using Clients.Service.Services;
 using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +15,11 @@ builder.Services.RegistrationDbContext<ClientContext>(builder.Configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services
+    .AddScoped<IUnitOfWork, UnitOfWork>()
+    .AddScoped<IClientService, ClientService>();
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

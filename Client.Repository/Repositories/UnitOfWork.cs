@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace Clients.Repository.Repositories
 {
-    public class UnitOfWork
-{
+    public class UnitOfWork : IUnitOfWork
+    {
         private readonly DbContext _dbContext;
 
         public UnitOfWork(ClientContext context)
@@ -21,6 +21,7 @@ namespace Clients.Repository.Repositories
         }
 
         public IClientRepository Clients { get; private set; }
+
 
         public int Complete()
         {
@@ -32,5 +33,4 @@ namespace Clients.Repository.Repositories
             _dbContext.Dispose();
         }
     }
-}
 }

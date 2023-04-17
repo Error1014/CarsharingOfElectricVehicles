@@ -15,11 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Client.Repository\Clients.Repository.csproj" />
+    <ProjectReference Include="..\Client.Service\Clients.Service.csproj" />
   </ItemGroup>
 
 </Project>
