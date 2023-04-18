@@ -3,6 +3,7 @@ using Clients.Repository.Entities;
 using Clients.Repository.Interfaces;
 using Clients.Service.Interfaces;
 using Infrastructure.DTO;
+using Infrastructure.Exceptions;
 using Infrastructure.Filters;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,10 @@ namespace Clients.Service.Services
         public async Task<ClientDTO> GetClient(Guid Id)
         {
             var client = await _unitOfWork.Clients.GetEntity(Id);
+            if (client==null)
+            {
+                throw new NotFoundException("Клиент не найден");
+            }
             return _map.Map<ClientDTO>(client);
         }
 

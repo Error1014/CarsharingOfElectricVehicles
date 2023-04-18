@@ -5,6 +5,7 @@ using Clients.Service;
 using Clients.Service.Interfaces;
 using Clients.Service.Services;
 using Infrastructure.Extensions;
+using Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,5 +35,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
