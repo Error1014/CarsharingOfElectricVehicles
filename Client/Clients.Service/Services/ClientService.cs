@@ -41,13 +41,7 @@ namespace Clients.Service.Services
 
         public async Task AddClient(ClientDTO clientDTO)
         {
-            bool isDublicete = await _unitOfWork.Clients.CheckDublicate(c => c.Login == clientDTO.Login);
-            if (isDublicete)
-            {
-                throw new DublicateException("Пользователь с таким логином уже зарегистрирован");
-            }
             var client = _map.Map<Client>(clientDTO);
-            client.Password = GeneratorHash.GetHash(clientDTO.Password);
             await _unitOfWork.Clients.AddEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
@@ -55,7 +49,6 @@ namespace Clients.Service.Services
         public async Task UpdateClient(ClientDTO clientDTO)
         {
             var client = _map.Map<Client>(clientDTO);
-            client.Password = GeneratorHash.GetHash(clientDTO.Password);
             _unitOfWork.Clients.UpdateEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
