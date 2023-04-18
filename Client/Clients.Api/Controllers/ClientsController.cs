@@ -1,14 +1,13 @@
 ﻿using Clients.Service.Interfaces;
 using Infrastructure.DTO;
 using Infrastructure.Filters;
+using Infrastructure.HelperModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clients.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClientsController : ControllerBase
+    public class ClientsController : BaseApiController
     {
         private readonly IClientService _clientService;
         public ClientsController(IClientService clientService)
