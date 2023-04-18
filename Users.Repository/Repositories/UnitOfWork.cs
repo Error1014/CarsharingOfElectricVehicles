@@ -18,9 +18,11 @@ namespace Users.Repository.Repositories
         {
             _dbContext = context;
             Users = new UserRepository(context);
+            Roles = new RoleRepository(context);
         }
 
         public IUserRepository Users { get; private set; }
+        public IRoleRepository Roles { get; private set; }
 
 
         public int Complete()
