@@ -2,6 +2,7 @@
 using Clients.Repository.Entities;
 using Clients.Repository.Interfaces;
 using Clients.Service.Interfaces;
+using Infrastructure;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
@@ -46,6 +47,7 @@ namespace Clients.Service.Services
                 throw new DublicateException("Пользователь с таким логином уже зарегистрирован");
             }
             var client = _map.Map<Client>(clientDTO);
+            client.Password = GeneratorHash.GetHash(clientDTO.Password);
             await _unitOfWork.Clients.AddEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
@@ -53,6 +55,7 @@ namespace Clients.Service.Services
         public async Task UpdateClient(ClientDTO clientDTO)
         {
             var client = _map.Map<Client>(clientDTO);
+            client.Password = GeneratorHash.GetHash(clientDTO.Password);
             _unitOfWork.Clients.UpdateEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
