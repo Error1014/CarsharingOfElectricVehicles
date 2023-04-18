@@ -1,5 +1,11 @@
 using Authorization.Repository.Context;
+using Authorization.Repository.Interfaces;
+using Authorization.Repository.Repositories;
+using Authorization.Service;
+using Authorization.Service.Interfaces;
+using Authorization.Service.Repositories;
 using Infrastructure.Extensions;
+using Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +16,12 @@ builder.Services.RegistrationDbContext<UserContext>(builder.Configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services
+    .AddScoped<IUnitOfWork, UnitOfWork>()
+    .AddScoped<IRoleService, RoleService>()
+    .AddScoped<IUserService, UserService>();
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,5 +36,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
