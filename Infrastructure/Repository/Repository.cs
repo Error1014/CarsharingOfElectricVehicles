@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,15 +38,20 @@ namespace Infrastructure.Repository
         {
             context.Set<TEntity>().Update(entity);
         }
-        public void RemoveEntities(TKey Id)
+        public void RemoveEntities(TEntity entity)
         {
-            var entity = context.Set<TEntity>().Find(Id);
             context.Set<TEntity>().Remove(entity);
         }
 
         public async Task SaveChanges()
         {
             await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> CheckDublicate(Expression<Func<TEntity, bool>> predicate)
+        {
+            var result = await context.Set<TEntity>().FirstOrDefaultAsync(predicate);
+            return result == null ? false : true;
         }
     }
 }

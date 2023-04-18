@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +14,9 @@ namespace Infrastructure.Repository
         Task<IEnumerable<TEntity>> GetAll();
         Task AddEntities(TEntity entity);
         void UpdateEntities(TEntity entity);
-        void RemoveEntities(TKey Id);
+        void RemoveEntities(TEntity entity);
         Task SaveChanges();
+        Task<bool> CheckDublicate(Expression<Func<TEntity, bool>> predicate);
 
     }
 }

@@ -15,7 +15,7 @@ namespace Clients.Service.Services
 {
     public class ClientService : IClientService
     {
-        private readonly IUnitOfWork _unitOfWork; 
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         public ClientService(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -25,7 +25,7 @@ namespace Clients.Service.Services
         public async Task<ClientDTO> GetClient(Guid Id)
         {
             var client = await _unitOfWork.Clients.GetEntity(Id);
-            if (client==null)
+            if (client == null)
             {
                 throw new NotFoundException("Клиент не найден");
             }
@@ -40,6 +40,11 @@ namespace Clients.Service.Services
 
         public async Task AddClient(ClientDTO clientDTO)
         {
+            bool isDublicete = await _unitOfWork.Clients.CheckDublicate(c => c.Login == clientDTO.Login);
+            if (isDublicete)
+            {
+                throw new DublicateException("Пользователь с таким логином уже зарегистрирован");
+            }
             var client = _map.Map<Client>(clientDTO);
             await _unitOfWork.Clients.AddEntities(client);
             await _unitOfWork.Clients.SaveChanges();
@@ -54,9 +59,11 @@ namespace Clients.Service.Services
 
         public async Task RemoveClient(Guid Id)
         {
-            _unitOfWork.Clients.RemoveEntities(Id);
+            var entityDTO = await GetClient(Id);
+            var entity = _map.Map<Client>(entityDTO);
+            _unitOfWork.Clients.RemoveEntities(entity);
             await _unitOfWork.Clients.SaveChanges();
         }
-        
+
     }
 }

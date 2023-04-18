@@ -28,7 +28,7 @@ namespace Clients.Api.Controllers
             return Ok(list);
         }
         [HttpPost]
-        public async Task<IActionResult> AddClient(ClientDTO clientDTO)
+        public async Task<IActionResult> Registration(ClientDTO clientDTO)
         {
             await _clientService.AddClient(clientDTO);
             return Ok();

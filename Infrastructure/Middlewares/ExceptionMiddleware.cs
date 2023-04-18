@@ -35,18 +35,9 @@ namespace Infrastructure.Middlewares
         private static Task HandleExceptionAsync(HttpContext context, MyBaseException exception)
         {
             var code = HttpStatusCode.InternalServerError;
-            string message = string.Empty;
 
-            switch (exception)
-            {
-                case NotFoundException:
-                    message = exception.Message;
-                    code = exception.CodeException;
-                    break;
-                default:
-                    message = exception.Message;
-                    break;
-            }
+            string message = exception.Message;
+            code = exception.CodeException;
 
 
             var result = JsonSerializer.Serialize(new { error = message , code = code});
