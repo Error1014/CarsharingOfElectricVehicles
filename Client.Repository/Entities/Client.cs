@@ -19,5 +19,6 @@ namespace Clients.Repository.Entities
         public string? Email { get; set; }
         public decimal? Balance { get; set; }
 
+        public DateTime DateRegistration{ get; set; }
     }
 }
