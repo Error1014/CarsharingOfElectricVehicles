@@ -1,4 +1,5 @@
-﻿using Infrastructure.HelperModels;
+﻿using Infrastructure.Filters;
+using Infrastructure.HelperModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
@@ -28,7 +29,15 @@ namespace Infrastructure.Repository
         {
             return await context.Set<TEntity>().ToListAsync();
         }
-
+        public async Task<IEnumerable<TEntity>> GetPage(PageFilter pageFilter)
+        {
+            var query = context.Set<TEntity>().AsQueryable();
+            query = query
+                .OrderBy(x => x.Id)
+                .Skip((pageFilter.NumPage - 1) * pageFilter.SizePage)
+                .Take(pageFilter.SizePage);
+            return await query.ToListAsync();
+        }
         public async Task AddEntities(TEntity entity)
         {
             await context.Set<TEntity>().AddAsync(entity);

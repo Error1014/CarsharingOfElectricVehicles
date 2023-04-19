@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Infrastructure.HelperModels;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,11 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.DTO
+namespace Clients.Repository.Entities
 {
-    public class ClientDTO
+    public class Client : BaseEntity<Guid>
     {
-        public Guid Id { get; set; }
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public decimal? Balance { get; set; }
@@ -21,7 +21,6 @@ namespace Infrastructure.DTO
         [DataType(DataType.Date)]
         [Column(TypeName = "Date")]
         public DateTime DateRegistration { get; set; }
-
 
     }
 }

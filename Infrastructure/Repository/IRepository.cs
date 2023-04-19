@@ -1,4 +1,5 @@
-﻿using Infrastructure.HelperModels;
+﻿using Infrastructure.Filters;
+using Infrastructure.HelperModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Infrastructure.Repository
         void RemoveEntities(TEntity entity);
         Task SaveChanges();
         Task<bool> CheckDublicate(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> GetPage(PageFilter pageFilter);
 
     }
 }
