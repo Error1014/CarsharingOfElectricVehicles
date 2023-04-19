@@ -13,9 +13,11 @@ namespace Authorization.Service.Interfaces
     public interface IUserService
     {
         Task<UserDTO> GetUser(Guid Id);
+        Task<UserDTO> GetUserByLogin(LoginDTO loginDTO);
         Task<IEnumerable<UserDTO>> GetUsers(PageFilter pageFilter);
         Task AddUser(UserDTO user);
         Task UpdateUser(UserDTO user);
         Task RemoveUser(Guid Id);
+        Task<string> GetRole(Guid userId);
     }
 }

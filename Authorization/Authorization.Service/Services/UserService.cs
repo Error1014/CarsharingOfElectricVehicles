@@ -53,6 +53,16 @@ namespace Authorization.Service.Repositories
             var userDTO = _map.Map<UserDTO>(user);
             return userDTO;
         }
+        public async Task<UserDTO> GetUserByLogin(LoginDTO loginDTO)
+        {
+            var user = await _unitOfWork.Users.GetUserByLogin(loginDTO);
+            if (user == null)
+            {
+                throw new NotFoundException("Пользователь не найден");
+            }
+            var userDTO = _map.Map<UserDTO>(user);
+            return userDTO;
+        }
 
         public async Task RemoveUser(Guid Id)
         {
@@ -71,6 +81,10 @@ namespace Authorization.Service.Repositories
             user.Password = GeneratorHash.GetHash(userDTO.Password);
             _unitOfWork.Users.UpdateEntities(user);
             await _unitOfWork.Users.SaveChanges();
+        }
+        public async Task<string> GetRole(Guid userId)
+        {
+            return await _unitOfWork.Users.GetRole(userId);
         }
     }
 }

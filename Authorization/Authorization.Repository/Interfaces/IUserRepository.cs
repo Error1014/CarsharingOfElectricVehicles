@@ -1,4 +1,5 @@
 ﻿using Authorization.Repository.Entities;
+using Infrastructure.DTO;
 using Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,7 @@ namespace Authorization.Repository.Interfaces
 {
     public interface IUserRepository : IRepository<User, Guid>
     {
+        Task<User> GetUserByLogin(LoginDTO loginDTO);
+        Task<string> GetRole(Guid userId);
     }
 }
