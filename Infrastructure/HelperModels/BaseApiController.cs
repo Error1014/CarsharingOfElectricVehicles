@@ -6,10 +6,14 @@ namespace Infrastructure.HelperModels
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BaseApiController : ControllerBase
+    public class BaseApiController : Controller
     {
         protected readonly HttpClient client = new HttpClient();
 
-        
+        public override void OnActionExecuting(ActionExecutingContext ctx)
+        {
+            base.OnActionExecuting(ctx);
+            ViewData["Authorization"] = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        }
     }
 }

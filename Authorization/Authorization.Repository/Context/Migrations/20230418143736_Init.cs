@@ -26,11 +26,11 @@ namespace Users.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Role",
                 columns: new[] {"Id", "Name" },
-                values: new object[] { 1, "Администратор" });
+                values: new object[] { 1, "Admin" });
             migrationBuilder.InsertData(
                 table: "Role",
                 columns: new[] { "Id", "Name" },
-                values: new object[] { 2, "Клиент" });
+                values: new object[] { 2, "Client" });
             migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new

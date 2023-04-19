@@ -34,6 +34,7 @@ namespace Authorization.Service.Repositories
             user.Password = GeneratorHash.GetHash(userDTO.Password);
             await _unitOfWork.Users.AddEntities(user);
             await _unitOfWork.Users.SaveChanges();
+
         }
 
         public async Task<IEnumerable<UserDTO>> GetUsers(PageFilter pageFilter)

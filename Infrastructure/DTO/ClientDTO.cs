@@ -15,6 +15,12 @@ namespace Infrastructure.DTO
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public decimal? Balance { get; set; }
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
+        public DateTime? Birthday { get; set; }
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
+        public DateTime DateRegistration { get; set; }
 
 
     }

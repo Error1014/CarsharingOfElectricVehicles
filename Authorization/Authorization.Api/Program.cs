@@ -4,30 +4,34 @@ using Authorization.Repository.Repositories;
 using Authorization.Service;
 using Authorization.Service.Interfaces;
 using Authorization.Service.Repositories;
+using Infrastructure.DTO;
 using Infrastructure.Extensions;
 using Infrastructure.HelperModels;
+using Infrastructure.Interfaces;
 using Infrastructure.Middlewares;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
 builder.Services.RegistrationDbContext<UserContext>(builder.Configuration);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 
+//await builder.Configuration.ConectionToConfiguration();
 builder.Services.Configure<JwtOptions>(
 builder.Configuration.GetSection("JwtOptions"));
 
+
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
-    .AddScoped<IRoleService, RoleService>()
     .AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<UserSession>();
+builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
+builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.SetJwtOptions(builder.Configuration);
+
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
@@ -55,8 +59,10 @@ builder.Services.AddSwaggerGen(opt =>
         }
     });
 });
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 var app = builder.Build();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseRouting();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -64,13 +70,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
 app.UseMiddleware<ExceptionMiddleware>();
-
+app.UseHttpsRedirection();
+app.UseStatusCodePages();
+app.MapControllers();
 app.Run();
