@@ -15,5 +15,7 @@ namespace Clients.Repository.Context
 
         }
         public DbSet<Client> Client { get; set; }
+        public DbSet<Passport> Passport { get; set; }
+        public DbSet<DrivingLicense> DrivingLicense { get; set; }
     }
 }
