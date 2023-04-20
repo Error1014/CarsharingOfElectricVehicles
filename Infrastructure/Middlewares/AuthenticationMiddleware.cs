@@ -7,6 +7,7 @@ using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
 using Infrastructure.Attributes;
 using Infrastructure.DTO;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Middlewares
 {
@@ -14,12 +15,10 @@ namespace Infrastructure.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly UriEndPoint uriEndPoint;
-        public AuthenticationMiddleware(RequestDelegate next)
+        public AuthenticationMiddleware(RequestDelegate next,IOptions<UriEndPoint> options)
         {
             _next = next;
-            uriEndPoint = new UriEndPoint();
-            uriEndPoint.BaseAddress = "https://localhost:7270";
-            uriEndPoint.Uri = "/api/Users/Authorize?role=";
+            uriEndPoint = options.Value;
 
         }
 

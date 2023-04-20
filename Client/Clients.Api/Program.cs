@@ -6,9 +6,11 @@ using Clients.Service.Interfaces;
 using Clients.Service.Services;
 using Infrastructure.DTO;
 using Infrastructure.Extensions;
+using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
 using Infrastructure.Middlewares;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,15 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.RegistrationDbContext<ClientContext>(builder.Configuration);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services
-    .AddScoped<IUnitOfWork, UnitOfWork>()
-    .AddScoped<IClientService, ClientService>();
-builder.Services.AddScoped<UserSession>();
-builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
-builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
+
+await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
+builder.Services.Configure<UriEndPoint>(
+    builder.Configuration.GetSection("AuthorizationService"));
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
@@ -52,6 +49,15 @@ builder.Services.AddSwaggerGen(opt =>
         }
     });
 });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services
+    .AddScoped<IUnitOfWork, UnitOfWork>()
+    .AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<UserSession>();
+builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
+builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 var app = builder.Build();
 

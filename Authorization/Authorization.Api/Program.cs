@@ -16,9 +16,7 @@ builder.Services.RegistrationDbContext<UserContext>(builder.Configuration);
 
 //await builder.Configuration.ConectionToConfiguration();
 builder.Services.Configure<JwtOptions>(
-builder.Configuration.GetSection("JwtOptions"));
-
-
+    builder.Configuration.GetSection("JwtOptions"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
