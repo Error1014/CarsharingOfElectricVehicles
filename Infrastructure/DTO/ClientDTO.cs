@@ -11,16 +11,16 @@ namespace Infrastructure.DTO
 {
     public class ClientDTO
     {
-        public Guid Id { get; set; }
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public decimal? Balance { get; set; }
+
         [DataType(DataType.Date)]
         [Column(TypeName = "Date")]
-        public DateTime? Birthday { get; set; }
-        [DataType(DataType.Date)]
-        [Column(TypeName = "Date")]
-        public DateTime DateRegistration { get; set; }
+        public DateTime DateRegistration { get; set; }//дата регистрации в приложении
+
+        public Guid PassportId { get; set; }
+        public Guid DrivingLicenseId { get; set; }
 
 
     }
