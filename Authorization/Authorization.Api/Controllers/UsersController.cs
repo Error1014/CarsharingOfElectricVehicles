@@ -1,5 +1,6 @@
 ﻿using Authorization.Repository.Entities;
 using Authorization.Service.Interfaces;
+using Infrastructure.Attributes;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
@@ -44,14 +45,23 @@ namespace Authorization.Api.Controllers
             await _userService.AddUser(userDTO);
             return Ok();
         }
+        [RoleAuthorize("Admin")]
+        [HttpPost(nameof(RegistrationOperator))]
+        public async Task<IActionResult> RegistrationOperator(UserDTO userDTO)
+        {
+            await _userService.AddUser(userDTO);
+            return Ok();
+        }
+        [RoleAuthorize("Operator Client")]
         [HttpPut]
-        public async Task<IActionResult> UpdateClient(UserDTO userDTO)
+        public async Task<IActionResult> Update(UserDTO userDTO)
         {
             await _userService.UpdateUser(userDTO);
             return Ok();
         }
+        [RoleAuthorize("Admin")]
         [HttpDelete]
-        public async Task<IActionResult> RemoveClient(Guid Id)
+        public async Task<IActionResult> Remove(Guid Id)
         {
             await _userService.RemoveUser(Id);
             return Ok();

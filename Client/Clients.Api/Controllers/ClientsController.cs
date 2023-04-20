@@ -22,7 +22,7 @@ namespace Clients.Api.Controllers
             var client = await _clientService.GetClient(id);
             return Ok(client);
         }
-        [RoleAuthorize("Admin")]
+        [RoleAuthorize("Admin Operator")]
         [HttpGet(nameof(GetClients))]
         public async Task<IActionResult> GetClients([FromQuery]PageFilter pageFilter)
         {
@@ -30,13 +30,14 @@ namespace Clients.Api.Controllers
             return Ok(list);
         }
 
+        [RoleAuthorize("Operator")]
         [HttpPost]
         public async Task<IActionResult> Registration(ClientDTO clientDTO)
         {
             await _clientService.AddClient(clientDTO);
             return Ok();
         }
-        [RoleAuthorize("Client")]
+        [RoleAuthorize("Operator")]
         [HttpPut]
         public async Task<IActionResult> UpdateClient(ClientDTO clientDTO)
         {
