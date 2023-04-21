@@ -17,7 +17,7 @@ namespace Infrastructure.Repository
         void UpdateEntities(TEntity entity);
         void RemoveEntities(TEntity entity);
         Task SaveChanges();
-        Task<bool> CheckDublicate(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetPage(PageFilter pageFilter);
 
     }

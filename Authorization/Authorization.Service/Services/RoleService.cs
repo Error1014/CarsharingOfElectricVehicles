@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Authorization.Service.Repositories
+namespace Authorization.Service.Services
 {
-    public class RoleService:IRoleService
+    public class RoleService : IRoleService
     {
     }
 }

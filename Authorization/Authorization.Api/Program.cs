@@ -3,7 +3,7 @@ using Authorization.Repository.Interfaces;
 using Authorization.Repository.Repositories;
 using Authorization.Service;
 using Authorization.Service.Interfaces;
-using Authorization.Service.Repositories;
+using Authorization.Service.Services;
 using Infrastructure.DTO;
 using Infrastructure.Extensions;
 using Infrastructure.HelperModels;

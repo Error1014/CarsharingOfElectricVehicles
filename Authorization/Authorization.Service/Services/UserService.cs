@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Authorization.Service.Repositories
+namespace Authorization.Service.Services
 {
     public class UserService : IUserService
     {
@@ -25,12 +25,12 @@ namespace Authorization.Service.Repositories
         }
         public async Task AddUser(UserDTO userDTO)
         {
-            bool isDublicate = await _unitOfWork.Users.CheckDublicate(u => u.Login == userDTO.Login);
-            if (isDublicate)
+            var user = await _unitOfWork.Users.Find(u => u.Login == userDTO.Login);
+            if (user !=null)
             {
                 throw new DublicateException("Пользователь с таким логином уже существует");
             }
-            var user = _map.Map<User>(userDTO);
+            user = _map.Map<User>(userDTO);
             user.Password = GeneratorHash.GetHash(userDTO.Password);
             await _unitOfWork.Users.AddEntities(user);
             await _unitOfWork.Users.SaveChanges();
@@ -68,7 +68,7 @@ namespace Authorization.Service.Repositories
         public async Task RemoveUser(Guid Id)
         {
             var user = await _unitOfWork.Users.GetEntity(Id);
-            if (user==null)
+            if (user == null)
             {
                 throw new NotFoundException("Пользователь не найден");
             }

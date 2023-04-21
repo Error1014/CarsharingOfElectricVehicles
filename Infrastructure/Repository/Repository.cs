@@ -57,10 +57,9 @@ namespace Infrastructure.Repository
             await context.SaveChangesAsync();
         }
 
-        public async Task<bool> CheckDublicate(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            var result = await context.Set<TEntity>().FirstOrDefaultAsync(predicate);
-            return result == null ? false : true;
+            return await context.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
     }
 }
