@@ -32,6 +32,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Car", "Car", "{EFE8F6B3-7131-42DD-89BD-F079E2A61B5E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cars.Api", "Car\Cars.Api\Cars.Api.csproj", "{6894DCAC-7738-4D19-930A-731486BF8812}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cars.Repository", "Car\Cars.Repository\Cars.Repository.csproj", "{E8843CE4-F972-4E54-B223-C4BE1DC40409}"
 EndProject
