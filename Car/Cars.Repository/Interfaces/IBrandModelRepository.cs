@@ -1,4 +1,5 @@
 ﻿using Cars.Repository.Entities;
+using Infrastructure.DTO;
 using Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,8 @@ namespace Cars.Repository.Interfaces
 {
     public interface IBrandModelRepository : IRepository<BrandModel, Guid>
     {
+        Task<IEnumerable<string>> GetBrands();
+        Task<IEnumerable<string>> GetModels(string brand);
+        Task<BrandModel> GetBrandModel(BrandModelDTO brandModelDTO);
     }
 }

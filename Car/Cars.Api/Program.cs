@@ -1,6 +1,7 @@
 using Cars.Repository.Context;
 using Cars.Repository.Interfaces;
 using Cars.Repository.Repositories;
+using Cars.Service;
 using Cars.Service.Interfaces;
 using Cars.Service.Services;
 using Infrastructure.DTO;
@@ -17,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.RegistrationDbContext<CarContext>(builder.Configuration);
-
 await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.Configure<UriEndPoint>(
     builder.Configuration.GetSection("AuthorizationService"));
@@ -62,7 +62,7 @@ builder.Services
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
 builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
-
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

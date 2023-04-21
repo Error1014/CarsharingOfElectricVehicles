@@ -23,7 +23,7 @@ namespace Cars.Service.Services
         }
         public async Task AddBrandModel(BrandModelDTO brandModelDTO)
         {
-            var brandModel = await _unitOfWork.BrandModels.Find(x => x.Brand == brandModelDTO.Brand && x.Model == brandModelDTO.Model);
+            var brandModel = await _unitOfWork.BrandModels.GetBrandModel(brandModelDTO);
             if (brandModel != null)
             {
                 throw new DublicateException("Модель этой марки уже есть в базе данных");
@@ -32,11 +32,21 @@ namespace Cars.Service.Services
             await _unitOfWork.BrandModels.SaveChanges();
         }
 
-        public async Task<IEnumerable<BrandModelDTO>> GetBrands()
+        public async Task<IEnumerable<BrandModelDTO>> GetBrandModels()
         {
             var list = await _unitOfWork.BrandModels.GetAll();
             var result = _map.Map<IEnumerable<BrandModelDTO>>(list);
             return result;
+        }
+
+        public async Task<IEnumerable<string>> GetBrands()
+        {
+            return await _unitOfWork.BrandModels.GetBrands();
+        }
+
+        public async Task<IEnumerable<string>> GetModels(string brand)
+        {
+            return await _unitOfWork.BrandModels.GetModels(brand);
         }
 
         public async Task RemodeBrandModel(Guid Id)
