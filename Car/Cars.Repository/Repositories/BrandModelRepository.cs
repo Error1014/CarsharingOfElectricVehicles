@@ -19,11 +19,11 @@ namespace Cars.Repository.Repositories
 
         public async Task<IEnumerable<string>> GetBrands()
         {
-            return Set.Distinct().Select(x=>x.Brand);
+            return Set.Select(x => x.Brand).Distinct();
         }
         public async Task<IEnumerable<string>> GetModels(string brand)
         {
-            return Set.Where(x=>x.Brand == brand).Distinct().Select(x => x.Brand);
+            return Set.Where(x=>x.Brand == brand).Select(x => x.Model).Distinct();
         }
         public async Task<BrandModel> GetBrandModel(BrandModelDTO brandModelDTO)
         {

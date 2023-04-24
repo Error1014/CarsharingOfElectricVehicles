@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using Cars.Repository.Interfaces;
+using Cars.Service.Interfaces;
+using Infrastructure.Attributes;
+using Infrastructure.DTO;
 using Infrastructure.HelperModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,25 +11,32 @@ namespace Cars.Api.Controllers
 {
     public class BrandModelsController : BaseApiController
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBrandModelService _brandModelService;
         private readonly IMapper _map;
 
-        public BrandModelsController(IUnitOfWork unitOfWork, IMapper mapper)
+        public BrandModelsController(IBrandModelService brandModelService, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _brandModelService = brandModelService;
             _map = mapper;
         }
 
         [HttpGet(nameof(GetBrands))]
         public async Task<IEnumerable<string>> GetBrands()
         {
-            return await _unitOfWork.BrandModels.GetBrands();
+            return await _brandModelService.GetBrands();
         }
 
         [HttpGet(nameof(GetModels))]
         public async Task<IEnumerable<string>> GetModels(string brand)
         {
-            return await _unitOfWork.BrandModels.GetModels(brand);
+            return await _brandModelService.GetModels(brand);
+        }
+        [RoleAuthorize("Admin Operator")]
+        [HttpPost(nameof(AddBrandModel))]
+        public async Task<IActionResult> AddBrandModel(BrandModelDTO brandModel)
+        {
+            await _brandModelService.AddBrandModel(brandModel);
+            return Ok();
         }
     }
 }

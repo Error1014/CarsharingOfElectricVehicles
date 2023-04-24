@@ -53,11 +53,11 @@ builder.Services.AddSwaggerGen();
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<IBrandModelService, BrandModelService>()
-    //.AddScoped<ICarCharacteristicService, CarCharacteristicService>()
-    //.AddScoped<ICarService, CarService>()
-    //.AddScoped<ICarTagService, CarTagService>()
-    //.AddScoped<ICharacteristicService, CharacteristicService>()
-    //.AddScoped<ITagService, TagService>()
+    .AddScoped<ICarCharacteristicService, CarCharacteristicService>()
+    .AddScoped<ICarService, CarService>()
+    .AddScoped<ICarTagService, CarTagService>()
+    .AddScoped<ICharacteristicService, CharacteristicService>()
+    .AddScoped<ITagService, TagService>()
     ;
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
@@ -80,3 +80,4 @@ app.UseMiddleware<AuthenticationMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseStatusCodePages();
 app.MapControllers();
+app.Run();
