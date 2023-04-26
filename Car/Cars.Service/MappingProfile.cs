@@ -19,6 +19,8 @@ namespace Cars.Service
             CreateMap<Car, CarInfoDTO>().ReverseMap();
             CreateMap<BrandModel, BrandModelDTO>();
             CreateMap<BrandModel, BrandModelDTO>().ReverseMap();
+            CreateMap<Characteristic, CharacteristicDTO>();
+            CreateMap<Characteristic, CharacteristicDTO>().ReverseMap();
         }
     }
 }
