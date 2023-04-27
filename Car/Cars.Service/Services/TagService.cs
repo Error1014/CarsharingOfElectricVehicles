@@ -1,13 +1,13 @@
-﻿using Authorization.Service.Interfaces;
+﻿using Cars.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Authorization.Service.Services
+namespace Cars.Service.Services
 {
-    public class RoleService : IRoleService
+    public class TagService: ITagService
     {
     }
 }

@@ -1,13 +1,13 @@
-﻿using Authorization.Service.Interfaces;
+﻿using Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Authorization.Service.Services
+namespace Cars.Service.Interfaces
 {
-    public class RoleService : IRoleService
+    public interface ICarCharacteristicService
     {
     }
 }

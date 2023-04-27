@@ -18,8 +18,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clients.Repository", "Client\Clients.Repository\Clients.Repository.csproj", "{D54A9828-D909-4043-A4AB-9DED3F0ABA0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clients.Service", "Client\Clients.Service\Clients.Service.csproj", "{ED0E9CEF-8A4F-4EEA-AC9A-57AA08C2E5C9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clients.Api", "Client\Clients.Api\Clients.Api.csproj", "{AE660B7D-C2B7-4096-90D2-E58033087AAC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{B3DB73BA-72FA-47B9-A62D-0534AA280F44}"
 EndProject
@@ -28,6 +34,20 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Repository", "Configuration\Configuration.Repository\Configuration.Repository.csproj", "{3D8ACC74-0881-41C4-881B-A4576E6AAEE7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Service", "Configuration\Configuration.Service\Configuration.Service.csproj", "{153F1D0E-BEEC-4EA8-97C0-A6810F2D77CE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2F11CE78-0068-4E05-A510-44B9AB325FA8} = {2F11CE78-0068-4E05-A510-44B9AB325FA8}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Car", "Car", "{94D57A9E-20BF-45B9-8BAA-E4910ABF73B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cars.Repository", "Car\Cars.Repository\Cars.Repository.csproj", "{E22ACC34-57A6-467C-B968-6B59FBBA6BCE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cars.Service", "Car\Cars.Service\Cars.Service.csproj", "{ACD95B02-0E23-4311-89CC-EB6B9B4E71EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cars.Api", "Car\Cars.Api\Cars.Api.csproj", "{250FEC47-BBA2-445B-9111-55B7CAC1CB17}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +95,18 @@ Global
 		{153F1D0E-BEEC-4EA8-97C0-A6810F2D77CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{153F1D0E-BEEC-4EA8-97C0-A6810F2D77CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{153F1D0E-BEEC-4EA8-97C0-A6810F2D77CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E22ACC34-57A6-467C-B968-6B59FBBA6BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E22ACC34-57A6-467C-B968-6B59FBBA6BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E22ACC34-57A6-467C-B968-6B59FBBA6BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E22ACC34-57A6-467C-B968-6B59FBBA6BCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACD95B02-0E23-4311-89CC-EB6B9B4E71EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACD95B02-0E23-4311-89CC-EB6B9B4E71EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACD95B02-0E23-4311-89CC-EB6B9B4E71EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACD95B02-0E23-4311-89CC-EB6B9B4E71EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{250FEC47-BBA2-445B-9111-55B7CAC1CB17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{250FEC47-BBA2-445B-9111-55B7CAC1CB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{250FEC47-BBA2-445B-9111-55B7CAC1CB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{250FEC47-BBA2-445B-9111-55B7CAC1CB17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +121,9 @@ Global
 		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {B3DB73BA-72FA-47B9-A62D-0534AA280F44}
 		{3D8ACC74-0881-41C4-881B-A4576E6AAEE7} = {B3DB73BA-72FA-47B9-A62D-0534AA280F44}
 		{153F1D0E-BEEC-4EA8-97C0-A6810F2D77CE} = {B3DB73BA-72FA-47B9-A62D-0534AA280F44}
+		{E22ACC34-57A6-467C-B968-6B59FBBA6BCE} = {94D57A9E-20BF-45B9-8BAA-E4910ABF73B9}
+		{ACD95B02-0E23-4311-89CC-EB6B9B4E71EC} = {94D57A9E-20BF-45B9-8BAA-E4910ABF73B9}
+		{250FEC47-BBA2-445B-9111-55B7CAC1CB17} = {94D57A9E-20BF-45B9-8BAA-E4910ABF73B9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36E2DDCB-ED16-4951-90B5-352A229090F6}

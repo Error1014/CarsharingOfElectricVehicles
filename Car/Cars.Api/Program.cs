@@ -1,24 +1,23 @@
-using Clients.Repository.Context;
-using Clients.Repository.Interfaces;
-using Clients.Repository.Repositories;
-using Clients.Service;
-using Clients.Service.Interfaces;
-using Clients.Service.Services;
+using Cars.Repository.Context;
+using Cars.Repository.Interfaces;
+using Cars.Repository.Repositories;
+using Cars.Service;
+using Cars.Service.Interfaces;
+using Cars.Service.Services;
 using Infrastructure.DTO;
 using Infrastructure.Extensions;
 using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
 using Infrastructure.Middlewares;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.RegistrationDbContext<ClientContext>(builder.Configuration);
 
+builder.Services.RegistrationDbContext<CarContext>(builder.Configuration);
 await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.Configure<UriEndPoint>(
     builder.Configuration.GetSection("AuthorizationService"));
@@ -53,12 +52,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
-    .AddScoped<IClientService, ClientService>();
+    .AddScoped<IBrandModelService, BrandModelService>()
+    .AddScoped<ICarCharacteristicService, CarCharacteristicService>()
+    .AddScoped<ICarService, CarService>()
+    .AddScoped<ICarTagService, CarTagService>()
+    .AddScoped<ICharacteristicService, CharacteristicService>()
+    .AddScoped<ITagService, TagService>()
+    ;
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
 builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
-
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -67,9 +72,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
 
 app.MapControllers();
 app.UseAuthentication();
