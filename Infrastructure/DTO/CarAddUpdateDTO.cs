@@ -10,7 +10,7 @@ namespace Infrastructure.DTO
     {
         public Guid BrandModelId { get; set; }
         public string Number { get; set; }
-        public string Year { get; set; }
+        public int Year { get; set; }
         public bool IsCASCO { get; set; }
         public bool IsRepair { get; set; }//в ремонте
         public int Mileage { get; set; }
