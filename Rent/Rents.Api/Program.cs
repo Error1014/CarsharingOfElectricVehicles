@@ -1,6 +1,9 @@
+using Infrastructure.Extensions;
+using Rents.Repository.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.RegistrationDbContext<RentContext>(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
