@@ -54,9 +54,9 @@ namespace Authorization.Api.Controllers
         }
         [RoleAuthorize("Operator Client")]
         [HttpPut]
-        public async Task<IActionResult> Update(UserDTO userDTO)
+        public async Task<IActionResult> Update(Guid id,UserDTO userDTO)
         {
-            await _userService.UpdateUser(userDTO);
+            await _userService.UpdateUser(id, userDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]

@@ -76,9 +76,10 @@ namespace Authorization.Service.Services
             await _unitOfWork.Users.SaveChanges();
         }
 
-        public async Task UpdateUser(UserDTO userDTO)
+        public async Task UpdateUser(Guid id,UserDTO userDTO)
         {
             var user = _map.Map<User>(userDTO);
+            user.Id = id;
             user.Password = GeneratorHash.GetHash(userDTO.Password);
             _unitOfWork.Users.UpdateEntities(user);
             await _unitOfWork.Users.SaveChanges();
