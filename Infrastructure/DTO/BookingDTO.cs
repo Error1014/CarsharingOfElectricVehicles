@@ -8,7 +8,6 @@ namespace Infrastructure.DTO
 {
     public class BookingDTO
     {
-        public Guid ClientId { get; set; }
         public Guid CarId { get; set; }
         public DateTime DateTimeBeginRent { get; set; }
         public Guid TariffId { get; set; }

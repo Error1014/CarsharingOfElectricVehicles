@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Attributes;
 using Infrastructure.DTO;
 using Infrastructure.HelperModels;
+using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rents.Service.Interfaces;

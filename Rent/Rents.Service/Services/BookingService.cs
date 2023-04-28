@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
+using Infrastructure.Interfaces;
 using Rents.Repository.Entities;
 using Rents.Repository.Interfaces;
 using Rents.Service.Interfaces;
@@ -16,15 +17,18 @@ namespace Rents.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
-        public BookingService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IUserSessionGetter _userSessionGetter;
+        public BookingService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter)
         {
             _unitOfWork = unitOfWork;
-            this._map = mapper;
+            _map = mapper;
+            _userSessionGetter = userSessionGetter;
         }
         public async Task AddBooking(BookingDTO bookingDTO)
         {
             //проверка на то есть ли у клиента арендованые машины на данный момент
             var booking = _map.Map<Booking>(bookingDTO);
+            booking.ClientId = _userSessionGetter.UserId;
             await _unitOfWork.Bookings.AddEntities(booking);
             await _unitOfWork.Bookings.SaveChanges();
         }
@@ -58,6 +62,7 @@ namespace Rents.Service.Services
         {
             var booking = _map.Map<Booking>(bookingDTO);
             booking.Id = id;
+            booking.ClientId = _userSessionGetter.UserId;
             _unitOfWork.Bookings.UpdateEntities(booking);
             await _unitOfWork.Bookings.SaveChanges();
         }

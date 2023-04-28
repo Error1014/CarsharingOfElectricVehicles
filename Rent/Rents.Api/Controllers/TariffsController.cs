@@ -28,21 +28,21 @@ namespace Rents.Api.Controllers
             var result = await _tariffService.GetTariffs();
             return Ok(result);
         }
-        [RoleAuthorize("Adminostrator")]
+        [RoleAuthorize("Admin")]
         [HttpPost]
         public async Task<IActionResult> AddTariff([FromQuery] TariffDTO tarifDTO)
         {
             await _tariffService.AddTariff(tarifDTO);
             return Ok();
         }
-        [RoleAuthorize("Adminostrator")]
+        [RoleAuthorize("Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateTariff(Guid id, [FromQuery] TariffDTO tarifDTO)
         {
             await _tariffService.UpdateTarif(id, tarifDTO);
             return Ok();
         }
-        [RoleAuthorize("Adminostrator")]
+        [RoleAuthorize("Admin")]
         [HttpDelete]
         public async Task<IActionResult> RemoveTariff(Guid id)
         {
