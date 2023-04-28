@@ -22,7 +22,7 @@ namespace Rents.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Rents.Repository.Entities.Rent", b =>
+            modelBuilder.Entity("Rents.Repository.Entities.Booking", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,7 +34,7 @@ namespace Rents.Repository.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DateTmeBeginRent")
+                    b.Property<DateTime>("DateTimeBeginRent")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("TariffId")
@@ -44,7 +44,7 @@ namespace Rents.Repository.Migrations
 
                     b.HasIndex("TariffId");
 
-                    b.ToTable("Rents");
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("Rents.Repository.Entities.RentCheque", b =>
@@ -96,7 +96,7 @@ namespace Rents.Repository.Migrations
                     b.ToTable("Tariffs");
                 });
 
-            modelBuilder.Entity("Rents.Repository.Entities.Rent", b =>
+            modelBuilder.Entity("Rents.Repository.Entities.Booking", b =>
                 {
                     b.HasOne("Rents.Repository.Entities.Tariff", "Tariff")
                         .WithMany()
@@ -109,7 +109,7 @@ namespace Rents.Repository.Migrations
 
             modelBuilder.Entity("Rents.Repository.Entities.RentCheque", b =>
                 {
-                    b.HasOne("Rents.Repository.Entities.Rent", "Rent")
+                    b.HasOne("Rents.Repository.Entities.Booking", "Rent")
                         .WithMany()
                         .HasForeignKey("RentId")
                         .OnDelete(DeleteBehavior.Cascade)
