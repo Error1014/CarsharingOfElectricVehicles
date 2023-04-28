@@ -1,4 +1,5 @@
-﻿using Infrastructure.DTO;
+﻿using Infrastructure.Attributes;
+using Infrastructure.DTO;
 using Infrastructure.HelperModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,21 +28,23 @@ namespace Rents.Api.Controllers
             var result = await _tariffService.GetTariffs();
             return Ok(result);
         }
-
+        [RoleAuthorize("Adminostrator")]
         [HttpPost]
         public async Task<IActionResult> AddTariff([FromQuery] TariffDTO tarifDTO)
         {
             await _tariffService.AddTariff(tarifDTO);
             return Ok();
         }
+        [RoleAuthorize("Adminostrator")]
         [HttpPut]
         public async Task<IActionResult> UpdateTariff(Guid id, [FromQuery] TariffDTO tarifDTO)
         {
             await _tariffService.UpdateTarif(id, tarifDTO);
             return Ok();
         }
+        [RoleAuthorize("Adminostrator")]
         [HttpDelete]
-        public async Task<IActionResult> removeTariff(Guid id)
+        public async Task<IActionResult> RemoveTariff(Guid id)
         {
             await _tariffService.RemoveTariff(id);
             return Ok();

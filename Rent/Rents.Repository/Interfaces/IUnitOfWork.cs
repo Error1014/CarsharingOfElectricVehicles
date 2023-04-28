@@ -8,7 +8,7 @@ namespace Rents.Repository.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRentRepository Rents { get; }
+        IBookingRepository Bookings { get; }
         IRentChequeRepository RentCheques { get; }
         ITariffRepository Tariffs { get; }
         int Complete();

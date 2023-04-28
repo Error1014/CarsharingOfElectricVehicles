@@ -16,12 +16,12 @@ namespace Rents.Repository.Repositories
         public UnitOfWork(RentContext context)
         {
             _dbContext = context;
-            Rents = new RentRepository(context);
+            Bookings = new BookingRepository(context);
             RentCheques = new RentChequeRepository(context);
             Tariffs = new TariffRepository(context);
         }
 
-        public IRentRepository Rents { get; private set; }
+        public IBookingRepository Bookings { get; private set; }
 
         public IRentChequeRepository RentCheques { get; private set; }
 

@@ -14,9 +14,9 @@ using Rents.Service.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegistrationDbContext<RentContext>(builder.Configuration);
-//await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
-//builder.Services.Configure<UriEndPoint>(
-//    builder.Configuration.GetSection("AuthorizationService"));
+await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
+builder.Services.Configure<UriEndPoint>(
+    builder.Configuration.GetSection("AuthorizationService"));
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
@@ -48,7 +48,8 @@ builder.Services.AddControllers();
 
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
-    .AddScoped<ITariffService, TariffService>();
+    .AddScoped<ITariffService, TariffService>()
+    .AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
 builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());

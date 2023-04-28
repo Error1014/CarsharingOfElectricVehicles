@@ -15,6 +15,8 @@ namespace Rents.Service
         {
             CreateMap<Tariff, TariffDTO>();
             CreateMap<Tariff, TariffDTO>().ReverseMap();
+            CreateMap<Booking, BookingDTO>();
+            CreateMap<Booking, BookingDTO>().ReverseMap();
         }
     }
 }

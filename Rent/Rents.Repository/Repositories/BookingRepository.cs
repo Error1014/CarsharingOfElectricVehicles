@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Rents.Repository.Repositories
 {
-    public class RentRepository : Repository<Booking, Guid>, IRentRepository
+    public class BookingRepository : Repository<Booking, Guid>, IBookingRepository
     {
-        public RentRepository(DbContext context) : base(context)
+        public BookingRepository(DbContext context) : base(context)
         {
         }
     }
