@@ -52,6 +52,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rent", "Rent", "{8354019B-2F22-4B92-B4D1-DDF8F4CA3149}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rents.Api", "Rent\Rents.Api\Rents.Api.csproj", "{19A0E0E8-70B1-441C-85C1-2E8E615F9182}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rents.Repository", "Rent\Rents.Repository\Rents.Repository.csproj", "{269CC109-6496-42EE-A853-D31566CAF821}"
 EndProject

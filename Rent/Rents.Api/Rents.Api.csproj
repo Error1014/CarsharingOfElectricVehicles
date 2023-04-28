@@ -16,11 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Rents.Repository\Rents.Repository.csproj" />
+    <ProjectReference Include="..\Rents.Service\Rents.Service.csproj" />
   </ItemGroup>
 
 </Project>
