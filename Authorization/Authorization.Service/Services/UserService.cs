@@ -54,15 +54,14 @@ namespace Authorization.Service.Services
             var userDTO = _map.Map<UserDTO>(user);
             return userDTO;
         }
-        public async Task<UserDTO> GetUserByLogin(LoginDTO loginDTO)
+        public async Task<User> GetUserByLogin(LoginDTO loginDTO)
         {
             var user = await _unitOfWork.Users.GetUserByLogin(loginDTO);
             if (user == null)
             {
                 throw new NotFoundException("Пользователь не найден");
             }
-            var userDTO = _map.Map<UserDTO>(user);
-            return userDTO;
+            return user;
         }
 
         public async Task RemoveUser(Guid Id)

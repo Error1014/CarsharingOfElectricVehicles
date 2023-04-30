@@ -13,7 +13,7 @@ namespace Authorization.Service.Interfaces
     public interface IUserService
     {
         Task<UserDTO> GetUser(Guid Id);
-        Task<UserDTO> GetUserByLogin(LoginDTO loginDTO);
+        Task<User> GetUserByLogin(LoginDTO loginDTO);
         Task<IEnumerable<UserDTO>> GetUsers(PageFilter pageFilter);
         Task AddUser(UserDTO user);
         Task UpdateUser(Guid id,UserDTO user);
