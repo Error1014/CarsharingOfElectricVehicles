@@ -11,6 +11,7 @@ namespace Infrastructure.DTO
 {
     public class ClientDTO
     {
+        public Guid Id { get; set; }   
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public decimal? Balance { get; set; }
