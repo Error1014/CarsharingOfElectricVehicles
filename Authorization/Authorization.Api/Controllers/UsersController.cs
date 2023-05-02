@@ -1,5 +1,6 @@
 ﻿using Authorization.Repository.Entities;
 using Authorization.Service.Interfaces;
+using AutoMapper;
 using Infrastructure.Attributes;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
@@ -28,27 +29,32 @@ namespace Authorization.Api.Controllers
         }
         #region обычные запросы
         [HttpGet]
-        public async Task<IActionResult> GetClient(Guid id)
+        public async Task<IActionResult> GetUser(Guid id)
         {
             var client = await _userService.GetUser(id);
             return Ok(client);
         }
-        [HttpGet(nameof(GetClients))]
-        public async Task<IActionResult> GetClients()
+        [RoleAuthorize("Admin")]
+        [HttpGet(nameof(GetUsers))]
+        public async Task<IActionResult> GetUsers()
         {
             var list = await _userService.GetUsers(new PageFilter(1, 10));
             return Ok(list);
         }
         [HttpPost]
-        public async Task<IActionResult> Registration(UserDTO userDTO)
+        public async Task<IActionResult> Registration(LoginDTO loginDTO)
         {
+            UserDTO userDTO = new UserDTO(loginDTO.Login, loginDTO.Password);
+            userDTO.RoleId = 3;
             await _userService.AddUser(userDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]
         [HttpPost(nameof(RegistrationOperator))]
-        public async Task<IActionResult> RegistrationOperator(UserDTO userDTO)
+        public async Task<IActionResult> RegistrationOperator(LoginDTO loginDTO)
         {
+            UserDTO userDTO = new UserDTO(loginDTO.Login, loginDTO.Password);
+            userDTO.RoleId = 2;
             await _userService.AddUser(userDTO);
             return Ok();
         }

@@ -15,6 +15,8 @@ namespace Authorization.Service
         {
             CreateMap<User, UserDTO>();
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<LoginDTO, UserDTO>();
+            CreateMap<LoginDTO, UserDTO>().ReverseMap();
         }
     }
 }
