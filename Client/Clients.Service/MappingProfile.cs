@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Clients.Repository.Entities;
 using Infrastructure.DTO;
+using Infrastructure.DTO.ClientDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,10 @@ namespace Clients.Service
         {
             CreateMap<Client, ClientDTO>();
             CreateMap<Client, ClientDTO>().ReverseMap();
+            CreateMap<Client, ClientDocumentDTO>();
+            CreateMap<Client, ClientDocumentDTO>().ReverseMap();
+            CreateMap<Passport, PassportDTO>();
+            CreateMap<Passport, PassportDTO>().ReverseMap();
         }
     }
 }

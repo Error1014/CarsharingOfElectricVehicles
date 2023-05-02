@@ -9,6 +9,8 @@ namespace Clients.Repository.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IClientRepository Clients { get; }
+        IPassportRepository Passports { get; }
+        IDrivingLicenseRepository DrivingLicenses { get; }
         int Complete();
     }
 }

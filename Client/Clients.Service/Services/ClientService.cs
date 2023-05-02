@@ -3,7 +3,7 @@ using Clients.Repository.Entities;
 using Clients.Repository.Interfaces;
 using Clients.Service.Interfaces;
 using Infrastructure;
-using Infrastructure.DTO;
+using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
 using System;

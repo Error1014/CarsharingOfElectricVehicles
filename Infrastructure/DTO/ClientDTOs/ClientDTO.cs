@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.DTO
+namespace Infrastructure.DTO.ClientDTOs
 {
     public class ClientDTO
     {
-        public Guid Id { get; set; }   
+        public Guid Id { get; set; }
         public string? Phone { get; set; }
         public string? Email { get; set; }
         public decimal? Balance { get; set; }

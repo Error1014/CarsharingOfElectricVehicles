@@ -1,4 +1,4 @@
-﻿using Infrastructure.DTO;
+﻿using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.Filters;
 using System;
 using System.Collections.Generic;

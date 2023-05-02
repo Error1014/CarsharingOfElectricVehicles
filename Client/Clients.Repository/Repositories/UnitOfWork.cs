@@ -18,10 +18,15 @@ namespace Clients.Repository.Repositories
         {
             _dbContext = context;
             Clients = new ClientRepository(context);
+            Passports = new PassportRepository(context);
+            DrivingLicenses = new DrivingLicenseRepository(context);
         }
 
         public IClientRepository Clients { get; private set; }
 
+        public IPassportRepository Passports { get; private set; }
+
+        public IDrivingLicenseRepository DrivingLicenses { get; private set; }
 
         public int Complete()
         {

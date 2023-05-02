@@ -1,6 +1,6 @@
 ﻿using Clients.Service.Interfaces;
 using Infrastructure.Attributes;
-using Infrastructure.DTO;
+using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
 using Microsoft.AspNetCore.Http;
