@@ -30,22 +30,28 @@ namespace Clients.Api.Controllers
             return Ok(list);
         }
 
-        [RoleAuthorize("Operator")]
         [HttpPost]
-        public async Task<IActionResult> Registration(ClientDTO clientDTO)
+        public async Task<IActionResult> AddClient(ClientContactDTO clientDTO)
         {
             await _clientService.AddClient(clientDTO);
             return Ok();
         }
         [RoleAuthorize("Operator")]
-        [HttpPut]
-        public async Task<IActionResult> UpdateClient(ClientDTO clientDTO)
+        [HttpPut(nameof(UpdateClientByOperator)+ "id")]
+        public async Task<IActionResult> UpdateClientByOperator(Guid id, ClientDocumentDTO clientDTO)
         {
-            await _clientService.UpdateClient(clientDTO);
+            await _clientService.UpdateClient(id,clientDTO);
             return Ok();
         }
         [RoleAuthorize("Client")]
-        [HttpDelete]
+        [HttpPut(nameof(UpdateClientByClient)+"id")]
+        public async Task<IActionResult> UpdateClientByClient(Guid id, ClientContactDTO clientDTO)
+        {
+            await _clientService.UpdateClient(id, clientDTO);
+            return Ok();
+        }
+        [RoleAuthorize("Client")]
+        [HttpDelete("id")]
         public async Task<IActionResult> RemoveClient(Guid Id)
         {
             await _clientService.RemoveClient(Id);

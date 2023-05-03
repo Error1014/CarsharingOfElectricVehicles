@@ -6,6 +6,7 @@ using Infrastructure;
 using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
+using Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,37 +19,48 @@ namespace Clients.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
-        public ClientService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IUserSessionGetter _userSessionGetter;
+        public ClientService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
+            _userSessionGetter = userSessionGetter;
         }
-        public async Task<ClientDTO> GetClient(Guid Id)
+        public async Task<ClientContactDTO> GetClient(Guid Id)
         {
             var client = await _unitOfWork.Clients.GetEntity(Id);
             if (client == null)
             {
                 throw new NotFoundException("Клиент не найден");
             }
-            return _map.Map<ClientDTO>(client);
+            return _map.Map<ClientContactDTO>(client);
         }
 
-        public async Task<IEnumerable<ClientDTO>> GetClients(PageFilter pageFilter)
+        public async Task<IEnumerable<ClientContactDTO>> GetClients(PageFilter pageFilter)
         {
             var clients = await _unitOfWork.Clients.GetAll();
-            return _map.Map<IEnumerable<ClientDTO>>(clients);
+            return _map.Map<IEnumerable<ClientContactDTO>>(clients);
         }
 
-        public async Task AddClient(ClientDTO clientDTO)
+        public async Task AddClient(ClientContactDTO clientDTO)
         {
             var client = _map.Map<Client>(clientDTO);
+            client.Id = _userSessionGetter.UserId;
             await _unitOfWork.Clients.AddEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
 
-        public async Task UpdateClient(ClientDTO clientDTO)
+        public async Task UpdateClient(Guid id,ClientDocumentDTO clientDTO)
         {
             var client = _map.Map<Client>(clientDTO);
+            client.Id = id;
+            _unitOfWork.Clients.UpdateEntities(client);
+            await _unitOfWork.Clients.SaveChanges();
+        }
+        public async Task UpdateClient(Guid id, ClientContactDTO clientDTO)
+        {
+            var client = _map.Map<Client>(clientDTO);
+            client.Id = id;
             _unitOfWork.Clients.UpdateEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }

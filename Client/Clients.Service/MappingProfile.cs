@@ -14,12 +14,14 @@ namespace Clients.Service
     {
         public MappingProfile()
         {
-            CreateMap<Client, ClientDTO>();
-            CreateMap<Client, ClientDTO>().ReverseMap();
+            CreateMap<Client, ClientContactDTO>();
+            CreateMap<Client, ClientContactDTO>().ReverseMap();
             CreateMap<Client, ClientDocumentDTO>();
             CreateMap<Client, ClientDocumentDTO>().ReverseMap();
             CreateMap<Passport, PassportDTO>();
             CreateMap<Passport, PassportDTO>().ReverseMap();
+            CreateMap<DrivingLicense, DrivingLicenseDTO>();
+            CreateMap<DrivingLicense, DrivingLicenseDTO>().ReverseMap();
         }
     }
 }

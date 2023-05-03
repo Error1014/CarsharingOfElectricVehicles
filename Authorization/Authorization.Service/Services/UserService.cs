@@ -30,6 +30,10 @@ namespace Authorization.Service.Services
             {
                 throw new DublicateException("Пользователь с таким логином уже существует");
             }
+            if (userDTO.RoleId==3)
+            {
+                //создать соответствующую запись в Client
+            }
             user = _map.Map<User>(userDTO);
             user.Password = GeneratorHash.GetHash(userDTO.Password);
             await _unitOfWork.Users.AddEntities(user);

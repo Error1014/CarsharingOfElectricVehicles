@@ -54,6 +54,7 @@ builder.Services.AddSwaggerGen();
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<IClientService, ClientService>()
+    .AddScoped<IDrivingLicenseService, DrivingLicenseService>()
     .AddScoped<IPassportService, PassportService>();
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());

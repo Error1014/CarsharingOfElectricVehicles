@@ -25,11 +25,15 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clients.Api", "Client\Clients.Api\Clients.Api.csproj", "{AE660B7D-C2B7-4096-90D2-E58033087AAC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+		{7C038EE6-C4B3-4A7A-B354-C0602BD1A604} = {7C038EE6-C4B3-4A7A-B354-C0602BD1A604}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{B3DB73BA-72FA-47B9-A62D-0534AA280F44}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Api", "Configuration\Configuration.Api\Configuration.Api.csproj", "{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7C038EE6-C4B3-4A7A-B354-C0602BD1A604} = {7C038EE6-C4B3-4A7A-B354-C0602BD1A604}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Repository", "Configuration\Configuration.Repository\Configuration.Repository.csproj", "{3D8ACC74-0881-41C4-881B-A4576E6AAEE7}"
 EndProject
@@ -47,6 +51,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cars.Api", "Car\Cars.Api\Cars.Api.csproj", "{250FEC47-BBA2-445B-9111-55B7CAC1CB17}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+		{7C038EE6-C4B3-4A7A-B354-C0602BD1A604} = {7C038EE6-C4B3-4A7A-B354-C0602BD1A604}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rent", "Rent", "{8354019B-2F22-4B92-B4D1-DDF8F4CA3149}"
@@ -54,6 +59,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rents.Api", "Rent\Rents.Api\Rents.Api.csproj", "{19A0E0E8-70B1-441C-85C1-2E8E615F9182}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+		{7C038EE6-C4B3-4A7A-B354-C0602BD1A604} = {7C038EE6-C4B3-4A7A-B354-C0602BD1A604}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rents.Repository", "Rent\Rents.Repository\Rents.Repository.csproj", "{269CC109-6496-42EE-A853-D31566CAF821}"

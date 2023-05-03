@@ -25,10 +25,10 @@ namespace Clients.Api.Controllers
         }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
-        public async Task<IActionResult> GetDrivingLicense([FromQuery] PageFilter pageFilter)
+        public async Task<IEnumerable<DrivingLicenseDTO>> GetDrivingLicenses([FromQuery] PageFilter pageFilter)
         {
             var drivingLicense = await _drivingLicenseService.GetDrivingLicenses(pageFilter);
-            return Ok(drivingLicense);
+            return drivingLicense;
         }
         [RoleAuthorize("Admin Operator")]
         [HttpPost]

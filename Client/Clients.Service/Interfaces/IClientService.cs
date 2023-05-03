@@ -10,10 +10,11 @@ namespace Clients.Service.Interfaces
 {
     public interface IClientService
     {
-        Task<ClientDTO> GetClient(Guid Id);
-        Task<IEnumerable<ClientDTO>> GetClients(PageFilter pageFilter);
-        Task AddClient(ClientDTO clientDTO);
-        Task UpdateClient(ClientDTO clientDTO);
+        Task<ClientContactDTO> GetClient(Guid Id);
+        Task<IEnumerable<ClientContactDTO>> GetClients(PageFilter pageFilter);
+        Task AddClient(ClientContactDTO clientDTO);
+        Task UpdateClient(Guid id,ClientDocumentDTO clientDTO);
+        Task UpdateClient(Guid id, ClientContactDTO clientDTO);
         Task RemoveClient(Guid Id);
     }
 }
