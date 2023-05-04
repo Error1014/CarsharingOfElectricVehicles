@@ -16,7 +16,7 @@ namespace Clients.Api.Controllers
             _clientService = clientService;
         }
         [RoleAuthorize("Admin")]
-        [HttpGet]
+        [HttpGet("id")]
         public async Task<IActionResult> GetClient(Guid id)
         {
             var client = await _clientService.GetClient(id);
@@ -24,7 +24,7 @@ namespace Clients.Api.Controllers
         }
         [RoleAuthorize("Admin Operator")]
         [HttpGet(nameof(GetClients))]
-        public async Task<IActionResult> GetClients([FromQuery]PageFilter pageFilter)
+        public async Task<IActionResult> GetClients([FromQuery] PageFilter pageFilter)
         {
             var list = await _clientService.GetClients(pageFilter);
             return Ok(list);
@@ -36,14 +36,14 @@ namespace Clients.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Operator")]
-        [HttpPut(nameof(UpdateClientByOperator)+ "id")]
+        [HttpPut(nameof(UpdateClientByOperator) + "id")]
         public async Task<IActionResult> UpdateClientByOperator(Guid id, ClientDocumentDTO clientDTO)
         {
-            await _clientService.UpdateClient(id,clientDTO);
+            await _clientService.UpdateClient(id, clientDTO);
             return Ok();
         }
         [RoleAuthorize("Client")]
-        [HttpPut(nameof(UpdateClientByClient)+"id")]
+        [HttpPut(nameof(UpdateClientByClient) + "id")]
         public async Task<IActionResult> UpdateClientByClient(Guid id, ClientContactDTO clientDTO)
         {
             await _clientService.UpdateClient(id, clientDTO);
@@ -56,7 +56,8 @@ namespace Clients.Api.Controllers
             await _clientService.UpdateBalance(summ);
             return Ok();
         }
-        [RoleAuthorize("Client")]
+
+        [RoleAuthorize("Admin")]
         [HttpDelete("id")]
         public async Task<IActionResult> RemoveClient(Guid Id)
         {
