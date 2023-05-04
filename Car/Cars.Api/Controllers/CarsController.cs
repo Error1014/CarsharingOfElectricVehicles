@@ -19,7 +19,14 @@ namespace Cars.Api.Controllers
         [HttpGet(nameof(GetCar))]
         public async Task<CarInfoDTO> GetCar(Guid Id)
         {
-           return await _carService.GetCar(Id);
+            return await _carService.GetCar(Id);
+        }
+
+        [HttpGet(nameof(GetCarIsRent))]
+        public async Task<IActionResult> GetCarIsRent(Guid id)
+        {
+            var car = await _carService.GetCar(id);
+            return Ok(car.IsRent);
         }
         [HttpGet(nameof(GetCars))]
         public async Task<IEnumerable<CarInfoDTO>> GetCars([FromQuery] PageFilter pageFilter)

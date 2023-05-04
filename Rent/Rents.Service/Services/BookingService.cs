@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
+using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
 using Rents.Repository.Entities;
 using Rents.Repository.Interfaces;
@@ -8,7 +9,9 @@ using Rents.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Rents.Service.Services
@@ -18,22 +21,28 @@ namespace Rents.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
+        private HttpClient _httpClient;
         public BookingService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
             _userSessionGetter = userSessionGetter;
+            _httpClient = new HttpClient();
         }
         public async Task AddBooking(BookingDTO bookingDTO)
         {
-            var lastBoocking = await _unitOfWork.Bookings.GetLastBooking(_userSessionGetter.UserId);
-            if (lastBoocking != null)
+            //var lastBoocking = await _unitOfWork.Bookings.GetLastBooking(_userSessionGetter.UserId);
+            //if (lastBoocking != null)
+            //{
+            //    var chek = await _unitOfWork.RentCheques.Find(x => x.RentId == lastBoocking.Id);
+            //    if (chek == null)
+            //    {
+            //        throw new NotFoundException("Вы уже арендуете авто, и не можете начать новую аренду");//Заменить ошибку
+            //    }
+            //}
+            if (await CheckIsRentCar(bookingDTO.CarId))
             {
-                var chek = await _unitOfWork.RentCheques.Find(x => x.RentId == lastBoocking.Id);
-                if (chek == null)
-                {
-                    throw new NotFoundException("Вы уже арендуете авто, и не можете начать новую аренду");//Заменить ошибку
-                }
+                throw new NotFoundException("Машина уже арендована");
             }
             var booking = _map.Map<Booking>(bookingDTO);
             booking.ClientId = _userSessionGetter.UserId;
@@ -41,7 +50,19 @@ namespace Rents.Service.Services
             await _unitOfWork.Bookings.AddEntities(booking);
             await _unitOfWork.Bookings.SaveChanges();
         }
-
+        // GetCarIsRent
+        // https://localhost:7215
+        // /api/Cars/GetCarIsRent/
+        private async Task<bool> CheckIsRentCar(Guid carId)
+        {
+            UriEndPoint uriEndPoint = new UriEndPoint(); //Заменить на взятие адреса из конфигурации
+            _httpClient.BaseAddress = new Uri("https://localhost:7215");
+            HttpResponseMessage response = await _httpClient.GetAsync("/api/Cars/GetCarIsRent?id="+carId);
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            var isRent = JsonSerializer.Deserialize<bool>(responseBody);
+            return isRent;
+        }
         public async Task RemoveBooking(Guid id)
         {
             var booking = await _unitOfWork.Bookings.GetEntity(id);
