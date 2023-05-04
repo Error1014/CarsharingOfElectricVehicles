@@ -29,11 +29,10 @@ namespace Clients.Api.Controllers
             var list = await _clientService.GetClients(pageFilter);
             return Ok(list);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> AddClient(ClientContactDTO clientDTO)
+        [HttpPost("id")]
+        public async Task<IActionResult> AddClient(Guid id, ClientDocumentDTO clientDTO)
         {
-            await _clientService.AddClient(clientDTO);
+            await _clientService.AddClient(id, clientDTO);
             return Ok();
         }
         [RoleAuthorize("Operator")]
@@ -48,6 +47,13 @@ namespace Clients.Api.Controllers
         public async Task<IActionResult> UpdateClientByClient(Guid id, ClientContactDTO clientDTO)
         {
             await _clientService.UpdateClient(id, clientDTO);
+            return Ok();
+        }
+
+        [HttpPut(nameof(UpdateBalance) + "id")]
+        public async Task<IActionResult> UpdateBalance(decimal summ)
+        {
+            await _clientService.UpdateBalance(summ);
             return Ok();
         }
         [RoleAuthorize("Client")]

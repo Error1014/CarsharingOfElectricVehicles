@@ -42,15 +42,14 @@ namespace Clients.Service.Services
             return _map.Map<IEnumerable<ClientContactDTO>>(clients);
         }
 
-        public async Task AddClient(ClientContactDTO clientDTO)
+        public async Task AddClient(Guid id, ClientDocumentDTO clientDTO)
         {
             var client = _map.Map<Client>(clientDTO);
-            client.Id = _userSessionGetter.UserId;
+            client.Id = id;
             await _unitOfWork.Clients.AddEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
-
-        public async Task UpdateClient(Guid id,ClientDocumentDTO clientDTO)
+        public async Task UpdateClient(Guid id, ClientDocumentDTO clientDTO)
         {
             var client = _map.Map<Client>(clientDTO);
             client.Id = id;
@@ -73,5 +72,12 @@ namespace Clients.Service.Services
             await _unitOfWork.Clients.SaveChanges();
         }
 
+        public async Task UpdateBalance(decimal summ)
+        {
+            var client = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
+            client.Balance += summ;
+            _unitOfWork.Clients.UpdateEntities(client);
+            await _unitOfWork.Clients.SaveChanges();
+        }
     }
 }

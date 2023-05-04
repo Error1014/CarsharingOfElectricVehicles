@@ -6,11 +6,17 @@ using Infrastructure;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
+using Infrastructure.HelperModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using XAct;
 
 namespace Authorization.Service.Services
 {
@@ -18,10 +24,12 @@ namespace Authorization.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IConfiguration _configuration;
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
+            _configuration = configuration;
         }
         public async Task AddUser(UserDTO userDTO)
         {
@@ -29,10 +37,6 @@ namespace Authorization.Service.Services
             if (user !=null)
             {
                 throw new DublicateException("Пользователь с таким логином уже существует");
-            }
-            if (userDTO.RoleId==3)
-            {
-                //создать соответствующую запись в Client
             }
             user = _map.Map<User>(userDTO);
             user.Password = GeneratorHash.GetHash(userDTO.Password);

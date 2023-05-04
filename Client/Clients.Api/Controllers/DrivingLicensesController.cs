@@ -44,6 +44,7 @@ namespace Clients.Api.Controllers
             await _drivingLicenseService.UpdateDrivingLicense(id, drivingLicenseDTO);
             return Ok();
         }
+
         [RoleAuthorize("Admin")]
         [HttpDelete("id")]
         public async Task<IActionResult> RemoveDrivingLicense(Guid id)
