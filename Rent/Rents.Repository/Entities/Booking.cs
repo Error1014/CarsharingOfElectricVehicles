@@ -11,7 +11,7 @@ namespace Rents.Repository.Entities
     {
         public Guid ClientId { get; set; }
         public Guid CarId { get; set; }
-        public DateTime DateTimeBeginRent { get; set; }
+        public DateTime DateTimeBeginBoocking { get; set; }
         public Guid TariffId { get; set; }
         public virtual Tariff? Tariff { get; set; }
     }

@@ -15,5 +15,11 @@ namespace Rents.Repository.Repositories
         public BookingRepository(DbContext context) : base(context)
         {
         }
+
+        public async Task<Booking?> GetLastBooking(Guid clientId)
+        {
+            var booking = await Set.Where(x => x.ClientId == clientId).OrderBy(x=>x.DateTimeBeginBoocking).LastOrDefaultAsync();
+            return booking;
+        }
     }
 }

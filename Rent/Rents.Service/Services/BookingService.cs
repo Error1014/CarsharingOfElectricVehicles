@@ -26,9 +26,18 @@ namespace Rents.Service.Services
         }
         public async Task AddBooking(BookingDTO bookingDTO)
         {
-            //проверка на то есть ли у клиента арендованые машины на данный момент
+            var lastBoocking = await _unitOfWork.Bookings.GetLastBooking(_userSessionGetter.UserId);
+            if (lastBoocking != null)
+            {
+                var chek = await _unitOfWork.RentCheques.Find(x => x.RentId == lastBoocking.Id);
+                if (chek == null)
+                {
+                    throw new NotFoundException("Вы уже арендуете авто, и не можете начать новую аренду");//Заменить ошибку
+                }
+            }
             var booking = _map.Map<Booking>(bookingDTO);
             booking.ClientId = _userSessionGetter.UserId;
+            booking.DateTimeBeginBoocking = DateTime.Now;
             await _unitOfWork.Bookings.AddEntities(booking);
             await _unitOfWork.Bookings.SaveChanges();
         }
