@@ -16,6 +16,12 @@ namespace Rents.Repository.Repositories
         {
         }
 
+        public async Task<IEnumerable<Booking>> GetAllBookingByClient(Guid clientId)
+        {
+            var booking = await Set.Where(x => x.ClientId == clientId).OrderByDescending(x => x.DateTimeBeginBoocking).ToListAsync();
+            return booking;
+        }
+
         public async Task<Booking?> GetLastBooking(Guid clientId)
         {
             var booking = await Set.Where(x => x.ClientId == clientId).OrderBy(x=>x.DateTimeBeginBoocking).LastOrDefaultAsync();

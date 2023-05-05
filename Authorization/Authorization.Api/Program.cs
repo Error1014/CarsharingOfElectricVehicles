@@ -14,7 +14,6 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.RegistrationDbContext<UserContext>(builder.Configuration);
 
-//await builder.Configuration.ConectionToConfiguration();
 builder.Services.Configure<JwtOptions>(
     builder.Configuration.GetSection("JwtOptions"));
 builder.Services.AddEndpointsApiExplorer();

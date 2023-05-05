@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Net.Http.Json;
-using XAct;
-using System.Text.Json;
-using Microsoft.AspNetCore.Http.Features;
+﻿using Infrastructure.Attributes;
+using Infrastructure.DTO;
 using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
-using Infrastructure.Attributes;
-using Infrastructure.DTO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Infrastructure.Middlewares
 {
@@ -15,7 +14,7 @@ namespace Infrastructure.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly UriEndPoint uriEndPoint;
-        public AuthenticationMiddleware(RequestDelegate next,IOptions<UriEndPoint> options)
+        public AuthenticationMiddleware(RequestDelegate next, IOptions<UriEndPoint> options)
         {
             _next = next;
             uriEndPoint = options.Value;
@@ -29,14 +28,26 @@ namespace Infrastructure.Middlewares
             var endpoint = context.Features.Get<IEndpointFeature>()?.Endpoint;
             var attribute = endpoint?.Metadata.GetMetadata<RoleAuthorizeAttribute>();
             var roles = attribute?.Roles;
-
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            var response = await _httpClient.PostAsync(uriEndPoint.Uri + roles, JsonContent.Create(""));
+            var response = new HttpResponseMessage();
+            if (roles == null)
+            {
+                response = await _httpClient.PostAsync($"{uriEndPoint.Uri}", JsonContent.Create(""));
+            }
+            else
+            {
+                response = await _httpClient.PostAsync($"{uriEndPoint.Uri}?role={roles}", JsonContent.Create(""));
+            }
+            
             response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var session = JsonSerializer.Deserialize<UserSession>(responseBody);
+            string responseBody =await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var session = JsonSerializer.Deserialize<UserSession>(responseBody, options);
             userSession.UserId = session.UserId;
             userSession.Role = session.Role;
             await _next(context);

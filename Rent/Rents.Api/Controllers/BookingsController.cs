@@ -23,11 +23,17 @@ namespace Rents.Api.Controllers
             var result = await _bookingService.GetBooking(Id);
             return Ok(result);
         }
-
+        [RoleAuthorize("Admin Operator")]
         [HttpGet(nameof(GetBookings))]
         public async Task<IEnumerable<BookingDTO>> GetBookings()
         {
             var result = await _bookingService.GetBookings();
+            return result;
+        }
+        [HttpGet(nameof(GetMyBookings))]
+        public async Task<IEnumerable<BookingDTO>> GetMyBookings()
+        {
+            var result = await _bookingService.GetBookingsByClient();
             return result;
         }
         [RoleAuthorize("Client")]

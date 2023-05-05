@@ -11,5 +11,6 @@ namespace Rents.Repository.Interfaces
     public interface IBookingRepository : IRepository<Booking, Guid>
     {
         Task<Booking> GetLastBooking(Guid clientId);
+        Task<IEnumerable<Booking>> GetAllBookingByClient(Guid clientId);
     }
 }

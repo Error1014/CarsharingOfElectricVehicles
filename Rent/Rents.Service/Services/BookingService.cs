@@ -31,15 +31,15 @@ namespace Rents.Service.Services
         }
         public async Task AddBooking(BookingDTO bookingDTO)
         {
-            //var lastBoocking = await _unitOfWork.Bookings.GetLastBooking(_userSessionGetter.UserId);
-            //if (lastBoocking != null)
-            //{
-            //    var chek = await _unitOfWork.RentCheques.Find(x => x.RentId == lastBoocking.Id);
-            //    if (chek == null)
-            //    {
-            //        throw new NotFoundException("Вы уже арендуете авто, и не можете начать новую аренду");//Заменить ошибку
-            //    }
-            //}
+            var lastBoocking = await _unitOfWork.Bookings.GetLastBooking(_userSessionGetter.UserId);
+            if (lastBoocking != null)
+            {
+                var chek = await _unitOfWork.RentCheques.Find(x => x.RentId == lastBoocking.Id);
+                if (chek == null)
+                {
+                    throw new NotFoundException("Вы уже арендуете авто, и не можете начать новую аренду");//Заменить ошибку
+                }
+            }
             if (await CheckIsRentCar(bookingDTO.CarId))
             {
                 throw new NotFoundException("Машина уже арендована");
@@ -59,7 +59,7 @@ namespace Rents.Service.Services
             _httpClient.BaseAddress = new Uri("https://localhost:7215");
             HttpResponseMessage response = await _httpClient.GetAsync("/api/Cars/GetCarIsRent?id="+carId);
             response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
             var isRent = JsonSerializer.Deserialize<bool>(responseBody);
             return isRent;
         }
@@ -85,6 +85,12 @@ namespace Rents.Service.Services
         {
             var bookin = await _unitOfWork.Bookings.GetAll();
             var result = _map.Map<IEnumerable<BookingDTO>>(bookin);
+            return result;
+        }
+        public async Task<IEnumerable<BookingDTO>> GetBookingsByClient()
+        {
+            var boockin = await _unitOfWork.Bookings.GetAllBookingByClient(_userSessionGetter.UserId);
+            var result = _map.Map<IEnumerable<BookingDTO>>(boockin);
             return result;
         }
 
