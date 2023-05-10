@@ -68,5 +68,20 @@ namespace Cars.Service.Services
             _unitOfWork.Cars.UpdateEntities(car);
             await _unitOfWork.Cars.SaveChanges();
         }
+        public async Task UpdateCarRent(Guid Id, bool isRent)
+        {
+            var car = await _unitOfWork.Cars.GetEntity(Id);
+            if (car.IsRent == true && isRent == true)
+            {
+                throw new NotFoundException("Машина уже арендована");
+            }
+            if (car.IsRepair)
+            {
+                throw new NotFoundException("Машина на техобслуживании");
+            }
+            car.IsRent = isRent;
+            _unitOfWork.Cars.UpdateEntities(car);
+            await _unitOfWork.Cars.SaveChanges();
+        }
     }
 }

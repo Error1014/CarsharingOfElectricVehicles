@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace Rents.Service.Services
@@ -40,24 +41,33 @@ namespace Rents.Service.Services
                     throw new NotFoundException("Вы уже арендуете авто, и не можете начать новую аренду");//Заменить ошибку
                 }
             }
-            if (await CheckIsRentCar(bookingDTO.CarId))
+            bool isRent = await RentCar(bookingDTO.CarId);
+            if (isRent)
             {
-                throw new NotFoundException("Машина уже арендована");
+                var booking = _map.Map<Booking>(bookingDTO);
+                booking.ClientId = _userSessionGetter.UserId;
+                booking.DateTimeBeginBoocking = DateTime.Now;
+                await _unitOfWork.Bookings.AddEntities(booking);
+                await _unitOfWork.Bookings.SaveChanges();
             }
-            var booking = _map.Map<Booking>(bookingDTO);
-            booking.ClientId = _userSessionGetter.UserId;
-            booking.DateTimeBeginBoocking = DateTime.Now;
-            await _unitOfWork.Bookings.AddEntities(booking);
-            await _unitOfWork.Bookings.SaveChanges();
+            
         }
-        // GetCarIsRent
-        // https://localhost:7215
-        // /api/Cars/GetCarIsRent/
-        private async Task<bool> CheckIsRentCar(Guid carId)
+
+        //private async Task<bool> CheckIsRentCar(Guid carId)
+        //{
+        //    UriEndPoint uriEndPoint = new UriEndPoint(); //Заменить на взятие адреса из конфигурации
+        //    _httpClient.BaseAddress = new Uri("https://localhost:7215");
+        //    HttpResponseMessage response = await _httpClient.GetAsync("/api/Cars/GetCarIsRent?id="+carId);
+        //    response.EnsureSuccessStatusCode();
+        //    var responseBody = await response.Content.ReadAsStringAsync();
+        //    var isRent = JsonSerializer.Deserialize<bool>(responseBody);
+        //    return isRent;
+        //}
+        private async Task<bool> RentCar(Guid carId)
         {
             UriEndPoint uriEndPoint = new UriEndPoint(); //Заменить на взятие адреса из конфигурации
             _httpClient.BaseAddress = new Uri("https://localhost:7215");
-            HttpResponseMessage response = await _httpClient.GetAsync("/api/Cars/GetCarIsRent?id="+carId);
+            HttpResponseMessage response = await _httpClient.PutAsync("/api/Cars/UpdateRentCar?id="+carId+"&isRent="+true, JsonContent.Create(""));
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             var isRent = JsonSerializer.Deserialize<bool>(responseBody);
