@@ -45,9 +45,9 @@ namespace Rents.Api.Controllers
         }
         [RoleAuthorize("Client")]
         [HttpPut]
-        public async Task<IActionResult> UpdateBooking(Guid Id, [FromQuery] BookingDTO bookingDTO)
+        public async Task<IActionResult> UpdateBooking(Guid carId)
         {
-            await _bookingService.UpdateBooking(Id, bookingDTO);
+            await _bookingService.UpdateBookingByClient(carId);
             return Ok();
         }
         [HttpDelete]

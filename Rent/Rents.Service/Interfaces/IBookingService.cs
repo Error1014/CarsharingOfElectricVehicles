@@ -15,5 +15,6 @@ namespace Rents.Service.Interfaces
         Task AddBooking(BookingDTO bookingDTO);
         Task RemoveBooking(Guid id);
         Task UpdateBooking(Guid id, BookingDTO bookingDTO);
+        Task UpdateBookingByClient(Guid? carId);
     }
 }

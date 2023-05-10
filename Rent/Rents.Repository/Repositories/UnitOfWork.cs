@@ -27,7 +27,9 @@ namespace Rents.Repository.Repositories
 
         public ITariffRepository Tariffs { get; private set; }
 
-        public int Complete()
+        public IRentRepository Rents { get; private set; }
+
+    public int Complete()
         {
             return _dbContext.SaveChanges();
         }

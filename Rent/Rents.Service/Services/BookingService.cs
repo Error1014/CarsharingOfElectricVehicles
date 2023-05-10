@@ -41,7 +41,7 @@ namespace Rents.Service.Services
                     throw new NotFoundException("Вы уже арендуете авто, и не можете начать новую аренду");//Заменить ошибку
                 }
             }
-            bool isRent = await RentCar(bookingDTO.CarId);
+            bool isRent = await UpdateRentCar(bookingDTO.CarId, true);
             if (isRent)
             {
                 var booking = _map.Map<Booking>(bookingDTO);
@@ -53,24 +53,14 @@ namespace Rents.Service.Services
             
         }
 
-        //private async Task<bool> CheckIsRentCar(Guid carId)
-        //{
-        //    UriEndPoint uriEndPoint = new UriEndPoint(); //Заменить на взятие адреса из конфигурации
-        //    _httpClient.BaseAddress = new Uri("https://localhost:7215");
-        //    HttpResponseMessage response = await _httpClient.GetAsync("/api/Cars/GetCarIsRent?id="+carId);
-        //    response.EnsureSuccessStatusCode();
-        //    var responseBody = await response.Content.ReadAsStringAsync();
-        //    var isRent = JsonSerializer.Deserialize<bool>(responseBody);
-        //    return isRent;
-        //}
-        private async Task<bool> RentCar(Guid carId)
+        private async Task<bool> UpdateRentCar(Guid? carId, bool isRent)
         {
             UriEndPoint uriEndPoint = new UriEndPoint(); //Заменить на взятие адреса из конфигурации
             _httpClient.BaseAddress = new Uri("https://localhost:7215");
-            HttpResponseMessage response = await _httpClient.PutAsync("/api/Cars/UpdateRentCar?id="+carId+"&isRent="+true, JsonContent.Create(""));
+            HttpResponseMessage response = await _httpClient.PutAsync("/api/Cars/UpdateRentCar?id="+carId+"&isRent=" + isRent, JsonContent.Create(""));
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
-            var isRent = JsonSerializer.Deserialize<bool>(responseBody);
+            isRent = JsonSerializer.Deserialize<bool>(responseBody);
             return isRent;
         }
         public async Task RemoveBooking(Guid id)
@@ -112,5 +102,30 @@ namespace Rents.Service.Services
             _unitOfWork.Bookings.UpdateEntities(booking);
             await _unitOfWork.Bookings.SaveChanges();
         }
+
+        public async Task UpdateBookingByClient(Guid? carId)
+        {
+            //var lastBoocking = await _unitOfWork.Bookings.GetLastBooking(_userSessionGetter.UserId);
+            //if (lastBoocking != null)
+            //{
+            //    var chek = await _unitOfWork.RentCheques.Find(x => x.RentId == lastBoocking.Id);
+            //    if (chek == null)
+            //    {
+            //        if (true)
+            //        {
+
+            //        }
+            //        await UpdateRentCar(carId, true);
+            //        await UpdateRentCar(lastBoocking.CarId, false);
+            //        lastBoocking.CarId = carId;
+            //        await _unitOfWork.Bookings.SaveChanges();
+            //    }
+            //    else
+            //    {
+            //        throw new NotFoundException("У вас нет активной аренды");//Заменить ошибку
+            //    }
+            //}
+        }
+
     }
 }

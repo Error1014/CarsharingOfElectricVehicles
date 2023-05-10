@@ -11,6 +11,7 @@ namespace Rents.Repository.Interfaces
         IBookingRepository Bookings { get; }
         IRentChequeRepository RentCheques { get; }
         ITariffRepository Tariffs { get; }
+        IRentRepository Rents { get; }
         int Complete();
     }
 }

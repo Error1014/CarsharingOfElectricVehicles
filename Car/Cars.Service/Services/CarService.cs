@@ -75,7 +75,7 @@ namespace Cars.Service.Services
             {
                 throw new NotFoundException("Машина уже арендована");
             }
-            if (car.IsRepair)
+            if (car.IsRepair && isRent == true)
             {
                 throw new NotFoundException("Машина на техобслуживании");
             }
