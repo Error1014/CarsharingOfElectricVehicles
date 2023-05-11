@@ -14,5 +14,7 @@ namespace Rents.Service.Interfaces
         Task<IEnumerable<RentDTO>> GetRents(PageFilter pageFilter);
         Task AddRent(AddRentDTO rentDTO);
         Task CancelBookingCar();
+        Task StartTrip();
+        Task EndTrip(decimal km);
     }
 }

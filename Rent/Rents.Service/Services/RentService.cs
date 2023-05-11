@@ -67,6 +67,25 @@ namespace Rents.Service.Services
             return result;
         }
 
+        public async Task StartTrip()
+        {
+            var rent = await _unitOfWork.Rents.GetActualBooking(_userSessionGetter.UserId);
+            rent.IsFinalSelectCar = true;
+            rent.DateTimeBeginRent = DateTime.Now;
+            _unitOfWork.Rents.UpdateEntities(rent);
+            await _unitOfWork.Rents.SaveChanges();
+        }
+
+        public async Task EndTrip(decimal km)
+        {
+            var rent = await _unitOfWork.Rents.GetActualBooking(_userSessionGetter.UserId);
+            rent.DateTimeEndRent = DateTime.Now;
+            rent.KilometersOutsideTariff = km;
+            rent.TotalPrice = await GetTotalPrice(rent.TariffId, km);
+            _unitOfWork.Rents.UpdateEntities(rent);
+            await _unitOfWork.Rents.SaveChanges();
+        }
+
         private async Task<bool> UpdateRentCar(Guid? carId, bool isRent)
         {
             UriEndPoint uriEndPoint = new UriEndPoint(); //Заменить на взятие адреса из конфигурации
@@ -84,6 +103,13 @@ namespace Rents.Service.Services
             var responseBody = await response.Content.ReadAsStringAsync();
             isRent = JsonSerializer.Deserialize<bool>(responseBody);
             return isRent;
+        }
+
+        private async Task<decimal> GetTotalPrice(Guid tariffId, decimal km)
+        {
+            var tariff = await _unitOfWork.Tariffs.GetEntity(tariffId);
+            var result = km * tariff.AdditionalPrice + tariff.Price;
+            return result;
         }
     }
 }

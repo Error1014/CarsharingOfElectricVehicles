@@ -43,5 +43,18 @@ namespace Rents.Api.Controllers
             await _rentsService.CancelBookingCar();
             return Ok();
         }
+        [RoleAuthorize("Client")]
+        [HttpPut(nameof(StartTrip))]
+        public async Task<IActionResult> StartTrip()
+        {
+            await _rentsService.StartTrip();
+            return Ok();
+        }
+        [HttpPut(nameof(EndTrip))]
+        public async Task<IActionResult> EndTrip([FromQuery] decimal kilometersOutsideTariff)
+        {
+            await _rentsService.EndTrip(kilometersOutsideTariff);
+            return Ok();
+        }
     }
 }
