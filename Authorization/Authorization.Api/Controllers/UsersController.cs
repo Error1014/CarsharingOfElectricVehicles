@@ -76,7 +76,7 @@ namespace Authorization.Api.Controllers
 
         #region запросы авторизации
         [HttpPost(nameof(Login))]
-        public async Task<IResult> Login([FromQuery] LoginDTO loginDTO)
+        public async Task<IResult> Login(LoginDTO loginDTO)
         {
             var person = await _userService.GetUserByLogin(loginDTO);
 
