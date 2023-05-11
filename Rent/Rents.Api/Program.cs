@@ -49,7 +49,7 @@ builder.Services.AddControllers();
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<ITariffService, TariffService>()
-    .AddScoped<IBookingService, BookingService>();
+    .AddScoped<IRentService, RentService>();
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
 builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());

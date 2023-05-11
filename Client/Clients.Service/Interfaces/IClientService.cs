@@ -13,7 +13,6 @@ namespace Clients.Service.Interfaces
         Task<ClientContactDTO> GetClient(Guid Id);
         Task<IEnumerable<ClientContactDTO>> GetClients(PageFilter pageFilter);
         Task AddClient(Guid id,ClientDocumentDTO clientDTO);
-        Task AddClient(Guid id);
         Task UpdateClient(Guid id,ClientDocumentDTO clientDTO);
         Task UpdateClient(Guid id, ClientContactDTO clientDTO);
         Task UpdateBalance(decimal summ);

@@ -14,8 +14,7 @@ namespace Rents.Repository.Context
         {
 
         }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<RentCheque> RentCheques { get; set; }
+        public DbSet<Rent> Rents { get; set; }
         public DbSet<Tariff> Tariffs { get; set; }
     }
 }

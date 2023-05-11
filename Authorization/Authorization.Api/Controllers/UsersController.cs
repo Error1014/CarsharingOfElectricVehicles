@@ -60,7 +60,7 @@ namespace Authorization.Api.Controllers
         }
         [RoleAuthorize("Operator Client")]
         [HttpPut]
-        public async Task<IActionResult> Update(Guid id,UserDTO userDTO)
+        public async Task<IActionResult> Update(Guid id, UserDTO userDTO)
         {
             await _userService.UpdateUser(id, userDTO);
             return Ok();
@@ -76,7 +76,7 @@ namespace Authorization.Api.Controllers
 
         #region запросы авторизации
         [HttpPost(nameof(Login))]
-        public async Task<IResult> Login(LoginDTO loginDTO)
+        public async Task<IResult> Login([FromQuery] LoginDTO loginDTO)
         {
             var person = await _userService.GetUserByLogin(loginDTO);
 
@@ -109,14 +109,22 @@ namespace Authorization.Api.Controllers
         }
 
         [HttpPost(nameof(Authorize))]
-        public async Task<ActionResult<UserSession>> Authorize([FromQuery] string? role)
+        public IActionResult Authorize([FromQuery] string? role)
         {
 
             UserSession userSession = new UserSession();
             var token = ViewData["Authorization"].ToString();
-            if (role == null) return Ok(JsonSerializer.Serialize(userSession));
-            var roles = role.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            if (token != "Bearer")
+            var roles = role?.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (roles == null)
+            {
+                roles = new List<string>();
+                roles.Add("Client");
+            }
+            if (token == "Bearer")
+            {
+                return Ok(userSession);
+            }
+            if (token != "")
             {
                 try
                 {

@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Rents.Repository.Interfaces
 {
-    public interface IBookingRepository : IRepository<Booking, Guid>
+    public interface IRentRepository : IRepository<Rent, Guid>
     {
+        Task<Rent> GetActualBooking(Guid clientId); 
     }
 }

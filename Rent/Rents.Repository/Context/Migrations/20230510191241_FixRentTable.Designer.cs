@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rents.Repository.Context;
 
@@ -11,9 +12,11 @@ using Rents.Repository.Context;
 namespace Rents.Repository.Migrations
 {
     [DbContext(typeof(RentContext))]
-    partial class RentContextModelSnapshot : ModelSnapshot
+    [Migration("20230510191241_FixRentTable")]
+    partial class FixRentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,13 +49,13 @@ namespace Rents.Repository.Migrations
                     b.Property<bool>("IsFinalSelectCar")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("KilometersOutsideTariff")
+                    b.Property<decimal?>("KilometersOutsideTariff")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("TariffId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<decimal?>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -78,7 +81,7 @@ namespace Rents.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

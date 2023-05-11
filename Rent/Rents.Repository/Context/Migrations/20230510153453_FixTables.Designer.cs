@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rents.Repository.Context;
 
@@ -11,9 +12,11 @@ using Rents.Repository.Context;
 namespace Rents.Repository.Migrations
 {
     [DbContext(typeof(RentContext))]
-    partial class RentContextModelSnapshot : ModelSnapshot
+    [Migration("20230510153453_FixTables")]
+    partial class FixTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,10 +40,10 @@ namespace Rents.Repository.Migrations
                     b.Property<DateTime>("DateTimeBeginBoocking")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateTimeBeginRent")
+                    b.Property<DateTime>("DateTimeBeginRent")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateTimeEndRent")
+                    b.Property<DateTime>("DateTimeEndRent")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsFinalSelectCar")
@@ -78,7 +81,7 @@ namespace Rents.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

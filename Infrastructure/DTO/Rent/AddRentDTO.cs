@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.DTO
+namespace Infrastructure.DTO.Rent
 {
-    public class BookingDTO
+    public class AddRentDTO
     {
         public Guid CarId { get; set; }
         public Guid TariffId { get; set; }

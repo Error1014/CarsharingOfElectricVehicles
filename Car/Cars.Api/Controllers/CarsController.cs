@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Cars.Service.Interfaces;
+using Infrastructure.Attributes;
 using Infrastructure.DTO;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
@@ -19,7 +20,14 @@ namespace Cars.Api.Controllers
         [HttpGet(nameof(GetCar))]
         public async Task<CarInfoDTO> GetCar(Guid Id)
         {
-           return await _carService.GetCar(Id);
+            return await _carService.GetCar(Id);
+        }
+
+        [HttpGet(nameof(GetCarIsRent))]
+        public async Task<IActionResult> GetCarIsRent(Guid id)
+        {
+            var car = await _carService.GetCar(id);
+            return Ok(car.IsRent);
         }
         [HttpGet(nameof(GetCars))]
         public async Task<IEnumerable<CarInfoDTO>> GetCars([FromQuery] PageFilter pageFilter)
@@ -39,7 +47,21 @@ namespace Cars.Api.Controllers
             await _carService.UpdateCar(id, carDTO);
             return Ok();
         }
-        [HttpDelete(nameof(UpdateCar))]
+        [HttpPut(nameof(BookingCar))]
+        public async Task<IActionResult> BookingCar(Guid id)
+        {
+            await _carService.BookingCar(id);
+            var car = await _carService.GetCar(id);
+            return Ok(car.IsRent);
+        }
+        [HttpPut(nameof(CancelBookingCar))]
+        public async Task<IActionResult> CancelBookingCar(Guid id)
+        {
+            await _carService.CancelBookingCar(id);
+            var car = await _carService.GetCar(id);
+            return Ok(car.IsRent);
+        }
+        [HttpDelete(nameof(RemoveCar))]
         public async Task<IActionResult> RemoveCar(Guid id)
         {
             await _carService.RemoveCar(id);

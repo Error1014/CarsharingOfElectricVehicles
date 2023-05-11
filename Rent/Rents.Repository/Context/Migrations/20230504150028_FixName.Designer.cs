@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rents.Repository.Context;
 
@@ -11,9 +12,11 @@ using Rents.Repository.Context;
 namespace Rents.Repository.Migrations
 {
     [DbContext(typeof(RentContext))]
-    partial class RentContextModelSnapshot : ModelSnapshot
+    [Migration("20230504150028_FixName")]
+    partial class FixName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace Rents.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Rents.Repository.Entities.Rent", b =>
+            modelBuilder.Entity("Rents.Repository.Entities.Booking", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,19 +40,32 @@ namespace Rents.Repository.Migrations
                     b.Property<DateTime>("DateTimeBeginBoocking")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateTimeBeginRent")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateTimeEndRent")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsFinalSelectCar")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("KilometersOutsideTariff")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid>("TariffId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TariffId");
+
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("Rents.Repository.Entities.RentCheque", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTimeBeginRent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTimeEndRent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("RentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("TotalPrice")
@@ -57,9 +73,9 @@ namespace Rents.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TariffId");
+                    b.HasIndex("BookingId");
 
-                    b.ToTable("Rents");
+                    b.ToTable("RentCheques");
                 });
 
             modelBuilder.Entity("Rents.Repository.Entities.Tariff", b =>
@@ -78,7 +94,7 @@ namespace Rents.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -86,7 +102,7 @@ namespace Rents.Repository.Migrations
                     b.ToTable("Tariffs");
                 });
 
-            modelBuilder.Entity("Rents.Repository.Entities.Rent", b =>
+            modelBuilder.Entity("Rents.Repository.Entities.Booking", b =>
                 {
                     b.HasOne("Rents.Repository.Entities.Tariff", "Tariff")
                         .WithMany()
@@ -95,6 +111,17 @@ namespace Rents.Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("Tariff");
+                });
+
+            modelBuilder.Entity("Rents.Repository.Entities.RentCheque", b =>
+                {
+                    b.HasOne("Rents.Repository.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
                 });
 #pragma warning restore 612, 618
         }
