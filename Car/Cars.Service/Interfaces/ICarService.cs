@@ -13,8 +13,9 @@ namespace Cars.Service.Interfaces
         Task<CarInfoDTO> GetCar(Guid id);
         Task<IEnumerable<CarInfoDTO>> GetCars(PageFilter pageFilter);
         Task AddCar(CarAddUpdateDTO carDTO);
-        Task UpdateCar(Guid Id,CarAddUpdateDTO carDTO);
-        Task UpdateCarRent(Guid Id,bool isRent);
-        Task RemoveCar(Guid Id);
+        Task UpdateCar(Guid id,CarAddUpdateDTO carDTO);
+        Task BookingCar(Guid id);
+        Task CancelBookingCar(Guid id);
+        Task RemoveCar(Guid id);
     }
 }

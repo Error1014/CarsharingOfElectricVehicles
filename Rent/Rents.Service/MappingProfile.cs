@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Infrastructure.DTO;
+using Infrastructure.DTO.Rent;
 using Rents.Repository.Entities;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,10 @@ namespace Rents.Service
         {
             CreateMap<Tariff, TariffDTO>();
             CreateMap<Tariff, TariffDTO>().ReverseMap();
-            CreateMap<Booking, BookingDTO>();
-            CreateMap<Booking, BookingDTO>().ReverseMap();
+            CreateMap<Rent, RentDTO>();
+            CreateMap<Rent, RentDTO>().ReverseMap();
+            CreateMap<Rent, AddRentDTO>();
+            CreateMap<Rent, AddRentDTO>().ReverseMap();
         }
     }
 }

@@ -47,10 +47,17 @@ namespace Cars.Api.Controllers
             await _carService.UpdateCar(id, carDTO);
             return Ok();
         }
-        [HttpPut(nameof(UpdateRentCar))]
-        public async Task<IActionResult> UpdateRentCar(Guid id, bool isRent)
+        [HttpPut(nameof(BookingCar))]
+        public async Task<IActionResult> BookingCar(Guid id)
         {
-            await _carService.UpdateCarRent(id, isRent);
+            await _carService.BookingCar(id);
+            var car = await _carService.GetCar(id);
+            return Ok(car.IsRent);
+        }
+        [HttpPut(nameof(CancelBookingCar))]
+        public async Task<IActionResult> CancelBookingCar(Guid id)
+        {
+            await _carService.CancelBookingCar(id);
             var car = await _carService.GetCar(id);
             return Ok(car.IsRent);
         }

@@ -15,8 +15,8 @@ namespace Rents.Repository.Entities
         public Guid TariffId { get; set; }
         public virtual Tariff? Tariff { get; set; }
         public bool IsFinalSelectCar { get; set; }
-        public DateTime DateTimeBeginRent { get; set; }
-        public DateTime DateTimeEndRent { get; set; }
+        public DateTime? DateTimeBeginRent { get; set; }
+        public DateTime? DateTimeEndRent { get; set; }
         public decimal KilometersOutsideTariff { get; set; }
         public decimal TotalPrice { get; set; }
     }

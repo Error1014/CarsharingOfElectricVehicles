@@ -54,23 +54,23 @@ namespace Cars.Service.Services
             return result;
         }
 
-        public async Task RemoveCar(Guid Id)
+        public async Task RemoveCar(Guid id)
         {
-            var car = await _unitOfWork.Cars.GetEntity(Id);
+            var car = await _unitOfWork.Cars.GetEntity(id);
             _unitOfWork.Cars.RemoveEntities(car);
             await _unitOfWork.Cars.SaveChanges();
         }
 
-        public async Task UpdateCar(Guid Id, CarAddUpdateDTO carDTO)
+        public async Task UpdateCar(Guid id, CarAddUpdateDTO carDTO)
         {
             var car = _map.Map<Car>(carDTO);
-            car.Id = Id;
+            car.Id = id;
             _unitOfWork.Cars.UpdateEntities(car);
             await _unitOfWork.Cars.SaveChanges();
         }
-        public async Task UpdateCarRent(Guid Id, bool isRent)
+        public async Task UpdateCarRent(Guid id, bool isRent)
         {
-            var car = await _unitOfWork.Cars.GetEntity(Id);
+            var car = await _unitOfWork.Cars.GetEntity(id);
             if (car.IsRent == true && isRent == true)
             {
                 throw new NotFoundException("Машина уже арендована");
@@ -80,6 +80,32 @@ namespace Cars.Service.Services
                 throw new NotFoundException("Машина на техобслуживании");
             }
             car.IsRent = isRent;
+            _unitOfWork.Cars.UpdateEntities(car);
+            await _unitOfWork.Cars.SaveChanges();
+        }
+        public async Task BookingCar(Guid id)
+        {
+            var car = await _unitOfWork.Cars.GetEntity(id);
+            if (car.IsRent == true)
+            {
+                throw new NotFoundException("Автомобиль уже арендован");
+            }
+            else if (car.IsRepair == true)
+            {
+                throw new NotFoundException("Автомобиль на данный момент на техобслуживании");
+            }
+            car.IsRent = true;
+            _unitOfWork.Cars.UpdateEntities(car);
+            await _unitOfWork.Cars.SaveChanges();
+        }
+        public async Task CancelBookingCar(Guid id)
+        {
+            var car = await _unitOfWork.Cars.GetEntity(id);
+            if (car == null)
+            {
+                throw new NotFoundException("Автомобиль не найден");
+            }
+            car.IsRent = false;
             _unitOfWork.Cars.UpdateEntities(car);
             await _unitOfWork.Cars.SaveChanges();
         }
