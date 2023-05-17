@@ -20,6 +20,7 @@ namespace Clients.Repository.Repositories
             Clients = new ClientRepository(context);
             Passports = new PassportRepository(context);
             DrivingLicenses = new DrivingLicenseRepository(context);
+            ClientSubscriptions = new ClientSubscriptionRepository(context);
         }
 
         public IClientRepository Clients { get; private set; }
@@ -27,6 +28,8 @@ namespace Clients.Repository.Repositories
         public IPassportRepository Passports { get; private set; }
 
         public IDrivingLicenseRepository DrivingLicenses { get; private set; }
+
+        public IClientSubscriptionRepository ClientSubscriptions { get; private set; }
 
         public int Complete()
         {

@@ -4,6 +4,7 @@ using Clients.Repository.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clients.Repository.Migrations
 {
     [DbContext(typeof(ClientContext))]
-    partial class ClientContextModelSnapshot : ModelSnapshot
+    [Migration("20230516151949_FixNewTable")]
+    partial class FixNewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,31 +120,6 @@ namespace Clients.Repository.Migrations
                     b.ToTable("Passport");
                 });
 
-            modelBuilder.Entity("Subscriptions.Repository.Entities.ClientSubscription", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateSubscription")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("QuantityMonths")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("SubscriptionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("ClientSubscription");
-                });
-
             modelBuilder.Entity("Clients.Repository.Entities.Client", b =>
                 {
                     b.HasOne("Clients.Repository.Entities.DrivingLicense", "DrivingLicense")
@@ -159,17 +137,6 @@ namespace Clients.Repository.Migrations
                     b.Navigation("DrivingLicense");
 
                     b.Navigation("Passport");
-                });
-
-            modelBuilder.Entity("Subscriptions.Repository.Entities.ClientSubscription", b =>
-                {
-                    b.HasOne("Clients.Repository.Entities.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Clients.Repository.Entities.DrivingLicense", b =>

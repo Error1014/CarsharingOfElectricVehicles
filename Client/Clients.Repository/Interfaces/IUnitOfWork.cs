@@ -11,6 +11,7 @@ namespace Clients.Repository.Interfaces
         IClientRepository Clients { get; }
         IPassportRepository Passports { get; }
         IDrivingLicenseRepository DrivingLicenses { get; }
+        IClientSubscriptionRepository ClientSubscriptions { get; }
         int Complete();
     }
 }

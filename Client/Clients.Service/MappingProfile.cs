@@ -2,6 +2,7 @@
 using Clients.Repository.Entities;
 using Infrastructure.DTO;
 using Infrastructure.DTO.ClientDTOs;
+using Subscriptions.Repository.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,10 @@ namespace Clients.Service
             CreateMap<Passport, PassportDTO>().ReverseMap();
             CreateMap<DrivingLicense, DrivingLicenseDTO>();
             CreateMap<DrivingLicense, DrivingLicenseDTO>().ReverseMap();
+            CreateMap<ClientSubscription, ClientSubscriptionDTO>();
+            CreateMap<ClientSubscription, ClientSubscriptionDTO>().ReverseMap();
+            CreateMap<ClientSubscription, SubscribleDTO>();
+            CreateMap<ClientSubscription, SubscribleDTO>().ReverseMap();
         }
     }
 }

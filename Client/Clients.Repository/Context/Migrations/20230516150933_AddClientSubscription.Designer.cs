@@ -4,6 +4,7 @@ using Clients.Repository.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clients.Repository.Migrations
 {
     [DbContext(typeof(ClientContext))]
-    partial class ClientContextModelSnapshot : ModelSnapshot
+    [Migration("20230516150933_AddClientSubscription")]
+    partial class AddClientSubscription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +34,9 @@ namespace Clients.Repository.Migrations
                     b.Property<decimal?>("Balance")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid?>("ClientSubscriptionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("DateRegistration")
                         .HasColumnType("Date");
 
@@ -47,6 +53,8 @@ namespace Clients.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientSubscriptionId");
 
                     b.HasIndex("DrivingLicenseId")
                         .IsUnique();
@@ -123,27 +131,23 @@ namespace Clients.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("DateSubscription")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("QuantityMonths")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("SubscriptionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
-
                     b.ToTable("ClientSubscription");
                 });
 
             modelBuilder.Entity("Clients.Repository.Entities.Client", b =>
                 {
+                    b.HasOne("Subscriptions.Repository.Entities.ClientSubscription", "ClientSubscription")
+                        .WithMany()
+                        .HasForeignKey("ClientSubscriptionId");
+
                     b.HasOne("Clients.Repository.Entities.DrivingLicense", "DrivingLicense")
                         .WithOne("Client")
                         .HasForeignKey("Clients.Repository.Entities.Client", "DrivingLicenseId")
@@ -156,20 +160,11 @@ namespace Clients.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ClientSubscription");
+
                     b.Navigation("DrivingLicense");
 
                     b.Navigation("Passport");
-                });
-
-            modelBuilder.Entity("Subscriptions.Repository.Entities.ClientSubscription", b =>
-                {
-                    b.HasOne("Clients.Repository.Entities.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Clients.Repository.Entities.DrivingLicense", b =>
