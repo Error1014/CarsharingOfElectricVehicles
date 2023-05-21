@@ -16,7 +16,7 @@ namespace Subscriptions.Api.Controllers
         {
             _subscriptionService = subscriptionService;
         }
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetSubscription(Guid id)
         {
             var result = await _subscriptionService.GetSubscription(id);
