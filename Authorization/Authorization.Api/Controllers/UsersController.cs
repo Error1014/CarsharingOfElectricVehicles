@@ -119,6 +119,8 @@ namespace Authorization.Api.Controllers
             {
                 roles = new List<string>();
                 roles.Add("Client");
+                roles.Add("Admin");
+                roles.Add("Operator");
             }
             if (token == "Bearer")
             {
