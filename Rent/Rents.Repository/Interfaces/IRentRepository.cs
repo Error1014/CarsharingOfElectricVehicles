@@ -10,6 +10,6 @@ namespace Rents.Repository.Interfaces
 {
     public interface IRentRepository : IRepository<Rent, Guid>
     {
-        Task<Rent> GetActualBooking(Guid clientId); 
+        Task<Rent> GetActualRent(Guid clientId); 
     }
 }

@@ -17,10 +17,16 @@ namespace Rents.Api.Controllers
             _rentsService = rentsService;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRent(Guid id)
         {
             var rent = await _rentsService.GetRent(id);
+            return Ok(rent);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetActualRent()
+        {
+            var rent = await _rentsService.GetRent();
             return Ok(rent);
         }
         [HttpGet(nameof(GetRents))]

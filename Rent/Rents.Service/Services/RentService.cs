@@ -59,7 +59,16 @@ namespace Rents.Service.Services
             var result = _map.Map<RentDTO>(rent);
             return result;
         }
-
+        public async Task<RentDTO> GetActualRent()
+        {
+            var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
+            if (rent == null)
+            {
+                throw new NotFoundException("Запись не найдена");
+            }
+            var result = _map.Map<RentDTO>(rent);
+            return result;
+        }
         public async Task<IEnumerable<RentDTO>> GetRents(PageFilter pageFilter)
         {
             var rent = await _unitOfWork.Rents.GetPage(pageFilter);
@@ -69,7 +78,7 @@ namespace Rents.Service.Services
 
         public async Task StartTrip()
         {
-            var rent = await _unitOfWork.Rents.GetActualBooking(_userSessionGetter.UserId);
+            var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
             rent.IsFinalSelectCar = true;
             rent.DateTimeBeginRent = DateTime.Now;
             _unitOfWork.Rents.UpdateEntities(rent);
@@ -78,7 +87,7 @@ namespace Rents.Service.Services
 
         public async Task EndTrip(decimal km)
         {
-            var rent = await _unitOfWork.Rents.GetActualBooking(_userSessionGetter.UserId);
+            var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
             rent.DateTimeEndRent = DateTime.Now;
             rent.KilometersOutsideTariff = km;
             rent.TotalPrice = await GetTotalPrice(rent.TariffId, km);
@@ -93,11 +102,11 @@ namespace Rents.Service.Services
             HttpResponseMessage response = new HttpResponseMessage();
             if (isRent)
             {
-                response = await _httpClient.PutAsync("/api/Cars/BookingCar?id=" + carId, JsonContent.Create(""));
+                response = await _httpClient.PutAsync("/api/Cars/BookingCar/" + carId, JsonContent.Create(""));
             }
             else
             {
-                response = await _httpClient.PutAsync("/api/Cars/CancelBookingCar?id=" + carId, JsonContent.Create(""));
+                response = await _httpClient.PutAsync("/api/Cars/CancelBookingCar/" + carId, JsonContent.Create(""));
             }
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();

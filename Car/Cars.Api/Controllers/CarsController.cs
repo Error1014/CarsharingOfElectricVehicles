@@ -17,13 +17,13 @@ namespace Cars.Api.Controllers
             _carService = carService;
         }
 
-        [HttpGet(nameof(GetCar))]
+        [HttpGet(nameof(GetCar) + ("/{id}"))]
         public async Task<CarInfoDTO> GetCar(Guid Id)
         {
             return await _carService.GetCar(Id);
         }
 
-        [HttpGet(nameof(GetCarIsRent))]
+        [HttpGet(nameof(GetCarIsRent) + ("/{id}"))]
         public async Task<IActionResult> GetCarIsRent(Guid id)
         {
             var car = await _carService.GetCar(id);
@@ -47,21 +47,21 @@ namespace Cars.Api.Controllers
             await _carService.UpdateCar(id, carDTO);
             return Ok();
         }
-        [HttpPut(nameof(BookingCar))]
+        [HttpPut(nameof(BookingCar) + ("/{id}"))]
         public async Task<IActionResult> BookingCar(Guid id)
         {
             await _carService.BookingCar(id);
             var car = await _carService.GetCar(id);
             return Ok(car.IsRent);
         }
-        [HttpPut(nameof(CancelBookingCar))]
+        [HttpPut(nameof(CancelBookingCar) + ("/{id}"))]
         public async Task<IActionResult> CancelBookingCar(Guid id)
         {
             await _carService.CancelBookingCar(id);
             var car = await _carService.GetCar(id);
             return Ok(car.IsRent);
         }
-        [HttpDelete(nameof(RemoveCar))]
+        [HttpDelete(nameof(RemoveCar) + ("/{id}"))]
         public async Task<IActionResult> RemoveCar(Guid id)
         {
             await _carService.RemoveCar(id);
