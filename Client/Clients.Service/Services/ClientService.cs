@@ -46,6 +46,7 @@ namespace Clients.Service.Services
         {
             var client = _map.Map<Client>(clientDTO);
             client.Id = id;
+            client.DateRegistration = DateTime.Today;
             await _unitOfWork.Clients.AddEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }

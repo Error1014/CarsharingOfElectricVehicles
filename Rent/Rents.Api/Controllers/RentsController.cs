@@ -17,10 +17,16 @@ namespace Rents.Api.Controllers
             _rentsService = rentsService;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRent(Guid id)
         {
             var rent = await _rentsService.GetRent(id);
+            return Ok(rent);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetActualRent()
+        {
+            var rent = await _rentsService.GetActualRent();
             return Ok(rent);
         }
         [HttpGet(nameof(GetRents))]
@@ -51,9 +57,9 @@ namespace Rents.Api.Controllers
             return Ok();
         }
         [HttpPut(nameof(EndTrip))]
-        public async Task<IActionResult> EndTrip([FromQuery] decimal kilometersOutsideTariff)
+        public async Task<IActionResult> EndTrip([FromQuery] decimal kilometers)
         {
-            await _rentsService.EndTrip(kilometersOutsideTariff);
+            await _rentsService.EndTrip(kilometers);
             return Ok();
         }
     }

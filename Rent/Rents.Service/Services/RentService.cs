@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Infrastructure.DTO;
+using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.DTO.Rent;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
@@ -17,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Rents.Service.Services
 {
-    public class RentService: IRentService
+    public class RentService : IRentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
@@ -43,7 +45,7 @@ namespace Rents.Service.Services
         }
         public async Task CancelBookingCar()
         {
-            var rent = await _unitOfWork.Rents.GetActualBooking(_userSessionGetter.UserId);
+            var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
             rent.IsFinalSelectCar = false;
             await UpdateRentCar(rent.CarId, false);
             _unitOfWork.Rents.UpdateEntities(rent);
@@ -59,7 +61,16 @@ namespace Rents.Service.Services
             var result = _map.Map<RentDTO>(rent);
             return result;
         }
-
+        public async Task<RentDTO> GetActualRent()
+        {
+            var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
+            if (rent == null)
+            {
+                throw new NotFoundException("Запись не найдена");
+            }
+            var result = _map.Map<RentDTO>(rent);
+            return result;
+        }
         public async Task<IEnumerable<RentDTO>> GetRents(PageFilter pageFilter)
         {
             var rent = await _unitOfWork.Rents.GetPage(pageFilter);
@@ -69,7 +80,7 @@ namespace Rents.Service.Services
 
         public async Task StartTrip()
         {
-            var rent = await _unitOfWork.Rents.GetActualBooking(_userSessionGetter.UserId);
+            var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
             rent.IsFinalSelectCar = true;
             rent.DateTimeBeginRent = DateTime.Now;
             _unitOfWork.Rents.UpdateEntities(rent);
@@ -78,10 +89,10 @@ namespace Rents.Service.Services
 
         public async Task EndTrip(decimal km)
         {
-            var rent = await _unitOfWork.Rents.GetActualBooking(_userSessionGetter.UserId);
+            var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
             rent.DateTimeEndRent = DateTime.Now;
             rent.KilometersOutsideTariff = km;
-            rent.TotalPrice = await GetTotalPrice(rent.TariffId, km);
+            rent.TotalPrice = await GetTotalPrice(rent);
             _unitOfWork.Rents.UpdateEntities(rent);
             await _unitOfWork.Rents.SaveChanges();
         }
@@ -93,11 +104,11 @@ namespace Rents.Service.Services
             HttpResponseMessage response = new HttpResponseMessage();
             if (isRent)
             {
-                response = await _httpClient.PutAsync("/api/Cars/BookingCar?id=" + carId, JsonContent.Create(""));
+                response = await _httpClient.PutAsync("/api/Cars/BookingCar/" + carId, JsonContent.Create(""));
             }
             else
             {
-                response = await _httpClient.PutAsync("/api/Cars/CancelBookingCar?id=" + carId, JsonContent.Create(""));
+                response = await _httpClient.PutAsync("/api/Cars/CancelBookingCar/" + carId, JsonContent.Create(""));
             }
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
@@ -105,10 +116,37 @@ namespace Rents.Service.Services
             return isRent;
         }
 
-        private async Task<decimal> GetTotalPrice(Guid tariffId, decimal km)
+        private async Task<decimal> GetTotalPrice(Rent rent)
         {
-            var tariff = await _unitOfWork.Tariffs.GetEntity(tariffId);
-            var result = km * tariff.AdditionalPrice + tariff.Price;
+            var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId);
+            var minutNoTariff = rent.DateTimeEndRent - rent.DateTimeBeginRent;
+            int totalMin = minutNoTariff.Value.Minutes;
+
+            _httpClient.BaseAddress = new Uri("https://localhost:7217");
+            var response = await _httpClient.GetAsync("/api/Subscriptions");
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var clientSubscription = JsonSerializer.Deserialize<SubscriptionDTO>(responseBody, options);
+            var timeSubscription = clientSubscription.QuantityMinutsInDay; // нужно найти оставшиеся минуты
+
+            int min = 0;
+            if (totalMin > timeSubscription)
+            {
+                min = totalMin - timeSubscription;
+            }
+
+            var tariffTime = tariff.Duration.Value.Minutes;
+
+            if (totalMin > tariffTime)
+            {
+                min = totalMin - tariffTime;
+            }
+
+            var result = min * tariff.AdditionalPrice + tariff.Price;
             return result;
         }
     }
