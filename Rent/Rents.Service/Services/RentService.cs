@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Infrastructure.DTO;
+using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.DTO.Rent;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
@@ -17,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Rents.Service.Services
 {
-    public class RentService: IRentService
+    public class RentService : IRentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
@@ -43,7 +45,7 @@ namespace Rents.Service.Services
         }
         public async Task CancelBookingCar()
         {
-            var rent = await _unitOfWork.Rents.GetActualBooking(_userSessionGetter.UserId);
+            var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
             rent.IsFinalSelectCar = false;
             await UpdateRentCar(rent.CarId, false);
             _unitOfWork.Rents.UpdateEntities(rent);
@@ -90,7 +92,7 @@ namespace Rents.Service.Services
             var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
             rent.DateTimeEndRent = DateTime.Now;
             rent.KilometersOutsideTariff = km;
-            rent.TotalPrice = await GetTotalPrice(rent.TariffId, km);
+            rent.TotalPrice = await GetTotalPrice(rent);
             _unitOfWork.Rents.UpdateEntities(rent);
             await _unitOfWork.Rents.SaveChanges();
         }
@@ -114,10 +116,37 @@ namespace Rents.Service.Services
             return isRent;
         }
 
-        private async Task<decimal> GetTotalPrice(Guid tariffId, decimal km)
+        private async Task<decimal> GetTotalPrice(Rent rent)
         {
-            var tariff = await _unitOfWork.Tariffs.GetEntity(tariffId);
-            var result = km * tariff.AdditionalPrice + tariff.Price;
+            var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId);
+            var minutNoTariff = rent.DateTimeEndRent - rent.DateTimeBeginRent;
+            int totalMin = minutNoTariff.Value.Minutes;
+
+            _httpClient.BaseAddress = new Uri("https://localhost:7217");
+            var response = await _httpClient.GetAsync("/api/Subscriptions");
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var clientSubscription = JsonSerializer.Deserialize<SubscriptionDTO>(responseBody, options);
+            var timeSubscription = clientSubscription.QuantityMinutsInDay; // нужно найти оставшиеся минуты
+
+            int min = 0;
+            if (totalMin > timeSubscription)
+            {
+                min = totalMin - timeSubscription;
+            }
+
+            var tariffTime = tariff.Duration.Value.Minutes;
+
+            if (totalMin > tariffTime)
+            {
+                min = totalMin - tariffTime;
+            }
+
+            var result = min * tariff.AdditionalPrice + tariff.Price;
             return result;
         }
     }

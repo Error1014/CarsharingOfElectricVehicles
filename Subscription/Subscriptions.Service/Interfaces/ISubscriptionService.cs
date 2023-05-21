@@ -10,6 +10,7 @@ namespace Subscriptions.Service.Interfaces
 {
     public interface ISubscriptionService
     {
+        Task<SubscriptionDTO> GetActualSubscription();
         Task<SubscriptionDTO> GetSubscription(Guid id);
         Task<Dictionary<Guid , SubscriptionDTO>> GetSubscriptions(PageFilter pageFilter);
         Task AddSubscripton(SubscriptionDTO subscriptionDTO);

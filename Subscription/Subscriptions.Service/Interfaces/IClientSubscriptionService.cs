@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clients.Service.Interfaces
+namespace Subscriptions.Service.Interfaces
 {
     public interface IClientSubscriptionService
     {

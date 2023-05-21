@@ -15,6 +15,7 @@ namespace Subscriptions.Repository.Context
 
         }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<ClientSubscription> ClientSubscriptions { get; set; }
 
     }
 }

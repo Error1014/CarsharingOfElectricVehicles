@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Clients.Repository.Entities;
-using Subscriptions.Repository.Entities;
 
 namespace Clients.Repository.Context
 {
@@ -16,7 +15,6 @@ namespace Clients.Repository.Context
 
         }
         public DbSet<Client> Client { get; set; }
-        public DbSet<ClientSubscription> ClientSubscription { get; set; }
         public DbSet<Passport> Passport { get; set; }
         public DbSet<DrivingLicense> DrivingLicense { get; set; }
     }

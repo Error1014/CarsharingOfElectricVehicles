@@ -17,12 +17,14 @@ namespace Subscriptions.Repository.Repositories
         {
             _dbContext = context;
             Subscriptions = new SubscriptionRepository(context);
+            ClientSubscriptions = new ClientSubscriptionRepository(context);
         }
 
 
 
 
         public ISubscriptionRepository Subscriptions { get; private set; }
+        public IClientSubscriptionRepository ClientSubscriptions { get; private set; }
 
         public int Complete()
         {

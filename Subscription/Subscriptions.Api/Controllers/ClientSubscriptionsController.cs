@@ -1,12 +1,10 @@
-﻿using Clients.Service.Interfaces;
-using Infrastructure.Attributes;
+﻿using Infrastructure.Attributes;
 using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.HelperModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Subscriptions.Repository.Entities;
+using Subscriptions.Service.Interfaces;
 
-namespace Clients.Api.Controllers
+namespace Subscriptions.Api.Controllers
 {
     public class ClientSubscriptionsController : BaseApiController
     {

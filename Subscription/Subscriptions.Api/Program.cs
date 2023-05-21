@@ -55,6 +55,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
+    .AddScoped<IClientSubscriptionService, ClientSubscriptionService>()
     .AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());

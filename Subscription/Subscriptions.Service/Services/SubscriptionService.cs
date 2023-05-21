@@ -2,6 +2,7 @@
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
+using Infrastructure.Interfaces;
 using Subscriptions.Repository.Entities;
 using Subscriptions.Repository.Interfaces;
 using Subscriptions.Service.Interfaces;
@@ -17,10 +18,12 @@ namespace Subscriptions.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
-        public SubscriptionService(IUnitOfWork unitOfWork, IMapper map)
+        private readonly IUserSessionGetter _userSessionGetter;
+        public SubscriptionService(IUnitOfWork unitOfWork, IMapper map, IUserSessionGetter userSessionGetter)
         {
             _unitOfWork = unitOfWork;
             _map = map;
+            _userSessionGetter = userSessionGetter;
         }
 
         public async Task AddSubscripton(SubscriptionDTO subscriptionDTO)
@@ -29,7 +32,21 @@ namespace Subscriptions.Service.Services
             await _unitOfWork.Subscriptions.AddEntities(subscription);
             await _unitOfWork.Subscriptions.SaveChanges();
         }
-
+        public async Task<SubscriptionDTO> GetActualSubscription()
+        {
+            var clientSubscription = await _unitOfWork.ClientSubscriptions.GetActualSubsciption(_userSessionGetter.UserId);
+            if (clientSubscription == null)
+            {
+                throw new NotFoundException("Абонимент не найден");
+            }
+            var subscription = await _unitOfWork.Subscriptions.GetEntity(clientSubscription.SubscriptionId);
+            if (clientSubscription == null)
+            {
+                throw new NotFoundException("Абонимент не найден");
+            }
+            var result = _map.Map<SubscriptionDTO>(subscription);
+            return result;
+        }
         public async Task<SubscriptionDTO> GetSubscription(Guid id)
         {
             var subscription = await _unitOfWork.Subscriptions.GetEntity(id);

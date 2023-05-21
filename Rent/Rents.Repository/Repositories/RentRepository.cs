@@ -16,7 +16,7 @@ namespace Rents.Repository.Repositories
         {
         }
 
-        public async Task<Rent> GetActualBooking(Guid clientId)
+        public async Task<Rent> GetActualRent(Guid clientId)
         {
             var rent = Set.Where(x => x.ClientId == clientId).OrderBy(x=>x.DateTimeBeginBoocking).FirstOrDefault();
             return rent;

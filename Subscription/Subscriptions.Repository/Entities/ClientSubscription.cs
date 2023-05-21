@@ -1,5 +1,4 @@
-﻿using Clients.Repository.Entities;
-using Infrastructure.HelperModels;
+﻿using Infrastructure.HelperModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +10,8 @@ namespace Subscriptions.Repository.Entities
     public class ClientSubscription:BaseEntity<Guid>
     {
         public Guid ClientId { get; set; }
-        public virtual Client Client { get; set; }
         public Guid SubscriptionId { get; set; }
+        public virtual Subscription Subscription { get; set; }
         public DateTime DateSubscription { get; set; }
         public int QuantityMonths { get; set; }
 

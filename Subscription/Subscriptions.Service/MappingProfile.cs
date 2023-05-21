@@ -16,6 +16,10 @@ namespace Subscriptions.Service
         {
             CreateMap<Subscription, SubscriptionDTO>();
             CreateMap<Subscription, SubscriptionDTO>().ReverseMap();
+            CreateMap<ClientSubscription, ClientSubscriptionDTO>();
+            CreateMap<ClientSubscription, ClientSubscriptionDTO>().ReverseMap();
+            CreateMap<ClientSubscription, SubscribleDTO>();
+            CreateMap<ClientSubscription, SubscribleDTO>().ReverseMap();
         }
     }
 }
