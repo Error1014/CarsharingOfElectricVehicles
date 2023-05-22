@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using XAct.Messages;
 
 namespace Infrastructure.Middlewares
 {
@@ -27,17 +28,29 @@ namespace Infrastructure.Middlewares
             {
                 await _next(httpContext);
             }
-            catch (MyBaseException ex)
+            catch (Exception ex)
             {
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
-        private static Task HandleExceptionAsync(HttpContext context, MyBaseException exception)
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var code = HttpStatusCode.InternalServerError;
-
-            string message = exception.Message;
-            code = exception.CodeException;
+            var message = string.Empty;
+            switch (exception)
+            {
+                case NotFoundException notFoundException:
+                    code = HttpStatusCode.NotFound;
+                    message = notFoundException.Message;
+                    break;
+                case BadRequestException notFoundException:
+                    code = HttpStatusCode.BadRequest;
+                    message = notFoundException.Message;
+                    break;
+                default:
+                    message = exception.Message;
+                    break;
+            }
 
 
             var result = JsonSerializer.Serialize(new { error = message , code = code});

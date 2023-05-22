@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Exceptions
 {
-    public class DublicateException : MyBaseException
+    public class BadRequestException : Exception
     {
-        public DublicateException(string message) : base(message, HttpStatusCode.BadRequest)
+        public BadRequestException(string message)
         {
         }
     }

@@ -27,7 +27,7 @@ namespace Cars.Service.Services
             var characteristic = await _unitOfWork.Characteristics.Find(x => x.Name == characteristicDTO.Name);
             if (characteristic != null)
             {
-                throw new DublicateException("Такая характеристика уже существует");
+                throw new BadRequestException("Такая характеристика уже существует");
             }
             characteristic = _map.Map<Characteristic>(characteristicDTO);
             await _unitOfWork.Characteristics.AddEntities(characteristic);

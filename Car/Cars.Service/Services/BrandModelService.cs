@@ -26,7 +26,7 @@ namespace Cars.Service.Services
             var brandModel = await _unitOfWork.BrandModels.GetBrandModel(brandModelDTO);
             if (brandModel != null)
             {
-                throw new DublicateException("Модель этой марки уже есть в базе данных");
+                throw new BadRequestException("Модель этой марки уже есть в базе данных");
             }
             await _unitOfWork.BrandModels.AddEntities(brandModel);
             await _unitOfWork.BrandModels.SaveChanges();

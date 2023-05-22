@@ -36,7 +36,7 @@ namespace Authorization.Service.Services
             var user = await _unitOfWork.Users.Find(u => u.Login == userDTO.Login);
             if (user !=null)
             {
-                throw new DublicateException("Пользователь с таким логином уже существует");
+                throw new BadRequestException("Пользователь с таким логином уже существует");
             }
             user = _map.Map<User>(userDTO);
             user.Password = GeneratorHash.GetHash(userDTO.Password);

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Exceptions
 {
-    public class NotFoundException : MyBaseException
+    public class NotFoundException : Exception
     {
-        public NotFoundException(string message) : base(message, HttpStatusCode.NotFound)
+        public NotFoundException(string message)
         {
             
         }
