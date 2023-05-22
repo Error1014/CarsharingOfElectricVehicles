@@ -9,11 +9,10 @@ namespace Cars.Service.Interfaces
 {
     public interface IBrandModelService
     {
-        Task<IEnumerable<string>> GetBrands();
-        Task<IEnumerable<string>> GetModels(string brand);
-        Task<IEnumerable<BrandModelDTO>> GetBrandModels();
+        Task<BrandModelDTO> GetBrandModel(Guid id);
+        Task<Dictionary<Guid,BrandModelDTO>> GetBrandModels();
         Task AddBrandModel(BrandModelDTO brandModelDTO);
-        Task UpdateBrandModel(BrandModelDTO brandModelDTO);
+        Task UpdateBrandModel(Guid id,BrandModelDTO brandModelDTO);
         Task RemodeBrandModel(Guid Id);
     }
 }

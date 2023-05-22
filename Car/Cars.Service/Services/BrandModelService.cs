@@ -23,48 +23,51 @@ namespace Cars.Service.Services
         }
         public async Task AddBrandModel(BrandModelDTO brandModelDTO)
         {
-            var brandModel = await _unitOfWork.BrandModels.GetBrandModel(brandModelDTO);
-            if (brandModel != null)
-            {
-                throw new BadRequestException("Модель этой марки уже есть в базе данных");
-            }
+            var brandModel = _map.Map<BrandModel>(brandModelDTO);
             await _unitOfWork.BrandModels.AddEntities(brandModel);
             await _unitOfWork.BrandModels.SaveChanges();
         }
-
-        public async Task<IEnumerable<BrandModelDTO>> GetBrandModels()
+        public async Task<BrandModelDTO> GetBrandModel(Guid id)
+        {
+            var brandModel = await CheckInDb(id);
+            var result = _map.Map<BrandModelDTO>(brandModel);
+            return result;
+        }
+        public async Task<Dictionary<Guid, BrandModelDTO>> GetBrandModels()
         {
             var list = await _unitOfWork.BrandModels.GetAll();
-            var result = _map.Map<IEnumerable<BrandModelDTO>>(list);
+            Dictionary<Guid, BrandModelDTO> result = new Dictionary<Guid, BrandModelDTO>();
+            foreach (var item in list)
+            {
+                result.Add(item.Id, _map.Map<BrandModelDTO>(item));
+            }
             return result;
         }
 
-        public async Task<IEnumerable<string>> GetBrands()
+        public async Task RemodeBrandModel(Guid id)
         {
-            return await _unitOfWork.BrandModels.GetBrands();
-        }
-
-        public async Task<IEnumerable<string>> GetModels(string brand)
-        {
-            return await _unitOfWork.BrandModels.GetModels(brand);
-        }
-
-        public async Task RemodeBrandModel(Guid Id)
-        {
-            var brandModel = await _unitOfWork.BrandModels.GetEntity(Id);
-            if (brandModel == null)
-            {
-                throw new NotFoundException("Модели нет в базе данных");
-            }
+            var brandModel = await CheckInDb(id);
             _unitOfWork.BrandModels.RemoveEntities(brandModel);
             await _unitOfWork.BrandModels.SaveChanges();
         }
 
-        public async Task UpdateBrandModel(BrandModelDTO brandModelDTO)
+        public async Task UpdateBrandModel(Guid id, BrandModelDTO brandModelDTO)
         {
-            var brandModel = _map.Map<BrandModel>(brandModelDTO);
-            _unitOfWork.BrandModels.UpdateEntities(brandModel);
+            var brandModel = await CheckInDb(id);
+            var result = _map.Map<BrandModel>(brandModelDTO);
+            result.Id = id;
+            _unitOfWork.BrandModels.UpdateEntities(result);
             await _unitOfWork.BrandModels.SaveChanges();
+        }
+
+        private async Task<BrandModel> CheckInDb(Guid id)
+        {
+            var brandModel = await _unitOfWork.BrandModels.GetEntity(id);
+            if (brandModel == null)
+            {
+                throw new NotFoundException("Модели нет в базе данных");
+            }
+            return brandModel;
         }
     }
 }

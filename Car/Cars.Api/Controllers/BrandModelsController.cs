@@ -20,22 +20,40 @@ namespace Cars.Api.Controllers
             _map = mapper;
         }
 
-        [HttpGet(nameof(GetBrands))]
-        public async Task<IEnumerable<string>> GetBrands()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBrandModel(Guid id)
         {
-            return await _brandModelService.GetBrands();
+            var result = await _brandModelService.GetBrandModel(id);
+            return Ok(result);
         }
 
-        [HttpGet(nameof(GetModels))]
-        public async Task<IEnumerable<string>> GetModels(string brand)
+        [HttpGet]
+        public async Task<IActionResult> GetBrandModels()
         {
-            return await _brandModelService.GetModels(brand);
+            var result = await _brandModelService.GetBrandModels();
+            return Ok(result);
         }
         [RoleAuthorize("Admin Operator")]
-        [HttpPost(nameof(AddBrandModel))]
-        public async Task<IActionResult> AddBrandModel(BrandModelDTO brandModel)
+        [HttpPost]
+        public async Task<IActionResult> AddBrandModel([FromQuery]BrandModelDTO brandModel)
         {
             await _brandModelService.AddBrandModel(brandModel);
+            return Ok();
+        }
+
+        [RoleAuthorize("Admin Operator")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBrandModel(Guid id, BrandModelDTO brandModel)
+        {
+            await _brandModelService.UpdateBrandModel(id, brandModel);
+            return Ok();
+        }
+
+        [RoleAuthorize("Admin Operator")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveBrandModel(Guid id)
+        {
+            await _brandModelService.RemodeBrandModel(id);
             return Ok();
         }
     }
