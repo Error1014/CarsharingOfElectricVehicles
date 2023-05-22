@@ -17,7 +17,7 @@ namespace Clients.Api.Controllers
             _drivingLicenseService = drivingLicenseService;
         }
         [RoleAuthorize("Admin Operator")]
-        [HttpGet("id")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetDrivingLicense(Guid id)
         {
             var drivingLicense = await _drivingLicenseService.GetDrivingLicense(id);
@@ -25,10 +25,10 @@ namespace Clients.Api.Controllers
         }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
-        public async Task<IEnumerable<DrivingLicenseDTO>> GetDrivingLicenses([FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetDrivingLicenses([FromQuery] PageFilter pageFilter)
         {
             var drivingLicense = await _drivingLicenseService.GetDrivingLicenses(pageFilter);
-            return drivingLicense;
+            return Ok(drivingLicense);
         }
         [RoleAuthorize("Admin Operator")]
         [HttpPost]
@@ -38,7 +38,7 @@ namespace Clients.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Admin Operator")]
-        [HttpPut("id")]
+        [HttpPut("/{id}")]
         public async Task<IActionResult> UpdateDrivingLicense(Guid id, [FromQuery] DrivingLicenseDTO drivingLicenseDTO)
         {
             await _drivingLicenseService.UpdateDrivingLicense(id, drivingLicenseDTO);
@@ -46,7 +46,7 @@ namespace Clients.Api.Controllers
         }
 
         [RoleAuthorize("Admin")]
-        [HttpDelete("id")]
+        [HttpDelete("/{id}")]
         public async Task<IActionResult> RemoveDrivingLicense(Guid id)
         {
             await _drivingLicenseService.RemoveDrivingLicense(id);

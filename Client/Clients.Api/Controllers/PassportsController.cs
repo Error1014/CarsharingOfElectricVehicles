@@ -17,7 +17,7 @@ namespace Clients.Api.Controllers
             _passportService = passportService;
         }
         [RoleAuthorize("Admin Operator")]
-        [HttpGet("id")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetPassport(Guid id)
         {
             var passport = await _passportService.GetPassport(id);
@@ -25,10 +25,10 @@ namespace Clients.Api.Controllers
         }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
-        public async Task<IEnumerable<PassportDTO>> GetPassports([FromQuery]PageFilter pageFilter)
+        public async Task<IActionResult> GetPassports([FromQuery]PageFilter pageFilter)
         {
             var passport = await _passportService.GetPassports(pageFilter);
-            return passport;
+            return Ok(passport);
         }
         [RoleAuthorize("Admin Operator")]
         [HttpPost]
@@ -38,14 +38,14 @@ namespace Clients.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Admin Operator")]
-        [HttpPut("id")]
+        [HttpPut("/{id}")]
         public async Task<IActionResult> UpdatePassport(Guid id, [FromQuery] PassportDTO passportDTO)
         {
             await _passportService.UpdatePassport(id, passportDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpDelete("id")]
+        [HttpDelete("/{id}")]
         public async Task<IActionResult> RemovePassport(Guid id)
         {
             await _passportService.RemovePassport(id);

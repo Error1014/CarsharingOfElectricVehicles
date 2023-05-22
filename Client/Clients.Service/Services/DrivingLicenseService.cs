@@ -42,11 +42,15 @@ namespace Clients.Service.Services
             return drivingLicenseDTO;
         }
 
-        public async Task<IEnumerable<DrivingLicenseDTO>> GetDrivingLicenses(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, DrivingLicenseDTO>> GetDrivingLicenses(PageFilter pageFilter)
         {
             var drivingLicenses = await _unitOfWork.DrivingLicenses.GetPage(pageFilter);
-            var drivingLicenseDTO = _map.Map<IEnumerable<DrivingLicenseDTO>>(drivingLicenses);
-            return drivingLicenseDTO;
+            Dictionary<Guid, DrivingLicenseDTO> result = new Dictionary<Guid, DrivingLicenseDTO>();
+            foreach (var item in drivingLicenses)
+            {
+                result.Add(item.Id, _map.Map<DrivingLicenseDTO>(item));
+            }
+            return result;
         }
 
         public async Task RemoveDrivingLicense(Guid id)

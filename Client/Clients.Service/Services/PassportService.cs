@@ -42,11 +42,15 @@ namespace Clients.Service.Services
             return passportDTO;
         }
 
-        public async Task<IEnumerable<PassportDTO>> GetPassports(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, PassportDTO>> GetPassports(PageFilter pageFilter)
         {
             var passports = await _unitOfWork.Passports.GetPage(pageFilter);
-            var passportDTO = _map.Map<IEnumerable<PassportDTO>>(passports);
-            return passportDTO;
+            Dictionary<Guid, PassportDTO> result = new Dictionary<Guid, PassportDTO>();
+            foreach (var item in passports)
+            {
+                result.Add(item.Id, _map.Map<PassportDTO>(item));
+            }
+            return result;
         }
 
         public async Task RemovePassport(Guid id)

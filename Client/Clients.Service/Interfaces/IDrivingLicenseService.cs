@@ -11,7 +11,7 @@ namespace Clients.Service.Interfaces
     public interface IDrivingLicenseService
     {
         Task<DrivingLicenseDTO> GetDrivingLicense(Guid id);
-        Task<IEnumerable<DrivingLicenseDTO>> GetDrivingLicenses(PageFilter pageFilter);
+        Task<Dictionary<Guid, DrivingLicenseDTO>> GetDrivingLicenses(PageFilter pageFilter);
         Task AddDrivingLicense(DrivingLicenseDTO drivingLicenseDTO);
         Task UpdateDrivingLicense(Guid id, DrivingLicenseDTO drivingLicenseDTO);
         Task RemoveDrivingLicense(Guid id);

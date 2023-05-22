@@ -36,10 +36,15 @@ namespace Clients.Service.Services
             return _map.Map<ClientContactDTO>(client);
         }
 
-        public async Task<IEnumerable<ClientContactDTO>> GetClients(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, ClientContactDTO>> GetClients(PageFilter pageFilter)
         {
             var clients = await _unitOfWork.Clients.GetAll();
-            return _map.Map<IEnumerable<ClientContactDTO>>(clients);
+            Dictionary<Guid, ClientContactDTO> result = new Dictionary<Guid, ClientContactDTO>();
+            foreach (var item in clients)
+            {
+                result.Add(item.Id, _map.Map<ClientContactDTO>(item));
+            }
+            return result;
         }
 
         public async Task AddClient(Guid id, ClientDocumentDTO clientDTO)
