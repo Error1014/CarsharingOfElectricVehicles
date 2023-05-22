@@ -42,13 +42,16 @@ namespace Authorization.Service.Services
             user.Password = GeneratorHash.GetHash(userDTO.Password);
             await _unitOfWork.Users.AddEntities(user);
             await _unitOfWork.Users.SaveChanges();
-
         }
 
-        public async Task<IEnumerable<UserDTO>> GetUsers(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, UserDTO>> GetUsers(PageFilter pageFilter)
         {
             var list = await _unitOfWork.Users.GetPage(pageFilter);
-            var result = _map.Map<IEnumerable<UserDTO>>(list);
+            Dictionary<Guid, UserDTO> result = new Dictionary<Guid, UserDTO>();
+            foreach (var user in list)
+            {
+                result.Add(user.Id, _map.Map<UserDTO>(user));
+            }
             return result;
         }
 

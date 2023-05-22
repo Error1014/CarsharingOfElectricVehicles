@@ -14,7 +14,7 @@ namespace Authorization.Service.Interfaces
     {
         Task<UserDTO> GetUser(Guid Id);
         Task<User> GetUserByLogin(LoginDTO loginDTO);
-        Task<IEnumerable<UserDTO>> GetUsers(PageFilter pageFilter);
+        Task<Dictionary<Guid, UserDTO>> GetUsers(PageFilter pageFilter);
         Task AddUser(UserDTO user);
         Task UpdateUser(Guid id,UserDTO user);
         Task RemoveUser(Guid Id);

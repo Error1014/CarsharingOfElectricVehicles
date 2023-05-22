@@ -28,14 +28,14 @@ namespace Authorization.Api.Controllers
             _jwtOptions = jwtOptions;
         }
         #region обычные запросы
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(Guid id)
         {
             var client = await _userService.GetUser(id);
             return Ok(client);
         }
         [RoleAuthorize("Admin")]
-        [HttpGet(nameof(GetUsers))]
+        [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
             var list = await _userService.GetUsers(new PageFilter(1, 10));
@@ -59,14 +59,14 @@ namespace Authorization.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Operator Client")]
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UserDTO userDTO)
         {
             await _userService.UpdateUser(id, userDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Remove(Guid Id)
         {
             await _userService.RemoveUser(Id);
