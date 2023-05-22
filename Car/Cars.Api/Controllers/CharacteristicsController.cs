@@ -15,28 +15,34 @@ namespace Cars.Api.Controllers
         {
             _characteristicService = characteristicService;
         }
-
-        [HttpGet]
-        public async Task<IEnumerable<CharacteristicDTO>> GetCharacteristics()
+        [HttpGet("/{id}")]
+        public async Task<IActionResult> GetCharacteristic(Guid id)
         {
-            return await _characteristicService.GetCharacteristics();
+            var resul = await _characteristicService.GetCharacteristic(id);
+            return Ok(resul);
         }
-        [RoleAuthorize("Admin Operator")]
+        [HttpGet]
+        public async Task<IActionResult> GetCharacteristics()
+        {
+            var resul = await _characteristicService.GetCharacteristics();
+            return Ok(resul);
+        }
+        [RoleAuthorize("Admin")]
         [HttpPost]
         public async Task<IActionResult> AddCharacteristics([FromQuery] CharacteristicDTO characteristicDTO)
         {
             await _characteristicService.AddCharacteristic(characteristicDTO);
             return Ok();
         }
-        [RoleAuthorize("Admin Operator")]
-        [HttpPut]
+        [RoleAuthorize("Admin")]
+        [HttpPut("/{id}")]
         public async Task<IActionResult> UpdateCharacteristics(Guid id, [FromQuery] CharacteristicDTO characteristicDTO)
         {
             await _characteristicService.UpdateCharacteristic(id, characteristicDTO);
             return Ok();
         }
-        [RoleAuthorize("Admin Operator")]
-        [HttpDelete]
+        [RoleAuthorize("Admin")]
+        [HttpDelete("/{id}")]
         public async Task<IActionResult> RemoveCharacteristics(Guid id)
         {
             await _characteristicService.RemoveCharacteristic(id);

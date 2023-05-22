@@ -33,11 +33,20 @@ namespace Cars.Service.Services
             await _unitOfWork.Characteristics.AddEntities(characteristic);
             await _unitOfWork.Characteristics.SaveChanges();
         }
-
-        public async Task<IEnumerable<CharacteristicDTO>> GetCharacteristics()
+        public async Task<CharacteristicDTO> GetCharacteristic(Guid id)
+        {
+            var c = await _unitOfWork.Characteristics.GetEntity(id);
+            var result = _map.Map<CharacteristicDTO>(c);
+            return result;
+        }
+        public async Task<Dictionary<Guid,CharacteristicDTO>> GetCharacteristics()
         {
             var list = await _unitOfWork.Characteristics.GetAll();
-            var result = _map.Map<IEnumerable<CharacteristicDTO>>(list);
+            Dictionary<Guid, CharacteristicDTO> result = new Dictionary<Guid, CharacteristicDTO>();
+            foreach (var item in list)
+            {
+                result.Add(item.Id, _map.Map<CharacteristicDTO>(item));
+            }
             return result;
         }
 
