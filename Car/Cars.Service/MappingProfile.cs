@@ -13,10 +13,8 @@ namespace Cars.Service
     {
         public MappingProfile()
         {
-            CreateMap<Car, CarAddUpdateDTO>();
-            CreateMap<Car, CarAddUpdateDTO>().ReverseMap();
-            CreateMap<Car, CarInfoDTO>();
-            CreateMap<Car, CarInfoDTO>().ReverseMap();
+            CreateMap<Car, CarDTO>();
+            CreateMap<Car, CarDTO>().ReverseMap();
             CreateMap<BrandModel, BrandModelDTO>();
             CreateMap<BrandModel, BrandModelDTO>().ReverseMap();
             CreateMap<Characteristic, CharacteristicDTO>();

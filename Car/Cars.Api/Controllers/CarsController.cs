@@ -17,10 +17,10 @@ namespace Cars.Api.Controllers
             _carService = carService;
         }
 
-        [HttpGet(nameof(GetCar) + ("/{id}"))]
-        public async Task<CarInfoDTO> GetCar(Guid Id)
+        [HttpGet("/{id}")]
+        public async Task<CarDTO> GetCar(Guid id)
         {
-            return await _carService.GetCar(Id);
+            return await _carService.GetCar(id);
         }
 
         [HttpGet(nameof(GetCarIsRent) + ("/{id}"))]
@@ -29,20 +29,23 @@ namespace Cars.Api.Controllers
             var car = await _carService.GetCar(id);
             return Ok(car.IsRent);
         }
-        [HttpGet(nameof(GetCars))]
-        public async Task<IEnumerable<CarInfoDTO>> GetCars([FromQuery] PageFilter pageFilter)
+        [HttpGet]
+        public async Task<IActionResult> GetCars([FromQuery] PageFilter pageFilter)
         {
-            return await _carService.GetCars(pageFilter);
+            var result = await _carService.GetCars(pageFilter);
+            return Ok(result);
         }
         //ec681f11-a312-48a2-af9d-07ececf30b04
-        [HttpPost(nameof(AddCar))]
-        public async Task<IActionResult> AddCar([FromQuery] CarAddUpdateDTO carDTO)
+        [RoleAuthorize("Admin")]
+        [HttpPost]
+        public async Task<IActionResult> AddCar([FromQuery] CarDTO carDTO)
         {
             await _carService.AddCar(carDTO);
             return Ok();
         }
-        [HttpPut(nameof(UpdateCar))]
-        public async Task<IActionResult> UpdateCar(Guid id, [FromQuery] CarAddUpdateDTO carDTO)
+        [RoleAuthorize("Admin")]
+        [HttpPut(nameof(UpdateCar) + ("/{id}"))]
+        public async Task<IActionResult> UpdateCar(Guid id, [FromQuery] CarDTO carDTO)
         {
             await _carService.UpdateCar(id, carDTO);
             return Ok();
@@ -61,7 +64,8 @@ namespace Cars.Api.Controllers
             var car = await _carService.GetCar(id);
             return Ok(car.IsRent);
         }
-        [HttpDelete(nameof(RemoveCar) + ("/{id}"))]
+        [RoleAuthorize("Admin")]
+        [HttpDelete("/{id}")]
         public async Task<IActionResult> RemoveCar(Guid id)
         {
             await _carService.RemoveCar(id);

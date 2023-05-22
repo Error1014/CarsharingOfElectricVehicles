@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -28,7 +29,7 @@ namespace Authorization.Api.Controllers
             _jwtOptions = jwtOptions;
         }
         #region обычные запросы
-        [HttpGet("{id}")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetUser(Guid id)
         {
             var client = await _userService.GetUser(id);
@@ -59,14 +60,14 @@ namespace Authorization.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Operator Client")]
-        [HttpPut("{id}")]
+        [HttpPut("/{id}")]
         public async Task<IActionResult> Update(Guid id, UserDTO userDTO)
         {
             await _userService.UpdateUser(id, userDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpDelete("{id}")]
+        [HttpDelete("/{id}")]
         public async Task<IActionResult> Remove(Guid Id)
         {
             await _userService.RemoveUser(Id);
@@ -111,64 +112,69 @@ namespace Authorization.Api.Controllers
         [HttpPost(nameof(Authorize))]
         public IActionResult Authorize([FromQuery] string? role)
         {
-
             UserSession userSession = new UserSession();
             var token = ViewData["Authorization"].ToString();
             var roles = role?.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            if (roles == null)
-            {
-                roles = new List<string>();
-                roles.Add("Client");
-                roles.Add("Admin");
-                roles.Add("Operator");
-            }
             if (token == "Bearer")
             {
                 return Ok(userSession);
             }
-            if (token != "")
+            if (token == null)
             {
-                try
-                {
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var key = Encoding.ASCII.GetBytes(_jwtOptions.Value.Key);
-                    tokenHandler.ValidateToken(token, new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ClockSkew = TimeSpan.Zero,
-                        ValidIssuer = _jwtOptions.Value.Issuer,
-                        ValidAudience = _jwtOptions.Value.Audience
-                    }, out SecurityToken validatedToken);
-                    var jwtToken = (JwtSecurityToken)validatedToken;
-                    var accountId = Guid.Parse(jwtToken.Claims.FirstOrDefault(x => x.Type == "Id").Value);
-                    var myRole = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimsIdentity.DefaultRoleClaimType).Value;
-                    bool isAuthorize = false;
-                    foreach (var item in roles)
-                    {
-                        if (item == myRole)
-                        {
-                            userSession.Role = myRole;
-                            userSession.UserId = accountId;
-                            isAuthorize = true;
-                            break;
-                        }
-                    }
-                    if (!isAuthorize) throw new Exception("403");// StatusCode(403);
-                }
-                catch
-                {
-                    throw new Exception("401");// StatusCode(401);
-                }
+                throw new Exception("403");
+            }
+            var jwtToken = DeShifr(token, roles);
+            var accountId = Guid.Parse(jwtToken.Claims.FirstOrDefault(x => x.Type == "Id").Value);
+            var myRole = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimsIdentity.DefaultRoleClaimType).Value;
+            bool isAuthorize = false;
+
+            if (roles == null)
+            {
+                userSession.Role = myRole;
+                userSession.UserId = accountId;
+                isAuthorize = true;
             }
             else
             {
-
-                throw new Exception("401");// StatusCode(401);
+                foreach (var item in roles)
+                {
+                    if (item == myRole)
+                    {
+                        userSession.Role = myRole;
+                        userSession.UserId = accountId;
+                        isAuthorize = true;
+                        break;
+                    }
+                }
             }
+            if (!isAuthorize) throw new Exception("403");
             return Ok(userSession);
+        }
+
+        private JwtSecurityToken DeShifr(string token, List<string> roles)
+        {
+            var jwtToken = new JwtSecurityToken();
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_jwtOptions.Value.Key);
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = _jwtOptions.Value.Issuer,
+                    ValidAudience = _jwtOptions.Value.Audience
+                }, out SecurityToken validatedToken);
+                jwtToken = (JwtSecurityToken)validatedToken;
+            }
+            catch
+            {
+                throw new Exception("401");
+            }
+            return jwtToken;
         }
         #endregion
     }

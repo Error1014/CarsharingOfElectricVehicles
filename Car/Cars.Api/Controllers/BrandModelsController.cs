@@ -20,7 +20,7 @@ namespace Cars.Api.Controllers
             _map = mapper;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetBrandModel(Guid id)
         {
             var result = await _brandModelService.GetBrandModel(id);
@@ -42,7 +42,7 @@ namespace Cars.Api.Controllers
         }
 
         [RoleAuthorize("Admin Operator")]
-        [HttpPut("{id}")]
+        [HttpPut("/{id}")]
         public async Task<IActionResult> UpdateBrandModel(Guid id, BrandModelDTO brandModel)
         {
             await _brandModelService.UpdateBrandModel(id, brandModel);
@@ -50,7 +50,7 @@ namespace Cars.Api.Controllers
         }
 
         [RoleAuthorize("Admin Operator")]
-        [HttpDelete("{id}")]
+        [HttpDelete("/{id}")]
         public async Task<IActionResult> RemoveBrandModel(Guid id)
         {
             await _brandModelService.RemodeBrandModel(id);

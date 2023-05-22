@@ -10,10 +10,10 @@ namespace Cars.Service.Interfaces
 {
     public interface ICarService
     {
-        Task<CarInfoDTO> GetCar(Guid id);
-        Task<IEnumerable<CarInfoDTO>> GetCars(PageFilter pageFilter);
-        Task AddCar(CarAddUpdateDTO carDTO);
-        Task UpdateCar(Guid id,CarAddUpdateDTO carDTO);
+        Task<CarDTO> GetCar(Guid id);
+        Task<Dictionary<Guid, CarDTO>> GetCars(PageFilter pageFilter);
+        Task AddCar(CarDTO carDTO);
+        Task UpdateCar(Guid id, CarDTO carDTO);
         Task BookingCar(Guid id);
         Task CancelBookingCar(Guid id);
         Task RemoveCar(Guid id);

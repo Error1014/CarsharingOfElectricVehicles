@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.DTO
 {
-    public class CarInfoDTO
+    public class CarDTO
     {
         public Guid BrandModelId { get; set; }
         public string Number { get; set; }

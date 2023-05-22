@@ -24,33 +24,32 @@ namespace Cars.Service.Services
             _map = mapper;
         }
 
-        public async Task AddCar(CarAddUpdateDTO carDTO)
+        public async Task AddCar(CarDTO carDTO)
         {
-            //var car = await _unitOfWork.Cars.Find(x => x.Number == carDTO.Number);
-            //if (car!=null)
-            //{
-            //    throw new DublicateException("Данный автомобиль уже зарегистрирован в БД");
-            //}
             var car = _map.Map<Car>(carDTO);
             await _unitOfWork.Cars.AddEntities(car);
             await _unitOfWork.Cars.SaveChanges();
         }
 
-        public async Task<CarInfoDTO> GetCar(Guid id)
+        public async Task<CarDTO> GetCar(Guid id)
         {
             var car = await _unitOfWork.Cars.GetEntity(id);
             if (car == null)
             {
                 throw new NotFoundException("Автомобиль не найден");
             }
-            var result = _map.Map<CarInfoDTO>(car);
+            var result = _map.Map<CarDTO>(car);
             return result;
         }
 
-        public async Task<IEnumerable<CarInfoDTO>> GetCars(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, CarDTO>> GetCars(PageFilter pageFilter)
         {
             var list = await _unitOfWork.Cars.GetPage(pageFilter);
-            var result = _map.Map<IEnumerable<CarInfoDTO>>(list);
+            Dictionary<Guid, CarDTO> result = new Dictionary<Guid, CarDTO>();
+            foreach (var item in list)
+            {
+                result.Add(item.Id, _map.Map<CarDTO>(item));
+            }
             return result;
         }
 
@@ -61,7 +60,7 @@ namespace Cars.Service.Services
             await _unitOfWork.Cars.SaveChanges();
         }
 
-        public async Task UpdateCar(Guid id, CarAddUpdateDTO carDTO)
+        public async Task UpdateCar(Guid id, CarDTO carDTO)
         {
             var car = _map.Map<Car>(carDTO);
             car.Id = id;
