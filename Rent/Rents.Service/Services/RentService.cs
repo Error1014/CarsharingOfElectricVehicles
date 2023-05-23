@@ -71,10 +71,14 @@ namespace Rents.Service.Services
             var result = _map.Map<RentDTO>(rent);
             return result;
         }
-        public async Task<IEnumerable<RentDTO>> GetRents(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, RentDTO>> GetRents(PageFilter pageFilter)
         {
-            var rent = await _unitOfWork.Rents.GetPage(pageFilter);
-            var result = _map.Map<IEnumerable<RentDTO>>(rent);
+            var list = await _unitOfWork.Rents.GetPage(pageFilter);
+            Dictionary<Guid, RentDTO> result = new Dictionary<Guid, RentDTO>();
+            foreach (var item in list)
+            {
+                result.Add(item.Id, _map.Map<RentDTO>(item));
+            }
             return result;
         }
 

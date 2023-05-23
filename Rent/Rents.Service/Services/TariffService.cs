@@ -41,10 +41,14 @@ namespace Rents.Service.Services
             return result;
         }
 
-        public async Task<IEnumerable<TariffDTO>> GetTariffs()
+        public async Task<Dictionary<Guid, TariffDTO>> GetTariffs()
         {
             var list = await _unitOfWork.Tariffs.GetAll();
-            var result = _map.Map<IEnumerable<TariffDTO>>(list);
+            Dictionary<Guid, TariffDTO> result =new Dictionary<Guid, TariffDTO>();
+            foreach (var item in list)
+            {
+                result.Add(item.Id, _map.Map<TariffDTO>(item));
+            }
             return result;
         }
 

@@ -17,23 +17,23 @@ namespace Rents.Api.Controllers
             _rentsService = rentsService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/{id}")]
         public async Task<IActionResult> GetRent(Guid id)
         {
             var rent = await _rentsService.GetRent(id);
             return Ok(rent);
         }
-        [HttpGet]
+        [HttpGet(nameof(GetActualRent))]
         public async Task<IActionResult> GetActualRent()
         {
             var rent = await _rentsService.GetActualRent();
             return Ok(rent);
         }
-        [HttpGet(nameof(GetRents))]
-        public async Task<IEnumerable<RentDTO>> GetRents([FromQuery] PageFilter pageFilter)
+        [HttpGet]
+        public async Task<IActionResult> GetRents([FromQuery] PageFilter pageFilter)
         {
             var rent = await _rentsService.GetRents(pageFilter);
-            return rent;
+            return Ok(rent);
         }
         [RoleAuthorize("Client")]
         [HttpPost]
