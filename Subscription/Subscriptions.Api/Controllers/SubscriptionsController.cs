@@ -23,7 +23,7 @@ namespace Subscriptions.Api.Controllers
             var result = await _subscriptionService.GetActualSubscription();
             return Ok(result);
         }
-        [HttpGet("{id}")]
+        [HttpGet("{/id}")]
         public async Task<IActionResult> GetSubscription(Guid id)
         {
             var result = await _subscriptionService.GetSubscription(id);
@@ -43,14 +43,14 @@ namespace Subscriptions.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpPut]
+        [HttpPut("{/id}")]
         public async Task<IActionResult> UpdateSubscription(Guid id, [FromQuery] SubscriptionDTO subscriptionDTO)
         {
             await _subscriptionService.UpdateSubscripton(id, subscriptionDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpDelete]
+        [HttpDelete("{/id}")]
         public async Task<IActionResult> RemoveSubscription(Guid id)
         {
             await _subscriptionService.RemoveSubscription(id);
