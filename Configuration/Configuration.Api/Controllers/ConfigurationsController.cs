@@ -2,6 +2,7 @@
 using Configuration.Repository.Interfaces;
 using Configuration.Service;
 using Infrastructure.Attributes;
+using Infrastructure.DTO;
 using Infrastructure.HelperModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,20 +20,21 @@ namespace Configuration.Api.Controllers
         [HttpGet(nameof(GetConfigurationItems))]
         public async Task<IActionResult> GetConfigurationItems()
         {
-            return Ok(await _configurationService.GetConfiguration());
+            var result = await _configurationService.GetConfiguration();
+            return Ok(result);
         }
         [RoleAuthorize("Admin")]
         [HttpPost]
-        public async Task<IActionResult> AddConfigurationItem(ConfigurationItem configurationItem)
+        public async Task<IActionResult> AddConfigurationItem(ConfigurationItemDTO configurationItem)
         {
             await _configurationService.AddConfiguration(configurationItem);
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpPut]
-        public async Task<IActionResult> UpdateConfigurationItem(ConfigurationItem configurationItem)
+        [HttpPut("/{id}")]
+        public async Task<IActionResult> UpdateConfigurationItem(Guid id, ConfigurationItemDTO configurationItem)
         {
-            await _configurationService.UpdateConfiguration(configurationItem);
+            await _configurationService.UpdateConfiguration(id, configurationItem);
             return Ok();
         }
     }

@@ -1,11 +1,12 @@
 ﻿using Configuration.Repository.Entities;
+using Infrastructure.DTO;
 
 namespace Configuration.Service
 {
     public interface IConfigurationService
     {
-        Task<IEnumerable<ConfigurationItem>> GetConfiguration();
-        Task AddConfiguration(ConfigurationItem configurationItem);
-        Task UpdateConfiguration(ConfigurationItem configurationItem);
+        Task<Dictionary<Guid, ConfigurationItemDTO>> GetConfiguration();
+        Task AddConfiguration(ConfigurationItemDTO configurationItem);
+        Task UpdateConfiguration(Guid id, ConfigurationItemDTO configurationItem);
     }
 }
