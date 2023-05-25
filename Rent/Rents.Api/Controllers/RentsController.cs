@@ -17,7 +17,7 @@ namespace Rents.Api.Controllers
             _rentsService = rentsService;
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRent(Guid id)
         {
             var rent = await _rentsService.GetRent(id);
@@ -29,7 +29,7 @@ namespace Rents.Api.Controllers
             var rent = await _rentsService.GetActualRent();
             return Ok(rent);
         }
-        [HttpGet]
+        [HttpGet(nameof(GetRents))]
         public async Task<IActionResult> GetRents([FromQuery] PageFilter pageFilter)
         {
             var rent = await _rentsService.GetRents(pageFilter);

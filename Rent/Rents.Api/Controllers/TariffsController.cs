@@ -16,7 +16,7 @@ namespace Rents.Api.Controllers
             _tariffService = tariffService;
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetTariff(Guid id)
         {
             var result = await _tariffService.GetTariff(id);
@@ -36,14 +36,14 @@ namespace Rents.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpPut("/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTariff(Guid id, [FromQuery] TariffDTO tarifDTO)
         {
             await _tariffService.UpdateTarif(id, tarifDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpDelete("/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveTariff(Guid id)
         {
             await _tariffService.RemoveTariff(id);

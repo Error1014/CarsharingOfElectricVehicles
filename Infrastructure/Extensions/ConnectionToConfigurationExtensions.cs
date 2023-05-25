@@ -17,11 +17,11 @@ namespace Infrastructure.Extensions
             var response = await httpClient.GetAsync(uriEndPoint.Uri);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
-            var configurationItemsList = JsonSerializer.Deserialize<IEnumerable<ConfigurationItemDTO>>(responseBody);
+            var configurationItemsList = JsonSerializer.Deserialize<Dictionary<Guid, ConfigurationItemDTO>>(responseBody);
             Dictionary<string, string> dictonary = new Dictionary<string, string>();
             foreach (var item in configurationItemsList)
             {
-                dictonary.Add(item.key, item.value);
+                dictonary.Add(item.Value.key, item.Value.value);
             }
             builder.Add(new DictionaryConfigurationSource(dictonary));
         }

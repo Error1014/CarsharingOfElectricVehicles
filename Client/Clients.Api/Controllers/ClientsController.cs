@@ -16,7 +16,7 @@ namespace Clients.Api.Controllers
             _clientService = clientService;
         }
         [RoleAuthorize("Admin")]
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetClient(Guid id)
         {
             var client = await _clientService.GetClient(id);
@@ -35,21 +35,21 @@ namespace Clients.Api.Controllers
             var list = await _clientService.GetBalance();
             return Ok(list);
         }
-        [HttpPost("/{id}")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> AddClient(Guid id, ClientDocumentDTO clientDTO)
         {
             await _clientService.AddClient(id, clientDTO);
             return Ok();
         }
         [RoleAuthorize("Operator")]
-        [HttpPut(nameof(UpdateClientByOperator) + "/{id}")]
+        [HttpPut(nameof(UpdateClientByOperator) + "{id}")]
         public async Task<IActionResult> UpdateClientByOperator(Guid id, ClientDocumentDTO clientDTO)
         {
             await _clientService.UpdateClient(id, clientDTO);
             return Ok();
         }
         [RoleAuthorize("Client")]
-        [HttpPut(nameof(UpdateClientByClient) + "/{id}")]
+        [HttpPut(nameof(UpdateClientByClient) + "{id}")]
         public async Task<IActionResult> UpdateClientByClient(Guid id, ClientContactDTO clientDTO)
         {
             await _clientService.UpdateClient(id, clientDTO);
@@ -61,7 +61,7 @@ namespace Clients.Api.Controllers
             await _clientService.UpdateBalance(summ);
             return Ok();
         }
-        [HttpPut(nameof(UpdateBalance) + "/{id}")]
+        [HttpPut(nameof(UpdateBalance) + "{id}")]
         public async Task<IActionResult> UpdateBalance(decimal summ)
         {
             await _clientService.UpdateBalance(summ);
@@ -69,7 +69,7 @@ namespace Clients.Api.Controllers
         }
 
         [RoleAuthorize("Admin")]
-        [HttpDelete("/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveClient(Guid Id)
         {
             await _clientService.RemoveClient(Id);

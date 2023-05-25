@@ -31,7 +31,7 @@ namespace Configuration.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpPut("/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateConfigurationItem(Guid id, ConfigurationItemDTO configurationItem)
         {
             await _configurationService.UpdateConfiguration(id, configurationItem);

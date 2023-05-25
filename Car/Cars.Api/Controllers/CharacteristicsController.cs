@@ -15,7 +15,7 @@ namespace Cars.Api.Controllers
         {
             _characteristicService = characteristicService;
         }
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetCharacteristic(Guid id)
         {
             var resul = await _characteristicService.GetCharacteristic(id);
@@ -35,14 +35,14 @@ namespace Cars.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpPut("/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCharacteristics(Guid id, [FromQuery] CharacteristicDTO characteristicDTO)
         {
             await _characteristicService.UpdateCharacteristic(id, characteristicDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpDelete("/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveCharacteristics(Guid id)
         {
             await _characteristicService.RemoveCharacteristic(id);
