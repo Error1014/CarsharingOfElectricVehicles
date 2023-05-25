@@ -16,6 +16,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using XAct.Events;
 
 namespace Rents.Service.Services
 {
@@ -33,8 +34,28 @@ namespace Rents.Service.Services
             _httpClient = new HttpClient();
         }
 
+        private async Task<decimal?> GetBalance()
+        {
+            _httpClient.BaseAddress = new Uri("https://localhost:7286");
+            var response = await _httpClient.GetAsync("/api/Users/GetBalance/");
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
+            return balance;
+        }
+
         public async Task AddRent(AddRentDTO rentDTO)
         {
+            var tariff = await _unitOfWork.Tariffs.GetEntity(rentDTO.TariffId);
+            var balance = await GetBalance();
+            if (balance <= 0)
+            {
+                throw new BadRequestException("Недостаточно средств");
+            }
+            if (tariff.Price > balance)
+            {
+                throw new BadRequestException("Недостаточно средств");
+            }
             var rent = _map.Map<Rent>(rentDTO);
             rent.ClientId = _userSessionGetter.UserId;
             rent.IsFinalSelectCar = false;
@@ -99,6 +120,17 @@ namespace Rents.Service.Services
             rent.TotalPrice = await GetTotalPrice(rent);
             _unitOfWork.Rents.UpdateEntities(rent);
             await _unitOfWork.Rents.SaveChanges();
+            await PayRent(rent.TotalPrice);
+        }
+
+        private async Task PayRent(decimal summ)
+        {
+            summ = 0 - summ;
+            _httpClient.BaseAddress = new Uri("https://localhost:7286");
+            var response = await _httpClient.PutAsync("/api/Users/UpdateBalance?summ="+summ, JsonContent.Create(""));
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
         }
 
         private async Task<bool> UpdateRentCar(Guid? carId, bool isRent)
@@ -122,7 +154,7 @@ namespace Rents.Service.Services
 
         private async Task<decimal> GetTotalPrice(Rent rent)
         {
-            var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId);
+            var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId.Value);
             var minutNoTariff = rent.DateTimeEndRent - rent.DateTimeBeginRent;
             int totalMin = minutNoTariff.Value.Minutes;
 

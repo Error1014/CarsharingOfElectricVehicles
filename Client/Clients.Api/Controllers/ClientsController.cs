@@ -29,6 +29,12 @@ namespace Clients.Api.Controllers
             var list = await _clientService.GetClients(pageFilter);
             return Ok(list);
         }
+        [HttpGet(nameof(GetBalance))]
+        public async Task<IActionResult> GetBalance()
+        {
+            var list = await _clientService.GetBalance();
+            return Ok(list);
+        }
         [HttpPost("/{id}")]
         public async Task<IActionResult> AddClient(Guid id, ClientDocumentDTO clientDTO)
         {
@@ -49,7 +55,12 @@ namespace Clients.Api.Controllers
             await _clientService.UpdateClient(id, clientDTO);
             return Ok();
         }
-
+        [HttpPut(nameof(UpdateBalance))]
+        public async Task<IActionResult> UpdateBalanse(decimal summ)
+        {
+            await _clientService.UpdateBalance(summ);
+            return Ok();
+        }
         [HttpPut(nameof(UpdateBalance) + "/{id}")]
         public async Task<IActionResult> UpdateBalance(decimal summ)
         {

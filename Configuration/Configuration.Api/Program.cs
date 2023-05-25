@@ -16,7 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.RegistrationDbContext<ConfigurationContext>(builder.Configuration);
-
 var configuration = builder.Configuration;
 builder.Host
        .ConfigureAppConfiguration((hostingContext, config) =>

@@ -10,6 +10,7 @@ namespace Clients.Service.Interfaces
 {
     public interface IClientService
     {
+        Task<decimal?> GetBalance();
         Task<ClientContactDTO> GetClient(Guid Id);
         Task<Dictionary<Guid, ClientContactDTO>> GetClients(PageFilter pageFilter);
         Task AddClient(Guid id,ClientDocumentDTO clientDTO);

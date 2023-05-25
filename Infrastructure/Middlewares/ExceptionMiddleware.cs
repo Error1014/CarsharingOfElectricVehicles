@@ -43,9 +43,9 @@ namespace Infrastructure.Middlewares
                     code = HttpStatusCode.NotFound;
                     message = notFoundException.Message;
                     break;
-                case BadRequestException notFoundException:
+                case BadRequestException badRequestException:
                     code = HttpStatusCode.BadRequest;
-                    message = notFoundException.Message;
+                    message = badRequestException.Message;
                     break;
                 default:
                     message = exception.Message;
