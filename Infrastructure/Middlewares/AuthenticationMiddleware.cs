@@ -39,9 +39,9 @@ namespace Infrastructure.Middlewares
             {
                 response = await _httpClient.PostAsync($"{uriEndPoint.Uri}?role={roles}", JsonContent.Create(""));
             }
-            
+
             response.EnsureSuccessStatusCode();
-            string responseBody =await response.Content.ReadAsStringAsync();
+            string responseBody = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
