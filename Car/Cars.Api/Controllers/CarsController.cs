@@ -23,7 +23,7 @@ namespace Cars.Api.Controllers
             return await _carService.GetCar(id);
         }
 
-        [HttpGet(nameof(GetCarIsRent) + ("{id}"))]
+        [HttpGet(nameof(GetCarIsRent) + ("/{id}"))]
         public async Task<IActionResult> GetCarIsRent(Guid id)
         {
             var car = await _carService.GetCar(id);
@@ -35,7 +35,7 @@ namespace Cars.Api.Controllers
             var result = await _carService.GetCars(pageFilter);
             return Ok(result);
         }
-        //ec681f11-a312-48a2-af9d-07ececf30b04
+
         [RoleAuthorize("Admin")]
         [HttpPost]
         public async Task<IActionResult> AddCar([FromQuery] CarDTO carDTO)
@@ -44,20 +44,20 @@ namespace Cars.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpPut(nameof(UpdateCar) + ("{id}"))]
+        [HttpPut(nameof(UpdateCar) + ("/{id}"))]
         public async Task<IActionResult> UpdateCar(Guid id, [FromQuery] CarDTO carDTO)
         {
             await _carService.UpdateCar(id, carDTO);
             return Ok();
         }
-        [HttpPut(nameof(BookingCar) + ("{id}"))]
+        [HttpPut(nameof(BookingCar) + ("/{id}"))]
         public async Task<IActionResult> BookingCar(Guid id)
         {
             await _carService.BookingCar(id);
             var car = await _carService.GetCar(id);
             return Ok(car.IsRent);
         }
-        [HttpPut(nameof(CancelBookingCar) + ("{id}"))]
+        [HttpPut(nameof(CancelBookingCar) + ("/{id}"))]
         public async Task<IActionResult> CancelBookingCar(Guid id)
         {
             await _carService.CancelBookingCar(id);

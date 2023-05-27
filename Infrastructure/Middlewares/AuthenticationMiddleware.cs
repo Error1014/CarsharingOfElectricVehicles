@@ -18,7 +18,6 @@ namespace Infrastructure.Middlewares
         {
             _next = next;
             uriEndPoint = options.Value;
-
         }
 
         public async Task Invoke(HttpContext context, IUserSessionSetter userSession)

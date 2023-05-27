@@ -37,7 +37,7 @@ namespace Rents.Service.Services
         private async Task<decimal?> GetBalance()
         {
             _httpClient.BaseAddress = new Uri("https://localhost:7286");
-            var response = await _httpClient.GetAsync("/api/Users/GetBalance/");
+            var response = await _httpClient.GetAsync("/api/Users/GetBalance");
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
