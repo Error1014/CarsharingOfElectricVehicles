@@ -32,6 +32,11 @@ namespace Clients.Service.Services
             var user = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
             return user.Balance;
         }
+        public async Task<decimal?> GetBalance(Guid id)
+        {
+            var user = await _unitOfWork.Clients.GetEntity(id);
+            return user.Balance;
+        }
         public async Task<ClientContactDTO> GetClient(Guid Id)
         {
             var client = await _unitOfWork.Clients.GetEntity(Id);

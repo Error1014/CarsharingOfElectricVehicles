@@ -15,7 +15,7 @@ namespace Clients.Api.Controllers
         {
             _clientService = clientService;
         }
-        [RoleAuthorize("Admin")]
+        [RoleAuthorize("Admin Operator")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClient(Guid id)
         {
@@ -33,6 +33,12 @@ namespace Clients.Api.Controllers
         public async Task<IActionResult> GetBalance()
         {
             var list = await _clientService.GetBalance();
+            return Ok(list);
+        }
+        [HttpGet(nameof(GetBalance)+"/{id}")]
+        public async Task<IActionResult> GetBalance(Guid id)
+        {
+            var list = await _clientService.GetBalance(id);
             return Ok(list);
         }
         [HttpPost("{id}")]
