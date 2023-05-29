@@ -8,7 +8,7 @@ namespace Infrastructure.Exceptions
 {
     public class ForbiddenException : Exception
     {
-        public ForbiddenException(string message)
+        public ForbiddenException(string message) : base(message)
         {
         }
     }

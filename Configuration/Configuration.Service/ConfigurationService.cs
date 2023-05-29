@@ -2,6 +2,8 @@
 using Configuration.Repository.Entities;
 using Configuration.Repository.Interfaces;
 using Infrastructure.DTO;
+using Infrastructure.Exceptions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Configuration.Service
 {
@@ -29,6 +31,11 @@ namespace Configuration.Service
 
         public async Task AddConfiguration(ConfigurationItemDTO configurationItem)
         {
+            var item = await _unitOfWork.ConfigurationItems.Find(x=>x.Key==configurationItem.key);
+            if (item != null)
+            {
+                throw new BadRequestException("Запись с таким ключём уже сужествует!!!");
+            }
             var result = _map.Map<ConfigurationItem>(configurationItem);
             await _unitOfWork.ConfigurationItems.AddEntities(result);
             await _unitOfWork.ConfigurationItems.SaveChanges();
@@ -36,8 +43,25 @@ namespace Configuration.Service
 
         public async Task UpdateConfiguration(Guid id, ConfigurationItemDTO configurationItem)
         {
+            var item = await _unitOfWork.ConfigurationItems.GetEntity(id);
+            if (item == null)
+            {
+                throw new NotFoundException("Запись не найдена");
+            }
             var result = _map.Map<ConfigurationItem>(configurationItem);
             result.Id=id;
+            _unitOfWork.ConfigurationItems.UpdateEntities(result);
+            await _unitOfWork.ConfigurationItems.SaveChanges();
+        }
+        public async Task UpdateConfiguration(string key, ConfigurationItemDTO configurationItem)
+        {
+            var item = await _unitOfWork.ConfigurationItems.Find(x=>x.Key==key);
+            if (item == null) 
+            {
+                throw new NotFoundException("Запись не найдена");
+            }
+            var result = _map.Map<ConfigurationItem>(configurationItem);
+            result.Id = item.Id;
             _unitOfWork.ConfigurationItems.UpdateEntities(result);
             await _unitOfWork.ConfigurationItems.SaveChanges();
         }

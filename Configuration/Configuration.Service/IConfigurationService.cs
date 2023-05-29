@@ -8,5 +8,6 @@ namespace Configuration.Service
         Task<Dictionary<Guid, ConfigurationItemDTO>> GetConfiguration();
         Task AddConfiguration(ConfigurationItemDTO configurationItem);
         Task UpdateConfiguration(Guid id, ConfigurationItemDTO configurationItem);
+        Task UpdateConfiguration(string key, ConfigurationItemDTO configurationItem);
     }
 }
