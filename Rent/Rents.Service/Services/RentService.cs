@@ -6,6 +6,7 @@ using Infrastructure.Exceptions;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Rents.Repository.Entities;
 using Rents.Repository.Interfaces;
 using Rents.Service.Interfaces;
@@ -25,19 +26,27 @@ namespace Rents.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
+        private readonly string _getBalanceUri;
+        private readonly string _updateBalanceUri;
+        private readonly string _boockingCarUri;
+        private readonly string _cancelBoockingCarUri;
         private HttpClient _httpClient;
-        public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter)
+        public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
             _userSessionGetter = userSessionGetter;
             _httpClient = new HttpClient();
+            _getBalanceUri = configuration.GetSection("EndPoint:GetBalance").Get<string>();
+            _updateBalanceUri = configuration.GetSection("EndPoint:UpdateBalance").Get<string>();
+            _updateBalanceUri = configuration.GetSection("EndPoint:BoockingCar").Get<string>();
+            _updateBalanceUri = configuration.GetSection("EndPoint:CancelBoockingCar").Get<string>();
+
         }
 
         private async Task<decimal?> GetBalance()
         {
-            _httpClient.BaseAddress = new Uri("https://localhost:7286");
-            var response = await _httpClient.GetAsync("/api/Users/GetBalance");
+            var response = await _httpClient.GetAsync(_getBalanceUri);
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
@@ -126,8 +135,7 @@ namespace Rents.Service.Services
         private async Task PayRent(decimal summ)
         {
             summ = 0 - summ;
-            _httpClient.BaseAddress = new Uri("https://localhost:7286");
-            var response = await _httpClient.PutAsync("/api/Users/UpdateBalance?summ="+summ, JsonContent.Create(""));
+            var response = await _httpClient.PutAsync(_updateBalanceUri + summ, JsonContent.Create(""));
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
@@ -136,15 +144,14 @@ namespace Rents.Service.Services
         private async Task<bool> UpdateRentCar(Guid? carId, bool isRent)
         {
             UriEndPoint uriEndPoint = new UriEndPoint(); //Заменить на взятие адреса из конфигурации
-            _httpClient.BaseAddress = new Uri("https://localhost:7215");
             HttpResponseMessage response = new HttpResponseMessage();
             if (isRent)
             {
-                response = await _httpClient.PutAsync("/api/Cars/BookingCar/" + carId, JsonContent.Create(""));
+                response = await _httpClient.PutAsync(_boockingCarUri + carId, JsonContent.Create(""));
             }
             else
             {
-                response = await _httpClient.PutAsync("/api/Cars/CancelBookingCar/" + carId, JsonContent.Create(""));
+                response = await _httpClient.PutAsync(_cancelBoockingCarUri + carId, JsonContent.Create(""));
             }
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();

@@ -23,8 +23,6 @@ builder.Host
            config.AddEfConfiguration(
                options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
        });
-builder.Services.Configure<UriEndPoint>(
-    builder.Configuration.GetSection("AuthorizationService"));
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<IConfigurationService, ConfigurationService>();

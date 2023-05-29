@@ -5,6 +5,7 @@ using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -15,17 +16,19 @@ namespace Infrastructure.Middlewares
     public class AuthenticationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly UriEndPoint uriEndPoint;
-        public AuthenticationMiddleware(RequestDelegate next, IOptions<UriEndPoint> options)
+        private readonly UriEndPoint _authorizeEndPoint;
+        private readonly IConfiguration _configuration;
+        public AuthenticationMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
-            uriEndPoint = options.Value;
+            _configuration = configuration;
+            _authorizeEndPoint = configuration.GetSection("EndPoint:AuthorizationService").Get<UriEndPoint>();
         }
 
         public async Task Invoke(HttpContext context, IUserSessionSetter userSession)
         {
             HttpClient _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(uriEndPoint.BaseAddress);
+            _httpClient.BaseAddress = new Uri(_authorizeEndPoint.BaseAddress);
             var endpoint = context.Features.Get<IEndpointFeature>()?.Endpoint;
             var attribute = endpoint?.Metadata.GetMetadata<RoleAuthorizeAttribute>();
             var roles = attribute?.Roles;
@@ -39,11 +42,11 @@ namespace Infrastructure.Middlewares
             }
             if (roles == null)
             {
-                response = await _httpClient.PostAsync($"{uriEndPoint.Uri}", JsonContent.Create(""));
+                response = await _httpClient.PostAsync($"{_authorizeEndPoint.Uri}", JsonContent.Create(""));
             }
             else
             {
-                response = await _httpClient.PostAsync($"{uriEndPoint.Uri}?role={roles}", JsonContent.Create(""));
+                response = await _httpClient.PostAsync($"{_authorizeEndPoint.Uri}?role={roles}", JsonContent.Create(""));
             }
 
             response.EnsureSuccessStatusCode();

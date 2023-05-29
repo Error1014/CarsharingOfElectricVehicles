@@ -21,7 +21,7 @@ builder.Services.RegistrationDbContext<SubscriptionContext>(builder.Configuratio
 
 await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.Configure<UriEndPoint>(
-    builder.Configuration.GetSection("AuthorizationService"));
+    builder.Configuration.GetSection("EndPoint:AuthorizationService:"));
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
