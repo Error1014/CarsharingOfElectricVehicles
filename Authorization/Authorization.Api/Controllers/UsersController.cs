@@ -116,7 +116,7 @@ namespace Authorization.Api.Controllers
             }
             if (token.IsNullOrEmpty())
             {
-                throw new UnauthorizedException("403");
+                throw new ForbiddenException("403");
             }
             var jwtToken = DeShifr(token, roles);
             var accountId = Guid.Parse(jwtToken.Claims.FirstOrDefault(x => x.Type == "Id").Value);
@@ -142,7 +142,7 @@ namespace Authorization.Api.Controllers
                     }
                 }
             }
-            if (!isAuthorize) throw new UnauthorizedException("403");
+            if (!isAuthorize) throw new ForbiddenException("403");
             return Ok(userSession);
         }
 
@@ -167,7 +167,7 @@ namespace Authorization.Api.Controllers
             }
             catch
             {
-                throw new Exception("401");
+                throw new UnauthorizedException("401");
             }
             return jwtToken;
         }

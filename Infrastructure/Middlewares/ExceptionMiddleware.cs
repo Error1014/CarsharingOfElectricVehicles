@@ -51,6 +51,10 @@ namespace Infrastructure.Middlewares
                     code = HttpStatusCode.Unauthorized;
                     message = unauthorizedException.Message;
                     break;
+                case ForbiddenException unauthorizedException:
+                    code = HttpStatusCode.Forbidden;
+                    message = unauthorizedException.Message;
+                    break;
                 default:
                     message = exception.Message;
                     break;
