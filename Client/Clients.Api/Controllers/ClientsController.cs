@@ -42,14 +42,14 @@ namespace Clients.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Operator")]
-        [HttpPut(nameof(UpdateClientByOperator) + "{id}")]
+        [HttpPut(nameof(UpdateClientByOperator) + "/{id}")]
         public async Task<IActionResult> UpdateClientByOperator(Guid id, ClientDocumentDTO clientDTO)
         {
             await _clientService.UpdateClient(id, clientDTO);
             return Ok();
         }
         [RoleAuthorize("Client")]
-        [HttpPut(nameof(UpdateClientByClient) + "{id}")]
+        [HttpPut(nameof(UpdateClientByClient) + "/{id}")]
         public async Task<IActionResult> UpdateClientByClient(Guid id, ClientContactDTO clientDTO)
         {
             await _clientService.UpdateClient(id, clientDTO);
@@ -61,7 +61,7 @@ namespace Clients.Api.Controllers
             await _clientService.UpdateBalance(summ);
             return Ok();
         }
-        [HttpPut(nameof(UpdateBalance) + "{id}")]
+        [HttpPut(nameof(UpdateBalance) + "/{id}")]
         public async Task<IActionResult> UpdateBalance(decimal summ)
         {
             await _clientService.UpdateBalance(summ);

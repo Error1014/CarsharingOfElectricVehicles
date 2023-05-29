@@ -29,7 +29,7 @@ namespace Rents.Api.Controllers
             var rent = await _rentsService.GetActualRent();
             return Ok(rent);
         }
-        [HttpGet(nameof(GetRents))]
+        [HttpGet]
         public async Task<IActionResult> GetRents([FromQuery] PageFilter pageFilter)
         {
             var rent = await _rentsService.GetRents(pageFilter);

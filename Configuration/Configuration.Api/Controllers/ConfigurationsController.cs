@@ -17,7 +17,7 @@ namespace Configuration.Api.Controllers
         {
             _configurationService = configurationService;
         }
-        [HttpGet(nameof(GetConfigurationItems))]
+        [HttpGet]
         public async Task<IActionResult> GetConfigurationItems()
         {
             var result = await _configurationService.GetConfiguration();

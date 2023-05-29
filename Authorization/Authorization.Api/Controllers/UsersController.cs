@@ -68,9 +68,9 @@ namespace Authorization.Api.Controllers
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Remove(Guid Id)
+        public async Task<IActionResult> Remove(Guid id)
         {
-            await _userService.RemoveUser(Id);
+            await _userService.RemoveUser(id);
             return Ok();
         }
         #endregion
