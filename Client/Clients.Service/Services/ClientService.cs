@@ -68,14 +68,13 @@ namespace Clients.Service.Services
             _unitOfWork.Clients.UpdateEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
-        public async Task UpdateClient(Guid id, ClientContactDTO clientDTO)
+        public async Task UpdateClient(ClientContactDTO clientDTO)
         {
             var client = _map.Map<Client>(clientDTO);
-            client.Id = id;
+            client.Id = _userSessionGetter.UserId;
             _unitOfWork.Clients.UpdateEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
-
         public async Task RemoveClient(Guid Id)
         {
             var entityDTO = await GetClient(Id);

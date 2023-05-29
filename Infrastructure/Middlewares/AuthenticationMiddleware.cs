@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Attributes;
 using Infrastructure.DTO;
+using Infrastructure.Exceptions;
 using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 using System.Text.Json;
+using XAct;
 
 namespace Infrastructure.Middlewares
 {
@@ -31,6 +33,10 @@ namespace Infrastructure.Middlewares
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             var response = new HttpResponseMessage();
+            if (token == null && !roles.IsNullOrEmpty())
+            {
+                throw new UnauthorizedException("Вы не авторизованы");
+            }
             if (roles == null)
             {
                 response = await _httpClient.PostAsync($"{uriEndPoint.Uri}", JsonContent.Create(""));

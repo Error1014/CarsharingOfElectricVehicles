@@ -49,10 +49,10 @@ namespace Clients.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Client")]
-        [HttpPut(nameof(UpdateClientByClient) + "/{id}")]
-        public async Task<IActionResult> UpdateClientByClient(Guid id, ClientContactDTO clientDTO)
+        [HttpPut(nameof(UpdateClientByClient))]
+        public async Task<IActionResult> UpdateClientByClient(ClientContactDTO clientDTO)
         {
-            await _clientService.UpdateClient(id, clientDTO);
+            await _clientService.UpdateClient(clientDTO);
             return Ok();
         }
         [HttpPut(nameof(UpdateBalance))]

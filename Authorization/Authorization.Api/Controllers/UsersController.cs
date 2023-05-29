@@ -1,21 +1,15 @@
-﻿using Authorization.Repository.Entities;
-using Authorization.Service.Interfaces;
-using AutoMapper;
+﻿using Authorization.Service.Interfaces;
 using Infrastructure.Attributes;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 
 namespace Authorization.Api.Controllers
 {
@@ -109,6 +103,7 @@ namespace Authorization.Api.Controllers
             return Results.Json(response);
         }
 
+
         [HttpPost(nameof(Authorize))]
         public IActionResult Authorize([FromQuery] string? role)
         {
@@ -119,9 +114,9 @@ namespace Authorization.Api.Controllers
             {
                 return Ok(userSession);
             }
-            if (token == null)
+            if (token.IsNullOrEmpty())
             {
-                throw new Exception("403");
+                throw new UnauthorizedException("403");
             }
             var jwtToken = DeShifr(token, roles);
             var accountId = Guid.Parse(jwtToken.Claims.FirstOrDefault(x => x.Type == "Id").Value);
@@ -147,7 +142,7 @@ namespace Authorization.Api.Controllers
                     }
                 }
             }
-            if (!isAuthorize) throw new Exception("403");
+            if (!isAuthorize) throw new UnauthorizedException("403");
             return Ok(userSession);
         }
 
