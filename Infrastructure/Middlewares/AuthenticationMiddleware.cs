@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using XAct;
@@ -49,7 +50,16 @@ namespace Infrastructure.Middlewares
                 response = await _httpClient.PostAsync($"{_authorizeEndPoint.Uri}?role={roles}", JsonContent.Create(""));
             }
 
-            response.EnsureSuccessStatusCode();
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizedException("Вы не авторизованы");
+            }
+            else if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new ForbiddenException("Вам недоступен данный ресурс");
+            }
+            //response.EnsureSuccessStatusCode();
+
             string responseBody = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {

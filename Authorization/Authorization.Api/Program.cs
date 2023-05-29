@@ -44,4 +44,5 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseStatusCodePages();
 app.MapControllers();
+app.UseMiddleware<ExceptionMiddleware>();
 app.Run();
