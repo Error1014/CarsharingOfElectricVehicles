@@ -15,7 +15,7 @@ namespace Clients.Api.Controllers
         {
             _clientService = clientService;
         }
-        [RoleAuthorize("Admin")]
+        [RoleAuthorize("Admin Operator")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClient(Guid id)
         {
@@ -35,6 +35,12 @@ namespace Clients.Api.Controllers
             var list = await _clientService.GetBalance();
             return Ok(list);
         }
+        [HttpGet(nameof(GetBalance)+"/{id}")]
+        public async Task<IActionResult> GetBalance(Guid id)
+        {
+            var list = await _clientService.GetBalance(id);
+            return Ok(list);
+        }
         [HttpPost("{id}")]
         public async Task<IActionResult> AddClient(Guid id, ClientDocumentDTO clientDTO)
         {
@@ -42,17 +48,17 @@ namespace Clients.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Operator")]
-        [HttpPut(nameof(UpdateClientByOperator) + "{id}")]
+        [HttpPut(nameof(UpdateClientByOperator) + "/{id}")]
         public async Task<IActionResult> UpdateClientByOperator(Guid id, ClientDocumentDTO clientDTO)
         {
             await _clientService.UpdateClient(id, clientDTO);
             return Ok();
         }
         [RoleAuthorize("Client")]
-        [HttpPut(nameof(UpdateClientByClient) + "{id}")]
-        public async Task<IActionResult> UpdateClientByClient(Guid id, ClientContactDTO clientDTO)
+        [HttpPut(nameof(UpdateClientByClient))]
+        public async Task<IActionResult> UpdateClientByClient(ClientContactDTO clientDTO)
         {
-            await _clientService.UpdateClient(id, clientDTO);
+            await _clientService.UpdateClient(clientDTO);
             return Ok();
         }
         [HttpPut(nameof(UpdateBalance))]
@@ -61,7 +67,7 @@ namespace Clients.Api.Controllers
             await _clientService.UpdateBalance(summ);
             return Ok();
         }
-        [HttpPut(nameof(UpdateBalance) + "{id}")]
+        [HttpPut(nameof(UpdateBalance) + "/{id}")]
         public async Task<IActionResult> UpdateBalance(decimal summ)
         {
             await _clientService.UpdateBalance(summ);

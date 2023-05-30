@@ -32,6 +32,11 @@ namespace Clients.Service.Services
             var user = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
             return user.Balance;
         }
+        public async Task<decimal?> GetBalance(Guid id)
+        {
+            var user = await _unitOfWork.Clients.GetEntity(id);
+            return user.Balance;
+        }
         public async Task<ClientContactDTO> GetClient(Guid Id)
         {
             var client = await _unitOfWork.Clients.GetEntity(Id);
@@ -68,14 +73,13 @@ namespace Clients.Service.Services
             _unitOfWork.Clients.UpdateEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
-        public async Task UpdateClient(Guid id, ClientContactDTO clientDTO)
+        public async Task UpdateClient(ClientContactDTO clientDTO)
         {
             var client = _map.Map<Client>(clientDTO);
-            client.Id = id;
+            client.Id = _userSessionGetter.UserId;
             _unitOfWork.Clients.UpdateEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
-
         public async Task RemoveClient(Guid Id)
         {
             var entityDTO = await GetClient(Id);

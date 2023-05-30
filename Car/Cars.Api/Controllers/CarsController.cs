@@ -23,12 +23,6 @@ namespace Cars.Api.Controllers
             return await _carService.GetCar(id);
         }
 
-        [HttpGet(nameof(GetCarIsRent) + ("/{id}"))]
-        public async Task<IActionResult> GetCarIsRent(Guid id)
-        {
-            var car = await _carService.GetCar(id);
-            return Ok(car.IsRent);
-        }
         [HttpGet]
         public async Task<IActionResult> GetCars([FromQuery] PageFilter pageFilter)
         {

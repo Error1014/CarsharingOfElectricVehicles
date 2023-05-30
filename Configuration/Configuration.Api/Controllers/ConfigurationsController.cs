@@ -17,7 +17,7 @@ namespace Configuration.Api.Controllers
         {
             _configurationService = configurationService;
         }
-        [HttpGet(nameof(GetConfigurationItems))]
+        [HttpGet]
         public async Task<IActionResult> GetConfigurationItems()
         {
             var result = await _configurationService.GetConfiguration();
@@ -35,6 +35,13 @@ namespace Configuration.Api.Controllers
         public async Task<IActionResult> UpdateConfigurationItem(Guid id, ConfigurationItemDTO configurationItem)
         {
             await _configurationService.UpdateConfiguration(id, configurationItem);
+            return Ok();
+        }
+        [RoleAuthorize("Admin")]
+        [HttpPut("{key}")]
+        public async Task<IActionResult> UpdateConfigurationItem(string key, ConfigurationItemDTO configurationItem)
+        {
+            await _configurationService.UpdateConfiguration(key, configurationItem);
             return Ok();
         }
     }

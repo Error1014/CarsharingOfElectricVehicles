@@ -1,21 +1,15 @@
-﻿using Authorization.Repository.Entities;
-using Authorization.Service.Interfaces;
-using AutoMapper;
+﻿using Authorization.Service.Interfaces;
 using Infrastructure.Attributes;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 
 namespace Authorization.Api.Controllers
 {
@@ -68,9 +62,9 @@ namespace Authorization.Api.Controllers
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Remove(Guid Id)
+        public async Task<IActionResult> Remove(Guid id)
         {
-            await _userService.RemoveUser(Id);
+            await _userService.RemoveUser(id);
             return Ok();
         }
         #endregion
@@ -109,6 +103,7 @@ namespace Authorization.Api.Controllers
             return Results.Json(response);
         }
 
+
         [HttpPost(nameof(Authorize))]
         public IActionResult Authorize([FromQuery] string? role)
         {
@@ -119,11 +114,31 @@ namespace Authorization.Api.Controllers
             {
                 return Ok(userSession);
             }
-            if (token == null)
+            if (token.IsNullOrEmpty())
             {
-                throw new Exception("403");
+                return new StatusCodeResult(401);
             }
-            var jwtToken = DeShifr(token, roles);
+            var jwtToken = new JwtSecurityToken();
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_jwtOptions.Value.Key);
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = _jwtOptions.Value.Issuer,
+                    ValidAudience = _jwtOptions.Value.Audience
+                }, out SecurityToken validatedToken);
+                jwtToken = (JwtSecurityToken)validatedToken;
+            }
+            catch
+            {
+                return new StatusCodeResult(401);
+            }
             var accountId = Guid.Parse(jwtToken.Claims.FirstOrDefault(x => x.Type == "Id").Value);
             var myRole = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimsIdentity.DefaultRoleClaimType).Value;
             bool isAuthorize = false;
@@ -147,35 +162,10 @@ namespace Authorization.Api.Controllers
                     }
                 }
             }
-            if (!isAuthorize) throw new Exception("403");
+            if (!isAuthorize) return new StatusCodeResult(403);
             return Ok(userSession);
         }
 
-        private JwtSecurityToken DeShifr(string token, List<string> roles)
-        {
-            var jwtToken = new JwtSecurityToken();
-            try
-            {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_jwtOptions.Value.Key);
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = _jwtOptions.Value.Issuer,
-                    ValidAudience = _jwtOptions.Value.Audience
-                }, out SecurityToken validatedToken);
-                jwtToken = (JwtSecurityToken)validatedToken;
-            }
-            catch
-            {
-                throw new Exception("401");
-            }
-            return jwtToken;
-        }
         #endregion
     }
 }

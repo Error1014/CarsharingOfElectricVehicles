@@ -6,6 +6,7 @@ using Infrastructure.Exceptions;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Rents.Repository.Entities;
 using Rents.Repository.Interfaces;
 using Rents.Service.Interfaces;
@@ -25,19 +26,28 @@ namespace Rents.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
+        private readonly UriEndPoint _getBalanceUri;
+        private readonly UriEndPoint _updateBalanceUri;
+        private readonly UriEndPoint _boockingCarUri;
+        private readonly UriEndPoint _cancelBoockingCarUri;
         private HttpClient _httpClient;
-        public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter)
+        public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
             _userSessionGetter = userSessionGetter;
             _httpClient = new HttpClient();
+            _getBalanceUri = configuration.GetSection("EndPoint:GetBalance").Get<UriEndPoint>();
+            _updateBalanceUri = configuration.GetSection("EndPoint:UpdateBalance").Get<UriEndPoint>();
+            _boockingCarUri = configuration.GetSection("EndPoint:BoockingCar").Get<UriEndPoint>();
+            _cancelBoockingCarUri = configuration.GetSection("EndPoint:CancelBoockingCar").Get<UriEndPoint>();
+
         }
 
         private async Task<decimal?> GetBalance()
         {
-            _httpClient.BaseAddress = new Uri("https://localhost:7286");
-            var response = await _httpClient.GetAsync("/api/Users/GetBalance");
+            _httpClient.BaseAddress = new Uri(_getBalanceUri.BaseAddress);
+            var response = await _httpClient.GetAsync(_getBalanceUri.Uri+_userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
@@ -125,9 +135,9 @@ namespace Rents.Service.Services
 
         private async Task PayRent(decimal summ)
         {
+            _httpClient.BaseAddress = new Uri(_updateBalanceUri.BaseAddress);
             summ = 0 - summ;
-            _httpClient.BaseAddress = new Uri("https://localhost:7286");
-            var response = await _httpClient.PutAsync("/api/Users/UpdateBalance?summ="+summ, JsonContent.Create(""));
+            var response = await _httpClient.PutAsync(_updateBalanceUri.Uri + summ, JsonContent.Create(""));
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
@@ -135,16 +145,15 @@ namespace Rents.Service.Services
 
         private async Task<bool> UpdateRentCar(Guid? carId, bool isRent)
         {
-            UriEndPoint uriEndPoint = new UriEndPoint(); //Заменить на взятие адреса из конфигурации
-            _httpClient.BaseAddress = new Uri("https://localhost:7215");
+            _httpClient.BaseAddress = new Uri(_boockingCarUri.BaseAddress);
             HttpResponseMessage response = new HttpResponseMessage();
             if (isRent)
             {
-                response = await _httpClient.PutAsync("/api/Cars/BookingCar/" + carId, JsonContent.Create(""));
+                response = await _httpClient.PutAsync(_boockingCarUri.Uri + carId, JsonContent.Create(""));
             }
             else
             {
-                response = await _httpClient.PutAsync("/api/Cars/CancelBookingCar/" + carId, JsonContent.Create(""));
+                response = await _httpClient.PutAsync(_cancelBoockingCarUri.Uri + carId, JsonContent.Create(""));
             }
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
