@@ -28,8 +28,7 @@ builder.Services
     .AddScoped<ICarService, CarService>()
     .AddScoped<ICarTagService, CarTagService>()
     .AddScoped<ICharacteristicService, CharacteristicService>()
-    .AddScoped<ITagService, TagService>()
-    ;
+    .AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
 builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
