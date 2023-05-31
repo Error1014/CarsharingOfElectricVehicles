@@ -15,5 +15,18 @@ namespace Chats.Repository.Entities
         public Guid? RecipientId { get; set; }
         public string Text { get; set; }
         public DateTime DateTime { get; set; }
+
+        public Message()
+        {
+
+        }
+        public Message(Guid chatId, Guid senderId, Guid? recipientId, string text)
+        {
+            ChatId = chatId;
+            SenderId = senderId;
+            RecipientId = recipientId;
+            Text = text;
+            DateTime = DateTime.Now;
+        }
     }
 }

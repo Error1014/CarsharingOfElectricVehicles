@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Infrastructure.DTO;
+using Infrastructure.Filters;
 
 namespace Chats.Service.Interfaces
 {
     public interface IMessageService
     {
+        Task<IEnumerable<MessageDTO>> GetMessages(Guid chatId, PageFilter pageFilter);
+        Task SendMessage(MessageDTO messageDTO);
+        Task SendMessageClient(string text);
+        Task SendMessageOperator(Guid clientId, string text);
     }
 }

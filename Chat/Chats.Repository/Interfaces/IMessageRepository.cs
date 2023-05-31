@@ -1,4 +1,5 @@
 ﻿using Chats.Repository.Entities;
+using Infrastructure.Filters;
 using Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace Chats.Repository.Interfaces
 {
     public interface IMessageRepository : IRepository<Message, Guid>
     {
+        Task<IEnumerable<Message>> GetMessages(Guid chatId, PageFilter pageFilter);
     }
 }
