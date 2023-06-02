@@ -24,16 +24,16 @@ namespace Chats.Api.Controllers
             return Ok(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetChats(PageFilter pageFilter)
+        public async Task<IActionResult> GetChats([FromQuery]PageFilter pageFilter)
         {
             var result = await _chatService.GetChats(pageFilter);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddChat(ChatDTO chatDTO)
+        public async Task<IActionResult> AddChat()
         {
-            await _chatService.AddChat(chatDTO);
+            await _chatService.AddChat();
             return Ok();
         }
         [HttpPut]

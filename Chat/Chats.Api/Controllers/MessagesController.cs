@@ -1,4 +1,5 @@
 ﻿using Chats.Service.Interfaces;
+using Infrastructure.DTO;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
 using Microsoft.AspNetCore.Http;
@@ -16,9 +17,16 @@ namespace Chats.Api.Controllers
         }
 
         [HttpGet]
-        public async Task GetMessages(PageFilter pageFilter)
+        public async Task<IActionResult> GetMessages(Guid chatId, [FromQuery] PageFilter pageFilter)
         {
-
+            var result = _messageService.GetMessages(chatId, pageFilter);
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> PostMessages([FromForm]MessageDTO messageDTO)
+        {
+            await _messageService.SendMessage(messageDTO);
+            return Ok();
         }
     }
 }

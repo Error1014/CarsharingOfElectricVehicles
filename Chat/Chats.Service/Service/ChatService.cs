@@ -26,14 +26,15 @@ namespace Chats.Service.Service
             _userSessionGetter = userSessionGetter;
         }
 
-        public async Task AddChat(ChatDTO chatDTO)
+        public async Task AddChat()
         {
-            var chat = await _unitOfWork.Chats.Find(x=>x.ClientId == chatDTO.ClientId);
+            var chat = await _unitOfWork.Chats.Find(x=>x.ClientId == _userSessionGetter.UserId);
             if (chat!=null)
             {
                 throw new BadRequestException("Чат для данного пользователя уже есть"); 
             }
-            chat = _map.Map<Chat>(chatDTO);
+            chat = new Chat();
+            chat.ClientId = _userSessionGetter.UserId;  
             await _unitOfWork.Chats.AddEntities(chat);
             await _unitOfWork.Chats.SaveChanges();
         }

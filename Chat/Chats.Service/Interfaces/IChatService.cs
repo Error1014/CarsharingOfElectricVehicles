@@ -13,7 +13,7 @@ namespace Chats.Service.Interfaces
         Task<ChatDTO> GetChat(Guid id);
         Task<ChatDTO> GetChat();
         Task<Dictionary<Guid, ChatDTO>> GetChats(PageFilter pageFilter);
-        Task AddChat(ChatDTO chatDTO);
+        Task AddChat();
         Task UpdateChat(Guid id, ChatDTO chat);
         Task RemoveChat(Guid id);
 

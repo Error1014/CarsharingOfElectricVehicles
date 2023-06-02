@@ -1,5 +1,6 @@
 ﻿using Infrastructure.DTO;
 using Infrastructure.Filters;
+using Microsoft.AspNetCore.Http;
 
 namespace Chats.Service.Interfaces
 {
@@ -7,7 +8,5 @@ namespace Chats.Service.Interfaces
     {
         Task<IEnumerable<MessageDTO>> GetMessages(Guid chatId, PageFilter pageFilter);
         Task SendMessage(MessageDTO messageDTO);
-        Task SendMessageClient(string text);
-        Task SendMessageOperator(Guid clientId, string text);
     }
 }

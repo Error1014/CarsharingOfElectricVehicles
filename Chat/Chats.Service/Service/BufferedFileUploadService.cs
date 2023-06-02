@@ -24,7 +24,7 @@ namespace Chats.Service.Service
                     }
                     using (var fileStream = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
                     {
-                        await file.CopyToAsync(fileStream);
+                         await file.CopyToAsync(fileStream);
                     }
                     return true;
                 }
