@@ -19,7 +19,7 @@ namespace Chats.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMessages(Guid chatId, [FromQuery] PageFilter pageFilter)
         {
-            var result = _messageService.GetMessages(chatId, pageFilter);
+            var result = await _messageService.GetMessages(chatId, pageFilter);
             return Ok(result);
         }
         [HttpPost]

@@ -14,8 +14,9 @@ namespace Infrastructure.DTO
         public Guid? RecipientId { get; set; }
         public string? Text { get; set; }
         public IFormFile? File {get; set; }
-        public string? FileName { get; private set; }
-        public byte[]? FileData { get; private set; }
+        public string? Name { get; private set; }
+        public string? FileName { get;  set; }
+        public byte[]? FileData { get; set; }
         public DateTime? DateTime { get; set; }
     }
 }
