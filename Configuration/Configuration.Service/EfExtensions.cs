@@ -5,7 +5,7 @@ namespace Configuration.Service
 {
     public static class EfExtensions
     {
-        public static IConfigurationBuilder AddEfConfiguration(this IConfigurationBuilder builder,
+        public static async Task<IConfigurationBuilder> AddEfConfiguration(this IConfigurationBuilder builder,
         Action<DbContextOptionsBuilder> optionsAction)
         {
             return builder.Add(new EfConfigurationSource(optionsAction));

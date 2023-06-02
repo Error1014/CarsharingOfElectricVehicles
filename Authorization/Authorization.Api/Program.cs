@@ -12,10 +12,9 @@ using Infrastructure.Middlewares;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.SetJwtOptions(builder.Configuration);
 builder.Services.RegistrationDbContext<UserContext>(builder.Configuration);
 
-builder.Services.Configure<JwtOptions>( 
-    builder.Configuration.GetSection("JwtOptions"));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -27,7 +26,7 @@ builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<U
 builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.SetJwtOptions(builder.Configuration);
+
 
 var app = builder.Build();
 app.UseDefaultFiles();
@@ -40,9 +39,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseStatusCodePages();
 app.MapControllers();
-app.UseMiddleware<ExceptionMiddleware>();
 app.Run();
