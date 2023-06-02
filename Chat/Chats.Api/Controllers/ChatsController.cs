@@ -23,6 +23,12 @@ namespace Chats.Api.Controllers
             var result = await _chatService.GetChat(id);
             return Ok(result);
         }
+        [HttpGet("my")]
+        public async Task<IActionResult> GetChat()
+        {
+            var result = await _chatService.GetChat();
+            return Ok(result);
+        }
         [HttpGet]
         public async Task<IActionResult> GetChats([FromQuery]PageFilter pageFilter)
         {

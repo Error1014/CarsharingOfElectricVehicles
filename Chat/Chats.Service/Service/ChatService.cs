@@ -54,7 +54,13 @@ namespace Chats.Service.Service
             var chat = await _unitOfWork.Chats.GetEntity(_userSessionGetter.UserId);
             if (chat == null)
             {
-                throw new NotFoundException("Чат не найден");
+                if (_userSessionGetter.Role=="Client")
+                {
+                    chat = new Chat();
+                    chat.ClientId = _userSessionGetter.UserId;
+                    await _unitOfWork.Chats.AddEntities(chat);
+                    await _unitOfWork.Chats.SaveChanges();
+                }
             }
             var result = _map.Map<ChatDTO>(chat);
             return result;
