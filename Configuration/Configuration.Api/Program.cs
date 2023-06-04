@@ -18,9 +18,9 @@ builder.Services.AddControllers();
 builder.Services.RegistrationDbContext<ConfigurationContext>(builder.Configuration);
 var configuration = builder.Configuration;
 builder.Host
-       .ConfigureAppConfiguration((hostingContext, config) =>
+       .ConfigureAppConfiguration(async (hostingContext, config) =>
        {
-           config.AddEfConfiguration(
+           await config.AddEfConfiguration(
                options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
        });
 builder.Services

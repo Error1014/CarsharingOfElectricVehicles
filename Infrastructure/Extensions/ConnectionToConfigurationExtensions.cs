@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Infrastructure.DTO;
 using Infrastructure.HelperModels;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,7 @@ namespace Infrastructure.Extensions
             uriEndPoint = configuration.GetSection("Configuration")
                                                      .Get<UriEndPoint>();
             httpClient.BaseAddress = new Uri(uriEndPoint.BaseAddress);
+            
             var response = await httpClient.GetAsync(uriEndPoint.Uri);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
