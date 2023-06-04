@@ -17,7 +17,7 @@ namespace Rents.Repository.Entities
         public bool IsFinalSelectCar { get; set; }
         public DateTime? DateTimeBeginRent { get; set; }
         public DateTime? DateTimeEndRent { get; set; }
-        public decimal KilometersOutsideTariff { get; set; }
+        public decimal Kilometers { get; set; }
         public decimal TotalPrice { get; set; }
     }
 }

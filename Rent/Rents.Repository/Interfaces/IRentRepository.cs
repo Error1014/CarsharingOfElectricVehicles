@@ -1,4 +1,5 @@
-﻿using Infrastructure.Repository;
+﻿using Infrastructure.Filters;
+using Infrastructure.Repository;
 using Rents.Repository.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Rents.Repository.Interfaces
     public interface IRentRepository : IRepository<Rent, Guid>
     {
         Task<Rent> GetActualRent(Guid clientId); 
+        Task<IEnumerable<Rent>> GetRentHistoryPage(HistoryRentFilter historyRentFilter);
     }
 }

@@ -12,7 +12,7 @@ namespace Rents.Service.Interfaces
     {
         Task<RentDTO> GetRent(Guid Id);
         Task<RentDTO> GetActualRent();
-        Task<Dictionary<Guid, RentDTO>> GetRents(PageFilter pageFilter);
+        Task<Dictionary<Guid, RentDTO>> GetRents(HistoryRentFilter pageFilter);
         Task AddRent(AddRentDTO rentDTO);
         Task CancelBookingCar();
         Task StartTrip();

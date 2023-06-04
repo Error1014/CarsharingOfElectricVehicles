@@ -47,7 +47,7 @@ namespace Rents.Service.Services
         private async Task<decimal?> GetBalance()
         {
             _httpClient.BaseAddress = new Uri(_getBalanceUri.BaseAddress);
-            var response = await _httpClient.GetAsync(_getBalanceUri.Uri+_userSessionGetter.UserId);
+            var response = await _httpClient.GetAsync(_getBalanceUri.Uri + _userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
@@ -102,8 +102,15 @@ namespace Rents.Service.Services
             var result = _map.Map<RentDTO>(rent);
             return result;
         }
-        public async Task<Dictionary<Guid, RentDTO>> GetRents(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, RentDTO>> GetRents(HistoryRentFilter pageFilter)
         {
+            if (pageFilter.ClientId == null)
+            {
+                if (_userSessionGetter.Role=="Client")
+                {
+                    pageFilter.ClientId = _userSessionGetter.UserId;
+                }
+            }
             var list = await _unitOfWork.Rents.GetPage(pageFilter);
             Dictionary<Guid, RentDTO> result = new Dictionary<Guid, RentDTO>();
             foreach (var item in list)
@@ -126,7 +133,7 @@ namespace Rents.Service.Services
         {
             var rent = await _unitOfWork.Rents.GetActualRent(_userSessionGetter.UserId);
             rent.DateTimeEndRent = DateTime.Now;
-            rent.KilometersOutsideTariff = km;
+            rent.Kilometers = km;
             rent.TotalPrice = await GetTotalPrice(rent);
             _unitOfWork.Rents.UpdateEntities(rent);
             await _unitOfWork.Rents.SaveChanges();
