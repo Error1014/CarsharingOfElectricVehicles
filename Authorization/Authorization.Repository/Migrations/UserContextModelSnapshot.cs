@@ -4,19 +4,16 @@ using Authorization.Repository.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Users.Repository.Migrations
+namespace Authorization.Repository.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20230418143736_Init")]
-    partial class Init
+    partial class UserContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace Users.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Users.Repository.Entities.Role", b =>
+            modelBuilder.Entity("Authorization.Repository.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,37 +39,22 @@ namespace Users.Repository.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("Users.Repository.Entities.User", b =>
+            modelBuilder.Entity("Authorization.Repository.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("Birthday")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateRegistration")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Patronymic")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -81,13 +63,11 @@ namespace Users.Repository.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Users.Repository.Entities.User", b =>
+            modelBuilder.Entity("Authorization.Repository.Entities.User", b =>
                 {
-                    b.HasOne("Users.Repository.Entities.Role", "Role")
+                    b.HasOne("Authorization.Repository.Entities.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });

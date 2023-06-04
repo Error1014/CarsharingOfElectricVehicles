@@ -28,7 +28,7 @@ namespace Authorization.Api.Controllers
             var person = await _userService.GetUserByLogin(loginDTO);
 
             var role = await _userService.GetRole(person.Id);
-
+            if (role == null) role = string.Empty;
             var claims = new List<Claim>
             {
                 new Claim("Id", person.Id.ToString()),
@@ -64,7 +64,7 @@ namespace Authorization.Api.Controllers
             var roles = role?.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             if (token == "Bearer")
             {
-                return Ok(userSession);
+                return new StatusCodeResult(401);
             }
             if (token.IsNullOrEmpty())
             {
@@ -93,29 +93,20 @@ namespace Authorization.Api.Controllers
             }
             var accountId = Guid.Parse(jwtToken.Claims.FirstOrDefault(x => x.Type == "Id").Value);
             var myRole = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimsIdentity.DefaultRoleClaimType).Value;
-            if (myRole==null)
+            if (myRole.IsNullOrEmpty())
             {
                 return new StatusCodeResult(401);
             }
             bool isAuthorize = false;
 
-            if (roles == null)
+            foreach (var item in roles)
             {
-                userSession.Role = myRole;
-                userSession.UserId = accountId;
-                isAuthorize = true;
-            }
-            else
-            {
-                foreach (var item in roles)
+                if (item == myRole)
                 {
-                    if (item == myRole)
-                    {
-                        userSession.Role = myRole;
-                        userSession.UserId = accountId;
-                        isAuthorize = true;
-                        break;
-                    }
+                    userSession.Role = myRole;
+                    userSession.UserId = accountId;
+                    isAuthorize = true;
+                    break;
                 }
             }
             if (!isAuthorize) return new StatusCodeResult(403);

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Users.Repository.Migrations
+namespace Authorization.Repository.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -15,7 +15,7 @@ namespace Users.Repository.Migrations
                 name: "Role",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "newid()")
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -25,7 +25,11 @@ namespace Users.Repository.Migrations
                 });
             migrationBuilder.InsertData(
                 table: "Role",
-                columns: new[] {"Id", "Name" },
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 0, "NotAuthenticated" });
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "Id", "Name" },
                 values: new object[] { 1, "Admin" });
             migrationBuilder.InsertData(
                table: "Role",
@@ -39,15 +43,10 @@ namespace Users.Repository.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql:"newid()"),
-                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Patronymic = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateRegistration = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    RoleId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,8 +55,7 @@ namespace Users.Repository.Migrations
                         name: "FK_User_Role_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Role",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

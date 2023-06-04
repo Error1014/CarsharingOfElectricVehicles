@@ -35,7 +35,7 @@ namespace Authorization.Api.Controllers
             return Ok(list);
         }
         [HttpPost]
-        public async Task<IActionResult> RegistrationU(LoginDTO loginDTO)
+        public async Task<IActionResult> RegistrationUser(LoginDTO loginDTO)
         {
             UserDTO userDTO = new UserDTO(loginDTO.Login, loginDTO.Password);
             await _userService.AddUser(userDTO);

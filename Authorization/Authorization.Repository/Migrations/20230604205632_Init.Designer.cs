@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Users.Repository.Migrations
+namespace Authorization.Repository.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20230420145351_FixUserTable")]
-    partial class FixUserTable
+    [Migration("20230604205632_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace Users.Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -70,9 +70,7 @@ namespace Users.Repository.Migrations
                 {
                     b.HasOne("Authorization.Repository.Entities.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });

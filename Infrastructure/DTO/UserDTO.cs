@@ -14,7 +14,7 @@ namespace Infrastructure.DTO
     {
         public string Login { get; set; }
         public string Password { get; set; }
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
 
         public UserDTO(string login, string password)
         {
