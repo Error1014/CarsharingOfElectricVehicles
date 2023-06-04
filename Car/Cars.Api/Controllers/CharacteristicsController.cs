@@ -21,18 +21,21 @@ namespace Cars.Api.Controllers
             var result = await _characteristicService.GetCharacteristicByCarId(carId);
             return Ok();
         }
+        [RoleAuthorize("Admin")]
         [HttpPost("{carId}")]
         public async Task<IActionResult> AddCharacteristic(Guid carId, [FromQuery] CharacteristicDTO characteristicDTO)
         {
             await _characteristicService.AddCharacteristicByCarId(carId, characteristicDTO);
             return Ok();
         }
+        [RoleAuthorize("Admin")]
         [HttpPut("{carId}")]
         public async Task<IActionResult> UpdateCharacteristic(Guid carId, [FromQuery] CharacteristicDTO characteristicDTO)
         {
             await _characteristicService.UpdateCharacteristicByCarId(carId, characteristicDTO);
             return Ok();
         }
+        [RoleAuthorize("Admin")]
         [HttpDelete("{carId}")]
         public async Task<IActionResult> RemoveCharacteristic(Guid carId)
         {
