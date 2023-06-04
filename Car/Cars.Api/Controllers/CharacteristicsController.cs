@@ -15,38 +15,30 @@ namespace Cars.Api.Controllers
         {
             _characteristicService = characteristicService;
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCharacteristic(Guid id)
+        [HttpGet("{carId}")]
+        public async Task<IActionResult> GetCharacterictic(Guid carId)
         {
-            var resul = await _characteristicService.GetCharacteristic(id);
-            return Ok(resul);
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetCharacteristics()
-        {
-            var resul = await _characteristicService.GetCharacteristics();
-            return Ok(resul);
-        }
-        [RoleAuthorize("Admin")]
-        [HttpPost]
-        public async Task<IActionResult> AddCharacteristics([FromQuery] CharacteristicDTO characteristicDTO)
-        {
-            await _characteristicService.AddCharacteristic(characteristicDTO);
+            var result = await _characteristicService.GetCharacteristicByCarId(carId);
             return Ok();
         }
-        [RoleAuthorize("Admin")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCharacteristics(Guid id, [FromQuery] CharacteristicDTO characteristicDTO)
+        [HttpPost("{carId}")]
+        public async Task<IActionResult> AddCharacteristic(Guid carId, [FromQuery] CharacteristicDTO characteristicDTO)
         {
-            await _characteristicService.UpdateCharacteristic(id, characteristicDTO);
+            await _characteristicService.AddCharacteristicByCarId(carId, characteristicDTO);
             return Ok();
         }
-        [RoleAuthorize("Admin")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> RemoveCharacteristics(Guid id)
+        [HttpPut("{carId}")]
+        public async Task<IActionResult> UpdateCharacteristic(Guid carId, [FromQuery] CharacteristicDTO characteristicDTO)
         {
-            await _characteristicService.RemoveCharacteristic(id);
+            await _characteristicService.UpdateCharacteristicByCarId(carId, characteristicDTO);
             return Ok();
         }
+        [HttpDelete("{carId}")]
+        public async Task<IActionResult> RemoveCharacteristic(Guid carId)
+        {
+            await _characteristicService.RemoveCharacteristicByCarId(carId);
+            return Ok();
+        }
+
     }
 }

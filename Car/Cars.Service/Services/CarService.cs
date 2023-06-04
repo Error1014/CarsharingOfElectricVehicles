@@ -56,7 +56,16 @@ namespace Cars.Service.Services
         public async Task RemoveCar(Guid id)
         {
             var car = await _unitOfWork.Cars.GetEntity(id);
+            if (car == null)
+            {
+                throw new NotFoundException("Автомобиль не найден");
+            }
             _unitOfWork.Cars.RemoveEntities(car);
+            var characteristic = await _unitOfWork.Characteristics.Find(x => x.CarId == car.Id);
+            if (characteristic != null)
+            {
+                _unitOfWork.Characteristics.RemoveEntities(characteristic);
+            }
             await _unitOfWork.Cars.SaveChanges();
         }
 
