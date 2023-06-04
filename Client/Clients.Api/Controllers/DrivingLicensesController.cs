@@ -34,8 +34,8 @@ namespace Clients.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDrivingLicense([FromQuery] DrivingLicenseDTO drivingLicenseDTO)
         {
-            await _drivingLicenseService.AddDrivingLicense(drivingLicenseDTO);
-            return Ok();
+            var id = await _drivingLicenseService.AddDrivingLicense(drivingLicenseDTO);
+            return Ok(id);
         }
         [RoleAuthorize("Admin Operator")]
         [HttpPut("{id}")]

@@ -12,7 +12,7 @@ namespace Clients.Service.Interfaces
     {
         Task<DrivingLicenseDTO> GetDrivingLicense(Guid id);
         Task<Dictionary<Guid, DrivingLicenseDTO>> GetDrivingLicenses(PageFilter pageFilter);
-        Task AddDrivingLicense(DrivingLicenseDTO drivingLicenseDTO);
+        Task<Guid> AddDrivingLicense(DrivingLicenseDTO drivingLicenseDTO);
         Task UpdateDrivingLicense(Guid id, DrivingLicenseDTO drivingLicenseDTO);
         Task RemoveDrivingLicense(Guid id);
     }

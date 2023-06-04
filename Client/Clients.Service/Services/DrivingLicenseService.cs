@@ -24,11 +24,12 @@ namespace Clients.Service.Services
             _map = mapper;
         }
 
-        public async Task AddDrivingLicense(DrivingLicenseDTO drivingLicenseDTO)
+        public async Task<Guid> AddDrivingLicense(DrivingLicenseDTO drivingLicenseDTO)
         {
             var drivingLicense = _map.Map<DrivingLicense>(drivingLicenseDTO);
             await _unitOfWork.DrivingLicenses.AddEntities(drivingLicense);
             await _unitOfWork.DrivingLicenses.SaveChanges();
+            return drivingLicense.Id;
         }
 
         public async Task<DrivingLicenseDTO> GetDrivingLicense(Guid id)
