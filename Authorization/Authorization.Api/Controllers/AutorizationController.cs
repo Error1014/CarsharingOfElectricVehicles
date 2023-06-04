@@ -21,6 +21,7 @@ namespace Authorization.Api.Controllers
             _userService = userService;
             _jwtOptions = jwtOptions;
         }
+
         #region запросы авторизации
         [HttpPost(nameof(Login))]
         public async Task<IResult> Login(LoginDTO loginDTO)

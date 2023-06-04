@@ -16,11 +16,7 @@ namespace Cars.Repository.Context
         }
         public DbSet<BrandModel> BrandModels { get; set; }
         public DbSet<Car> Cars { get; set; }
-        public DbSet<CarCharacteristic> CarsCharacteristics { get; set; }
-        public DbSet<CarTag> CarTags { get; set; }
         public DbSet<Characteristic> Characteristics { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-
 
     }
 }

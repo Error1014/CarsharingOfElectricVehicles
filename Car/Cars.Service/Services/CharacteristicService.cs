@@ -24,14 +24,14 @@ namespace Cars.Service.Services
 
         public async Task AddCharacteristic(CharacteristicDTO characteristicDTO)
         {
-            var characteristic = await _unitOfWork.Characteristics.Find(x => x.Name == characteristicDTO.Name);
-            if (characteristic != null)
-            {
-                throw new BadRequestException("Такая характеристика уже существует");
-            }
-            characteristic = _map.Map<Characteristic>(characteristicDTO);
-            await _unitOfWork.Characteristics.AddEntities(characteristic);
-            await _unitOfWork.Characteristics.SaveChanges();
+            //var characteristic = await _unitOfWork.Characteristics.Find(x => x.Name == characteristicDTO.Name);
+            //if (characteristic != null)
+            //{
+            //    throw new BadRequestException("Такая характеристика уже существует");
+            //}
+            //characteristic = _map.Map<Characteristic>(characteristicDTO);
+            //await _unitOfWork.Characteristics.AddEntities(characteristic);
+            //await _unitOfWork.Characteristics.SaveChanges();
         }
         public async Task<CharacteristicDTO> GetCharacteristic(Guid id)
         {

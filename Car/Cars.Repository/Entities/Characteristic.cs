@@ -9,8 +9,13 @@ namespace Cars.Repository.Entities
 {
     public class Characteristic:BaseEntity<Guid>
     {
-        public string Name { get; set; }
-        public string? UOM { get; set; }//единицы измерения
-        public virtual IEnumerable<CarCharacteristic> CarCharacteristics { get; set; }
+        public Guid CarId { get; set; }
+        public int YearOfRelease { get; set; }
+        public string Color { get; set; }
+        public int Mileage { get; set; }
+        public string Transmission { get; set; }
+        public string WheelDrive { get; set; }
+        public string Rudder { get; set; }
+        public virtual Car Car { get; set; }
     }
 }

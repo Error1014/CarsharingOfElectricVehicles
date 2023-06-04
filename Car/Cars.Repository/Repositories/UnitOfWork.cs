@@ -17,19 +17,13 @@ namespace Cars.Repository.Repositories
         {
             _dbContext = context;
             BrandModels = new BrandModelRepository(context);
-            CarCharacteristics = new CarCharacteristicRepository(context);
             Cars = new CarRepository(context);
-            CarTags = new CarTagRepository(context);
             Characteristics = new CharacteristicRepository(context);
-            Tags = new TagRepository(context);
         }
 
         public IBrandModelRepository BrandModels { get; private set; }
-        public ICarCharacteristicRepository CarCharacteristics{ get; private set; }
         public ICarRepository Cars { get; private set; }
-        public ICarTagRepository CarTags { get; private set; }
         public ICharacteristicRepository Characteristics { get; private set; }
-        public ITagRepository Tags { get; private set; }
 
         public int Complete()
         {
