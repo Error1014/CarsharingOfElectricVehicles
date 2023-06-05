@@ -50,24 +50,15 @@ namespace Cars.Repository.Migrations
                     b.Property<Guid>("BrandModelId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsCASCO")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsRent")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRepair")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Mileage")
-                        .HasColumnType("int");
-
                     b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -76,87 +67,43 @@ namespace Cars.Repository.Migrations
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("Cars.Repository.Entities.CarCharacteristic", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CharacteristicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarId");
-
-                    b.HasIndex("CharacteristicId");
-
-                    b.ToTable("CarsCharacteristics");
-                });
-
-            modelBuilder.Entity("Cars.Repository.Entities.CarTag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("CarTags");
-                });
-
             modelBuilder.Entity("Cars.Repository.Entities.Characteristic", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UOM")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Characteristics");
-                });
-
-            modelBuilder.Entity("Cars.Repository.Entities.Tag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("CarId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ImagePath")
+                    b.Property<string>("Color")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<int>("Mileage")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Rudder")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Transmission")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WheelDrive")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("YearOfRelease")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.HasIndex("CarId")
+                        .IsUnique();
+
+                    b.ToTable("Characteristics");
                 });
 
             modelBuilder.Entity("Cars.Repository.Entities.Car", b =>
@@ -170,42 +117,15 @@ namespace Cars.Repository.Migrations
                     b.Navigation("BrandModel");
                 });
 
-            modelBuilder.Entity("Cars.Repository.Entities.CarCharacteristic", b =>
+            modelBuilder.Entity("Cars.Repository.Entities.Characteristic", b =>
                 {
                     b.HasOne("Cars.Repository.Entities.Car", "Car")
-                        .WithMany("CarCharacteristics")
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Cars.Repository.Entities.Characteristic", "Characteristic")
-                        .WithMany("CarCharacteristics")
-                        .HasForeignKey("CharacteristicId")
+                        .WithOne("Characteristic")
+                        .HasForeignKey("Cars.Repository.Entities.Characteristic", "CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Car");
-
-                    b.Navigation("Characteristic");
-                });
-
-            modelBuilder.Entity("Cars.Repository.Entities.CarTag", b =>
-                {
-                    b.HasOne("Cars.Repository.Entities.Car", "Car")
-                        .WithMany("CarTags")
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Cars.Repository.Entities.Tag", "Tag")
-                        .WithMany("CarTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Car");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Cars.Repository.Entities.BrandModel", b =>
@@ -215,19 +135,8 @@ namespace Cars.Repository.Migrations
 
             modelBuilder.Entity("Cars.Repository.Entities.Car", b =>
                 {
-                    b.Navigation("CarCharacteristics");
-
-                    b.Navigation("CarTags");
-                });
-
-            modelBuilder.Entity("Cars.Repository.Entities.Characteristic", b =>
-                {
-                    b.Navigation("CarCharacteristics");
-                });
-
-            modelBuilder.Entity("Cars.Repository.Entities.Tag", b =>
-                {
-                    b.Navigation("CarTags");
+                    b.Navigation("Characteristic")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

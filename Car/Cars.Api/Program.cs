@@ -18,17 +18,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.RegistrationDbContext<CarContext>(builder.Configuration);
-await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
+//await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<IBrandModelService, BrandModelService>()
-    .AddScoped<ICarCharacteristicService, CarCharacteristicService>()
     .AddScoped<ICarService, CarService>()
-    .AddScoped<ICarTagService, CarTagService>()
-    .AddScoped<ICharacteristicService, CharacteristicService>()
-    .AddScoped<ITagService, TagService>();
+    .AddScoped<ICharacteristicService, CharacteristicService>();
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
 builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
@@ -46,8 +43,8 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<AuthenticationMiddleware>();
-app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<AuthenticationMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
 app.UseStatusCodePages();
 app.MapControllers();
 app.Run();

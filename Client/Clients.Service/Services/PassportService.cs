@@ -24,11 +24,12 @@ namespace Clients.Service.Services
             _map = mapper;
         }
 
-        public async Task AddPassport(PassportDTO passportDTO)
+        public async Task<Guid> AddPassport(PassportDTO passportDTO)
         {
             var passport = _map.Map<Passport>(passportDTO);
             await _unitOfWork.Passports.AddEntities(passport);
             await _unitOfWork.Passports.SaveChanges();
+            return passport.Id;
         }
 
         public async Task<PassportDTO> GetPassport(Guid id)

@@ -32,43 +32,52 @@ namespace Infrastructure.Middlewares
             _httpClient.BaseAddress = new Uri(_authorizeEndPoint.BaseAddress);
             var endpoint = context.Features.Get<IEndpointFeature>()?.Endpoint;
             var attribute = endpoint?.Metadata.GetMetadata<RoleAuthorizeAttribute>();
-            var roles = attribute?.Roles;
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            var response = new HttpResponseMessage();
-            if (token == null && !roles.IsNullOrEmpty())
+            if (attribute != null)
             {
-                throw new UnauthorizedException("Вы не авторизованы");
-            }
-            if (roles == null)
-            {
-                response = await _httpClient.PostAsync($"{_authorizeEndPoint.Uri}", JsonContent.Create(""));
+                var roles = attribute?.Roles;
+
+                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                _httpClient.DefaultRequestHeaders.Accept.Clear();
+                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+                var response = new HttpResponseMessage();
+                if (token == null && !roles.IsNullOrEmpty())
+                {
+                    throw new UnauthorizedException("Вы не авторизованы");
+                }
+                if (roles == null)
+                {
+                    response = await _httpClient.PostAsync($"{_authorizeEndPoint.Uri}", JsonContent.Create(""));
+                }
+                else
+                {
+                    response = await _httpClient.PostAsync($"{_authorizeEndPoint.Uri}?role={roles}", JsonContent.Create(""));
+                }
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new UnauthorizedException("Вы не авторизованы");
+                }
+                else if (response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    throw new ForbiddenException("Вам недоступен данный ресурс");
+                }
+                //response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                var session = JsonSerializer.Deserialize<UserSession>(responseBody, options);
+                userSession.UserId = session.UserId;
+                userSession.Role = session.Role;
+                await _next(context);
             }
             else
             {
-                response = await _httpClient.PostAsync($"{_authorizeEndPoint.Uri}?role={roles}", JsonContent.Create(""));
+                await _next(context);
             }
-
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                throw new UnauthorizedException("Вы не авторизованы");
-            }
-            else if (response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                throw new ForbiddenException("Вам недоступен данный ресурс");
-            }
-            //response.EnsureSuccessStatusCode();
-
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-            var session = JsonSerializer.Deserialize<UserSession>(responseBody, options);
-            userSession.UserId = session.UserId;
-            userSession.Role = session.Role;
-            await _next(context);
+            
         }
 
     }

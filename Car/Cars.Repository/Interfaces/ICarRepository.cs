@@ -1,4 +1,5 @@
 ﻿using Cars.Repository.Entities;
+using Infrastructure.Filters;
 using Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace Cars.Repository.Interfaces
 {
     public interface ICarRepository : IRepository<Car, Guid>
     {
+        Task<IEnumerable<Car>> GetCars(CarFilter carFilter);
     }
 }

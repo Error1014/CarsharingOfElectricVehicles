@@ -25,7 +25,7 @@ namespace Clients.Api.Controllers
         }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
-        public async Task<IActionResult> GetPassports([FromQuery]PageFilter pageFilter)
+        public async Task<IActionResult> GetPassports([FromQuery] PageFilter pageFilter)
         {
             var passport = await _passportService.GetPassports(pageFilter);
             return Ok(passport);
@@ -34,8 +34,8 @@ namespace Clients.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPassport([FromQuery] PassportDTO passportDTO)
         {
-            await _passportService.AddPassport(passportDTO);
-            return Ok();
+            var id = await _passportService.AddPassport(passportDTO);
+            return Ok(id);
         }
         [RoleAuthorize("Admin Operator")]
         [HttpPut("{id}")]

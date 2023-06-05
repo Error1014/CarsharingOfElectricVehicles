@@ -42,9 +42,9 @@ namespace Cars.Service.Services
             return result;
         }
 
-        public async Task<Dictionary<Guid, CarDTO>> GetCars(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, CarDTO>> GetCars(CarFilter carFilter)
         {
-            var list = await _unitOfWork.Cars.GetPage(pageFilter);
+            var list = await _unitOfWork.Cars.GetCars(carFilter);
             Dictionary<Guid, CarDTO> result = new Dictionary<Guid, CarDTO>();
             foreach (var item in list)
             {
@@ -56,7 +56,16 @@ namespace Cars.Service.Services
         public async Task RemoveCar(Guid id)
         {
             var car = await _unitOfWork.Cars.GetEntity(id);
+            if (car == null)
+            {
+                throw new NotFoundException("Автомобиль не найден");
+            }
             _unitOfWork.Cars.RemoveEntities(car);
+            var characteristic = await _unitOfWork.Characteristics.Find(x => x.CarId == car.Id);
+            if (characteristic != null)
+            {
+                _unitOfWork.Characteristics.RemoveEntities(characteristic);
+            }
             await _unitOfWork.Cars.SaveChanges();
         }
 

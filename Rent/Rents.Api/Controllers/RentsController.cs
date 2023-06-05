@@ -30,9 +30,9 @@ namespace Rents.Api.Controllers
             return Ok(rent);
         }
         [HttpGet]
-        public async Task<IActionResult> GetRents([FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetRents([FromQuery] HistoryRentFilter filter)
         {
-            var rent = await _rentsService.GetRents(pageFilter);
+            var rent = await _rentsService.GetRents(filter);
             return Ok(rent);
         }
         [RoleAuthorize("Client")]
