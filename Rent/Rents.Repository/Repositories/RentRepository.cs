@@ -20,12 +20,12 @@ namespace Rents.Repository.Repositories
 
         public async Task<Rent> GetActualRent(Guid clientId)
         {
-            var rent = Set.Where(x => x.ClientId == clientId).OrderBy(x=>x.DateTimeBeginBoocking).FirstOrDefault();
+            var rent = Set.Where(x => x.ClientId == clientId).OrderBy(x => x.DateTimeBeginBoocking).FirstOrDefault();
             return rent;
         }
 
         public async Task<IEnumerable<Rent>> GetRentHistoryPage(HistoryRentFilter filter)
-            {
+        {
             var query = Set;
             if (filter.ClientId.HasValue)
             {
@@ -33,7 +33,7 @@ namespace Rents.Repository.Repositories
             }
             if (filter.MinKilometersOutsideTariff.HasValue)
             {
-                query = query.Where(x => x.Kilometers >=filter.MinKilometersOutsideTariff);
+                query = query.Where(x => x.Kilometers >= filter.MinKilometersOutsideTariff);
             }
             if (filter.MaxKilometersOutsideTariff.HasValue)
             {

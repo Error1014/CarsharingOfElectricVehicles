@@ -13,5 +13,6 @@ namespace Cars.Repository.Entities
         public string Number { get; set; }
         public bool IsRent { get; set; }//арендована
         public bool IsRepair { get; set; }//в ремонте
+        public virtual Characteristic Characteristic { get; set; }
     }
 }
