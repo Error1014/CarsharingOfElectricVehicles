@@ -24,9 +24,9 @@ namespace Cars.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCars([FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetCars([FromQuery] CarFilter carFilter)
         {
-            var result = await _carService.GetCars(pageFilter);
+            var result = await _carService.GetCars(carFilter);
             return Ok(result);
         }
 

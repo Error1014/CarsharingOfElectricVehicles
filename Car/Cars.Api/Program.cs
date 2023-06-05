@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.RegistrationDbContext<CarContext>(builder.Configuration);
-await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
+//await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services
@@ -43,8 +43,8 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<AuthenticationMiddleware>();
-app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<AuthenticationMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
 app.UseStatusCodePages();
 app.MapControllers();
 app.Run();

@@ -42,9 +42,9 @@ namespace Cars.Service.Services
             return result;
         }
 
-        public async Task<Dictionary<Guid, CarDTO>> GetCars(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, CarDTO>> GetCars(CarFilter carFilter)
         {
-            var list = await _unitOfWork.Cars.GetPage(pageFilter);
+            var list = await _unitOfWork.Cars.GetCars(carFilter);
             Dictionary<Guid, CarDTO> result = new Dictionary<Guid, CarDTO>();
             foreach (var item in list)
             {
