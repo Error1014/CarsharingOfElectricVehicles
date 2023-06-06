@@ -38,6 +38,7 @@ namespace Authorization.Api.Controllers
         public async Task<IActionResult> RegistrationUser(LoginDTO loginDTO)
         {
             UserDTO userDTO = new UserDTO(loginDTO.Login, loginDTO.Password);
+            userDTO.RoleId = 3;
             await _userService.AddUser(userDTO);
             return Ok();
         }

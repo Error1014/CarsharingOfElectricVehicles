@@ -7,11 +7,12 @@ using TransactionsSystem.Repository.Repositories;
 using TransactionsSystem.Service.Interfaces;
 using TransactionsSystem.Service.Service;
 using TransactionsSystem.Service;
+using Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegistrationDbContext<TransactionContext>(builder.Configuration);
-
+await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -35,7 +36,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseMiddleware<AuthenticationMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();

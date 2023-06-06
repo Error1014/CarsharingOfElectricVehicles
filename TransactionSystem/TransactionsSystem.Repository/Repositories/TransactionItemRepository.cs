@@ -17,6 +17,13 @@ namespace TransactionsSystem.Repository.Repositories
         {
         }
 
+        public async Task<IEnumerable<TransactionItem>> GetTransactionByClient(Guid id)
+        {
+            var query = Set;
+            query = query.Where(x=>x.ClientId == id);
+            return await query.ToListAsync();
+        }
+
         public async Task<IEnumerable<TransactionItem>> GetTransactions(TransactionFilter transactionFilter)
         {
             var query = Set;

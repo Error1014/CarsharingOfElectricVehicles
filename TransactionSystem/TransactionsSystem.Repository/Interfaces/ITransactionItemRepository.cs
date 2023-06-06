@@ -12,5 +12,6 @@ namespace TransactionsSystem.Repository.Interfaces
     public interface ITransactionItemRepository : IRepository<TransactionItem, Guid>
     {
         Task<IEnumerable<TransactionItem>> GetTransactions(TransactionFilter transactionFilter);
+        Task<IEnumerable<TransactionItem>> GetTransactionByClient(Guid id);
     }
 }

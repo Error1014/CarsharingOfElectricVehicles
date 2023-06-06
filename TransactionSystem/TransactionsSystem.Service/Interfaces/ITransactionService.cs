@@ -10,6 +10,7 @@ namespace TransactionsSystem.Service.Interfaces
 {
     public interface ITransactionService
     {
+        Task<decimal> GetBalance();
         Task<TransactionItemDTO> GetTransaction(Guid id);
         Task<Dictionary<Guid, TransactionItemDTO>> GetTransactions(TransactionFilter filter);
         Task AddTransaction(TransactionItemDTO transactionItemDTO);

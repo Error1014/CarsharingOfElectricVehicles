@@ -80,5 +80,13 @@ namespace TransactionsSystem.Service.Service
             _unitOfWork.Transactions.RemoveEntities(transaction);
             await _unitOfWork.Transactions.SaveChanges();
         }
+
+        public async Task<decimal> GetBalance()
+        {
+            var transaction = await _unitOfWork.Transactions.GetTransactionByClient(_userSessionGetter.UserId);
+            var balance = transaction.Sum(x => x.Summ);
+            return balance;
+
+        }
     }
 }

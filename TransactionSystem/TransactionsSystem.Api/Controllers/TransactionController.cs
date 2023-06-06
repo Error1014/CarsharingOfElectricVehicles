@@ -29,6 +29,13 @@ namespace TransactionsSystem.Api.Controllers
             var result = await _transactionService.GetTransactions(pageFilter);
             return Ok(result);
         }
+        [RoleAuthorize("Client")]
+        [HttpGet(nameof(GetBalance))]
+        public async Task<IActionResult> GetBalance()
+        {
+            var result = await _transactionService.GetBalance();
+            return Ok(result);
+        }
         [HttpPost]
         public async Task<IActionResult> AddTransaction([FromQuery] TransactionItemDTO transactionItemDTO)
         {
