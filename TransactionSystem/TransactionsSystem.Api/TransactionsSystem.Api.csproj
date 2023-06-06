@@ -15,11 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TransactionsSystem.Repository\TransactionsSystem.Repository.csproj" />
+    <ProjectReference Include="..\TransactionsSystem.Service\TransactionsSystem.Service.csproj" />
   </ItemGroup>
 
 </Project>
