@@ -10,5 +10,14 @@ namespace TransactionsSystem.Repository.Entities
     public class TypeTransaction:BaseEntity<int>
     {
         public string Name { get; set; }
+
+        public TypeTransaction()
+        {
+
+        }
+        public TypeTransaction(string name)
+        {
+            Name = name;
+        }
     }
 }
