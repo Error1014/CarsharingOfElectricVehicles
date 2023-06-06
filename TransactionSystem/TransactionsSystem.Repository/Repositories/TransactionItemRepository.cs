@@ -41,20 +41,22 @@ namespace TransactionsSystem.Repository.Repositories
                 query = query.Where(x => x.DateTime <= transactionFilter.MaxDate);
             }
             var list = new List<TransactionItem>();
+            var typesStr = transactionFilter.TypeTransaction.Split(',');
+            var typesInt = new List<int>();
+            foreach (var item in typesStr)
+            {
+                typesInt.Add(int.Parse(item));
+            }
             if (transactionFilter.TypeTransaction!=null)
             {
                 foreach(var item in query)
                 {
                     bool isOk = false;
-                    for (int j = 0; j < transactionFilter.TypeTransaction.Count(); j++)
+                    for (int j = 0; j < typesInt.Count; j++)
                     {
-                        if (item.TypeTransactionId == transactionFilter.TypeTransaction[j])
+                        if (item.TypeTransactionId == typesInt[j])
                         {
                             isOk = true;
-                        }
-                        else
-                        {
-                            isOk = false;
                             break;
                         }
                     }

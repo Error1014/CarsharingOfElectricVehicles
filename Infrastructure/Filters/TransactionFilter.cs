@@ -13,7 +13,7 @@ namespace Infrastructure.Filters
         public decimal? MaxSumm { get; set; }
         public DateTime? MinDate { get; set; }
         public DateTime? MaxDate { get; set; }
-        public List<int>? TypeTransaction { get; set; }
+        public string? TypeTransaction { get; set; }
 
         public TransactionFilter() 
         {
@@ -21,7 +21,7 @@ namespace Infrastructure.Filters
         public TransactionFilter(int numPage, int sizePage) : base(numPage, sizePage)
         {
         }
-        public TransactionFilter(int numPage, int sizePage, Guid? clientId, decimal? minSumm, decimal? maxSumm, DateTime? minDate, DateTime? maxDate, List<int>? types):base(numPage, sizePage)
+        public TransactionFilter(int numPage, int sizePage, Guid? clientId, decimal? minSumm, decimal? maxSumm, DateTime? minDate, DateTime? maxDate, string? types):base(numPage, sizePage)
         {
             ClientId = clientId;
             MinSumm = minSumm;

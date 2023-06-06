@@ -2,6 +2,7 @@
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
+using Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,12 @@ namespace TransactionsSystem.Service.Service
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
-        public TransactionService(IUnitOfWork unitOfWork, IMapper map)
+        private readonly IUserSessionGetter _userSessionGetter;
+        public TransactionService(IUnitOfWork unitOfWork, IMapper map, IUserSessionGetter userSessionGetter)
         {
             _unitOfWork = unitOfWork;
             _map = map;
+            _userSessionGetter = userSessionGetter;
         }
 
         public async Task AddTransaction(TransactionItemDTO transactionItemDTO)
@@ -43,7 +46,11 @@ namespace TransactionsSystem.Service.Service
 
         public async Task<Dictionary<Guid, TransactionItemDTO>> GetTransactions(TransactionFilter filter)
         {
-            var list = await _unitOfWork.Transactions.GetPage(filter);
+            if (_userSessionGetter.Role=="Client")
+            {
+                filter.ClientId = _userSessionGetter.UserId;
+            }
+            var list = await _unitOfWork.Transactions.GetTransactions(filter);
             Dictionary<Guid, TransactionItemDTO> result = new Dictionary<Guid, TransactionItemDTO>();
             foreach (var item in list)
             {

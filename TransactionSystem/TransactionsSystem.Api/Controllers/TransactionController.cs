@@ -35,14 +35,14 @@ namespace TransactionsSystem.Api.Controllers
             await _transactionService.AddTransaction(transactionItemDTO);
             return Ok();
         }
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTransaction(Guid id, [FromQuery] TransactionItemDTO transactionItemDTO)
         {
             await _transactionService.UpdateTransactionItem(id, transactionItemDTO);
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveTransaction(Guid id)
         {
             await _transactionService.RemoveTransaction(id);
