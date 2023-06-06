@@ -3,6 +3,7 @@ using Clients.Repository.Entities;
 using Clients.Repository.Interfaces;
 using Clients.Service.Interfaces;
 using Infrastructure;
+using Infrastructure.DTO;
 using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
@@ -31,6 +32,13 @@ namespace Clients.Service.Services
         {
             var user = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
             return user.Balance;
+        }
+        public async Task<FIODTO> GetFIO()
+        {
+            var user = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
+            var passport = await _unitOfWork.Passports.GetEntity(user.PassportId);
+            var fio = _map.Map<FIODTO>(passport);
+            return fio;
         }
         public async Task<decimal?> GetBalance(Guid id)
         {

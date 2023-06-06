@@ -1,4 +1,5 @@
-﻿using Infrastructure.DTO.ClientDTOs;
+﻿using Infrastructure.DTO;
+using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.Filters;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Clients.Service.Interfaces
     public interface IClientService
     {
         Task<decimal?> GetBalance();
+        Task<FIODTO> GetFIO();
         Task<decimal?> GetBalance(Guid id);
         Task<ClientContactDTO> GetClient(Guid Id);
         Task<Dictionary<Guid, ClientContactDTO>> GetClients(PageFilter pageFilter);
