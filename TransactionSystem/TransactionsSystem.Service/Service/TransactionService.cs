@@ -63,7 +63,7 @@ namespace TransactionsSystem.Service.Service
             _unitOfWork.Transactions.UpdateEntities(transaction);
             await _unitOfWork.Transactions.SaveChanges();
         }
-        public async Task DeleteTransaction(Guid id)
+        public async Task RemoveTransaction(Guid id)
         {
             var transaction = await _unitOfWork.Transactions.GetEntity(id);
             if (transaction == null)

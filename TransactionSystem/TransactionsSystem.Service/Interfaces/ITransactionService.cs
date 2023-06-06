@@ -13,7 +13,7 @@ namespace TransactionsSystem.Service.Interfaces
         Task<TransactionItemDTO> GetTransaction(Guid id);
         Task<Dictionary<Guid, TransactionItemDTO>> GetTransactions(PageFilter pageFilter);
         Task AddTransaction(TransactionItemDTO transactionItemDTO);
-        Task DeleteTransaction(Guid id);
+        Task RemoveTransaction(Guid id);
         Task UpdateTransactionItem(Guid id, TransactionItemDTO transactionItemDTO);
     }
 }
