@@ -1,4 +1,5 @@
-﻿using Infrastructure.DTO;
+﻿using Infrastructure.Attributes;
+using Infrastructure.DTO;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +24,7 @@ namespace TransactionsSystem.Api.Controllers
             return Ok(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetTransactions([FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetTransactions([FromQuery] TransactionFilter pageFilter)
         {
             var result = await _transactionService.GetTransactions(pageFilter);
             return Ok(result);
@@ -40,6 +41,7 @@ namespace TransactionsSystem.Api.Controllers
             await _transactionService.UpdateTransactionItem(id, transactionItemDTO);
             return Ok();
         }
+        [RoleAuthorize("Admin")]
         [HttpDelete]
         public async Task<IActionResult> RemoveTransaction(Guid id)
         {

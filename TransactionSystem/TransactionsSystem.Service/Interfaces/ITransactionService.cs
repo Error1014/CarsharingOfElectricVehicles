@@ -11,7 +11,7 @@ namespace TransactionsSystem.Service.Interfaces
     public interface ITransactionService
     {
         Task<TransactionItemDTO> GetTransaction(Guid id);
-        Task<Dictionary<Guid, TransactionItemDTO>> GetTransactions(PageFilter pageFilter);
+        Task<Dictionary<Guid, TransactionItemDTO>> GetTransactions(TransactionFilter filter);
         Task AddTransaction(TransactionItemDTO transactionItemDTO);
         Task RemoveTransaction(Guid id);
         Task UpdateTransactionItem(Guid id, TransactionItemDTO transactionItemDTO);

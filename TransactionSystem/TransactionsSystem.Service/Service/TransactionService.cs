@@ -41,9 +41,9 @@ namespace TransactionsSystem.Service.Service
             return result;
         }
 
-        public async Task<Dictionary<Guid, TransactionItemDTO>> GetTransactions(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, TransactionItemDTO>> GetTransactions(TransactionFilter filter)
         {
-            var list = await _unitOfWork.Transactions.GetPage(pageFilter);
+            var list = await _unitOfWork.Transactions.GetPage(filter);
             Dictionary<Guid, TransactionItemDTO> result = new Dictionary<Guid, TransactionItemDTO>();
             foreach (var item in list)
             {

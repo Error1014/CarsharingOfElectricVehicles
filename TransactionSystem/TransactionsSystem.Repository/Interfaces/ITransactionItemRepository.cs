@@ -1,4 +1,5 @@
-﻿using Infrastructure.Repository;
+﻿using Infrastructure.Filters;
+using Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace TransactionsSystem.Repository.Interfaces
 {
     public interface ITransactionItemRepository : IRepository<TransactionItem, Guid>
     {
+        Task<IEnumerable<TransactionItem>> GetTransactions(TransactionFilter transactionFilter);
     }
 }
