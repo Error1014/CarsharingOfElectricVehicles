@@ -35,6 +35,12 @@ namespace Clients.Api.Controllers
             var list = await _clientService.GetBalance();
             return Ok(list);
         }
+        [HttpGet(nameof(GetFIO))]
+        public async Task<IActionResult> GetFIO()
+        {
+            var list = await _clientService.GetBalance();
+            return Ok(list);
+        }
         [HttpGet(nameof(GetBalance)+"/{id}")]
         public async Task<IActionResult> GetBalance(Guid id)
         {
