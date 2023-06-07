@@ -88,5 +88,12 @@ namespace TransactionsSystem.Service.Service
             return balance;
 
         }
+        public async Task<decimal> GetBalance(Guid id)
+        {
+            var transaction = await _unitOfWork.Transactions.GetTransactionByClient(id);
+            var balance = transaction.Sum(x => x.Summ);
+            return balance;
+
+        }
     }
 }

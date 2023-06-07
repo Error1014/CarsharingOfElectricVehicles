@@ -94,6 +94,10 @@ namespace Cars.Service.Services
         public async Task BookingCar(Guid id)
         {
             var car = await _unitOfWork.Cars.GetEntity(id);
+            if (car == null)
+            {
+                throw new NotFoundException("Автомобиль не найден");
+            }
             if (car.IsRent == true)
             {
                 throw new NotFoundException("Автомобиль уже арендован");

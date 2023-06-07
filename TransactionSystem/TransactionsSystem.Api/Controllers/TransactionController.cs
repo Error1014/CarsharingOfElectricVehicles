@@ -29,6 +29,12 @@ namespace TransactionsSystem.Api.Controllers
             var result = await _transactionService.GetTransactions(pageFilter);
             return Ok(result);
         }
+        [HttpGet(nameof(GetBalance)+"/{id}")]
+        public async Task<IActionResult> GetBalance(Guid id)
+        {
+            var result = await _transactionService.GetBalance(id);
+            return Ok(result);
+        }
         [RoleAuthorize("Client")]
         [HttpGet(nameof(GetBalance))]
         public async Task<IActionResult> GetBalance()
@@ -37,7 +43,7 @@ namespace TransactionsSystem.Api.Controllers
             return Ok(result);
         }
         [HttpPost]
-        public async Task<IActionResult> AddTransaction([FromQuery] TransactionItemDTO transactionItemDTO)
+        public async Task<IActionResult> AddTransaction([FromBody] TransactionItemDTO transactionItemDTO)
         {
             await _transactionService.AddTransaction(transactionItemDTO);
             return Ok();

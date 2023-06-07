@@ -32,11 +32,11 @@ namespace Infrastructure.Middlewares
             _httpClient.BaseAddress = new Uri(_authorizeEndPoint.BaseAddress);
             var endpoint = context.Features.Get<IEndpointFeature>()?.Endpoint;
             var attribute = endpoint?.Metadata.GetMetadata<RoleAuthorizeAttribute>();
-            if (attribute != null)
-            {
-                var roles = attribute?.Roles;
+            var roles = attribute?.Roles;
 
-                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            if (attribute != null && !token.IsNullOrEmpty())
+            {
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
                 var response = new HttpResponseMessage();

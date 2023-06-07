@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Filters;
 using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace TransactionsSystem.Repository.Repositories
                 query = query.Where(x => x.DateTime <= transactionFilter.MaxDate);
             }
             var list = new List<TransactionItem>();
-            var typesStr = transactionFilter.TypeTransaction.Split(',');
+            var typesStr = transactionFilter.TypeTransaction.IsNullOrEmpty() ? new string[0] : transactionFilter.TypeTransaction.Split(',');
             var typesInt = new List<int>();
             foreach (var item in typesStr)
             {

@@ -21,11 +21,11 @@ namespace Cars.Repository.Repositories
         public async Task<IEnumerable<Car>> GetCars(CarFilter carFilter)
         {
             var query = Set;
-            if (carFilter.Brand.IsNullOrEmpty())
+            if (!carFilter.Brand.IsNullOrEmpty())
             {
                 query = query.Where(x => x.BrandModel.Brand == carFilter.Brand);
             }
-            if (carFilter.Model.IsNullOrEmpty())
+            if (!carFilter.Model.IsNullOrEmpty())
             {
                 query = query.Where(x => x.BrandModel.Brand == carFilter.Model);
             }
@@ -45,15 +45,15 @@ namespace Cars.Repository.Repositories
             {
                 query = query.Where(x => x.Characteristic.Mileage <= carFilter.MaxMileage);
             }
-            if (carFilter.Transmission.IsNullOrEmpty())
+            if (!carFilter.Transmission.IsNullOrEmpty())
             {
                 query = query.Where(x => x.Characteristic.Transmission == carFilter.Transmission);
             }
-            if (carFilter.WheelDrive.IsNullOrEmpty())
+            if (!carFilter.WheelDrive.IsNullOrEmpty())
             {
                 query = query.Where(x => x.Characteristic.WheelDrive == carFilter.WheelDrive);
             }
-            if (carFilter.Rudder.IsNullOrEmpty())
+            if (!carFilter.Rudder.IsNullOrEmpty())
             {
                 query = query.Where(x => x.Characteristic.Rudder == carFilter.Rudder);
             }

@@ -30,13 +30,12 @@ namespace Rents.Service.Services
         private readonly UriEndPoint _updateBalanceUri;
         private readonly UriEndPoint _boockingCarUri;
         private readonly UriEndPoint _cancelBoockingCarUri;
-        private HttpClient _httpClient;
         public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
             _userSessionGetter = userSessionGetter;
-            _httpClient = new HttpClient();
+
             _getBalanceUri = configuration.GetSection("EndPoint:GetBalance").Get<UriEndPoint>();
             _updateBalanceUri = configuration.GetSection("EndPoint:UpdateBalance").Get<UriEndPoint>();
             _boockingCarUri = configuration.GetSection("EndPoint:BoockingCar").Get<UriEndPoint>();
@@ -46,6 +45,7 @@ namespace Rents.Service.Services
 
         private async Task<decimal?> GetBalance()
         {
+            HttpClient _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(_getBalanceUri.BaseAddress);
             var response = await _httpClient.GetAsync(_getBalanceUri.Uri + _userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
@@ -106,12 +106,13 @@ namespace Rents.Service.Services
         {
             if (pageFilter.ClientId == null)
             {
-                if (_userSessionGetter.Role=="Client")
+                if (_userSessionGetter.Role == "Client")
                 {
                     pageFilter.ClientId = _userSessionGetter.UserId;
                 }
             }
             var list = await _unitOfWork.Rents.GetPage(pageFilter);
+            list = list.OrderBy(x => x.DateTimeBeginBoocking);
             Dictionary<Guid, RentDTO> result = new Dictionary<Guid, RentDTO>();
             foreach (var item in list)
             {
@@ -136,22 +137,28 @@ namespace Rents.Service.Services
             rent.Kilometers = km;
             rent.TotalPrice = await GetTotalPrice(rent);
             _unitOfWork.Rents.UpdateEntities(rent);
+            await UpdateRentCar(rent.CarId, false);
             await _unitOfWork.Rents.SaveChanges();
             await PayRent(rent.TotalPrice);
         }
 
         private async Task PayRent(decimal summ)
         {
+            HttpClient _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(_updateBalanceUri.BaseAddress);
             summ = 0 - summ;
-            var response = await _httpClient.PutAsync(_updateBalanceUri.Uri + summ, JsonContent.Create(""));
+            var transact = new TransactionItemDTO();
+            transact.ClientId = _userSessionGetter.UserId;
+            transact.Summ = summ;
+            transact.DateTime = DateTime.Now;
+            transact.TypeTransactionId = 3;
+            var response = await _httpClient.PostAsync(_updateBalanceUri.Uri, JsonContent.Create(transact));
             response.EnsureSuccessStatusCode();
-            var responseBody = await response.Content.ReadAsStringAsync();
-            decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
         }
 
         private async Task<bool> UpdateRentCar(Guid? carId, bool isRent)
         {
+            HttpClient _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(_boockingCarUri.BaseAddress);
             HttpResponseMessage response = new HttpResponseMessage();
             if (isRent)
@@ -170,6 +177,7 @@ namespace Rents.Service.Services
 
         private async Task<decimal> GetTotalPrice(Rent rent)
         {
+            HttpClient _httpClient = new HttpClient();
             var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId.Value);
             var minutNoTariff = rent.DateTimeEndRent - rent.DateTimeBeginRent;
             int totalMin = minutNoTariff.Value.Minutes;
@@ -190,8 +198,8 @@ namespace Rents.Service.Services
             {
                 min = totalMin - timeSubscription;
             }
-
-            var tariffTime = tariff.Duration.Value.Minutes;
+            
+            var tariffTime = tariff.Duration == null ? 0 : tariff.Duration.Value.Minutes;
 
             if (totalMin > tariffTime)
             {
