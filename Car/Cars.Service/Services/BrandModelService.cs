@@ -21,11 +21,12 @@ namespace Cars.Service.Services
             _unitOfWork = unitOfWork;
             _map = map;
         }
-        public async Task AddBrandModel(BrandModelDTO brandModelDTO)
+        public async Task<Guid> AddBrandModel(BrandModelDTO brandModelDTO)
         {
             var brandModel = _map.Map<BrandModel>(brandModelDTO);
             await _unitOfWork.BrandModels.AddEntities(brandModel);
             await _unitOfWork.BrandModels.SaveChanges();
+            return brandModel.Id;
         }
         public async Task<BrandModelDTO> GetBrandModel(Guid id)
         {

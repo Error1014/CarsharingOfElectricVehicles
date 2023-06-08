@@ -22,9 +22,9 @@ namespace Cars.Service.Services
             _map = mapper;
         }
 
-        public async Task AddCharacteristicByCarId(Guid carId, CharacteristicDTO characteristicDTO)
+        public async Task<Guid> AddCharacteristicByCarId(CharacteristicDTO characteristicDTO)
         {
-            var characteristic = await _unitOfWork.Characteristics.Find(x => x.CarId == carId);
+            var characteristic = await _unitOfWork.Characteristics.Find(x => x.CarId == characteristicDTO.CarId);
             if (characteristic != null)
             {
                 throw new BadRequestException("Характеристика на данный автомобиль уже есть");
@@ -32,10 +32,11 @@ namespace Cars.Service.Services
             else
             {
                 characteristic = _map.Map<Characteristic>(characteristicDTO);
-                characteristic.CarId = carId;
+                characteristic.CarId = characteristicDTO.CarId;
                 await _unitOfWork.Characteristics.AddEntities(characteristic);
                 await _unitOfWork.Characteristics.SaveChanges();
             }
+            return characteristic.Id;
         }
 
         public async Task RemoveCharacteristicByCarId(Guid carId)

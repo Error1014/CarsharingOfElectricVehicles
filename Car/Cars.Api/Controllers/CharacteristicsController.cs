@@ -22,25 +22,25 @@ namespace Cars.Api.Controllers
             return Ok();
         }
         [RoleAuthorize("Admin")]
-        [HttpPost("{carId}")]
-        public async Task<IActionResult> AddCharacteristic(Guid carId, [FromQuery] CharacteristicDTO characteristicDTO)
+        [HttpPost]
+        public async Task<IActionResult> AddCharacteristic([FromQuery] CharacteristicDTO characteristicDTO)
         {
-            await _characteristicService.AddCharacteristicByCarId(carId, characteristicDTO);
-            return Ok();
+            var id = await _characteristicService.AddCharacteristicByCarId( characteristicDTO);
+            return Created(new Uri("/api/Characteristics", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin")]
         [HttpPut("{carId}")]
         public async Task<IActionResult> UpdateCharacteristic(Guid carId, [FromQuery] CharacteristicDTO characteristicDTO)
         {
             await _characteristicService.UpdateCharacteristicByCarId(carId, characteristicDTO);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{carId}")]
         public async Task<IActionResult> RemoveCharacteristic(Guid carId)
         {
             await _characteristicService.RemoveCharacteristicByCarId(carId);
-            return Ok();
+            return NoContent();
         }
 
     }

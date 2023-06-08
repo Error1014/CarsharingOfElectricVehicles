@@ -10,7 +10,7 @@ namespace Cars.Service.Interfaces
     public interface ICharacteristicService
     {
         Task<CharacteristicDTO> GetCharacteristicByCarId(Guid carId);
-        Task AddCharacteristicByCarId(Guid carId, CharacteristicDTO characteristicDTO);
+        Task<Guid> AddCharacteristicByCarId(CharacteristicDTO characteristicDTO);
         Task UpdateCharacteristicByCarId(Guid carId, CharacteristicDTO characteristicDTO);
         Task RemoveCharacteristicByCarId(Guid carId);
     }
