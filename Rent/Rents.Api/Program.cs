@@ -17,7 +17,6 @@ builder.Services.RegistrationDbContext<RentContext>(builder.Configuration);
 await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 
 builder.Services.AddControllers();
-
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<ITariffService, TariffService>()

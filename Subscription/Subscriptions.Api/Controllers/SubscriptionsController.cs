@@ -39,22 +39,22 @@ namespace Subscriptions.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSubscription([FromQuery] SubscriptionDTO subscriptionDTO)
         {
-            await _subscriptionService.AddSubscripton(subscriptionDTO);
-            return Ok();
+            var id = await _subscriptionService.AddSubscripton(subscriptionDTO);
+            return Created(new Uri("/api/Subscriptions", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSubscription(Guid id, [FromQuery] SubscriptionDTO subscriptionDTO)
         {
             await _subscriptionService.UpdateSubscripton(id, subscriptionDTO);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveSubscription(Guid id)
         {
             await _subscriptionService.RemoveSubscription(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

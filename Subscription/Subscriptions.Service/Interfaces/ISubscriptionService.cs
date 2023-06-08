@@ -13,7 +13,7 @@ namespace Subscriptions.Service.Interfaces
         Task<SubscriptionDTO> GetActualSubscription();
         Task<SubscriptionDTO> GetSubscription(Guid id);
         Task<Dictionary<Guid , SubscriptionDTO>> GetSubscriptions(PageFilter pageFilter);
-        Task AddSubscripton(SubscriptionDTO subscriptionDTO);
+        Task<Guid> AddSubscripton(SubscriptionDTO subscriptionDTO);
         Task UpdateSubscripton(Guid id, SubscriptionDTO subscriptionDTO);
         Task RemoveSubscription(Guid id);
 
