@@ -54,7 +54,7 @@ namespace Rents.Service.Services
             return balance;
         }
 
-        public async Task AddRent(AddRentDTO rentDTO)
+        public async Task<Guid> AddRent(AddRentDTO rentDTO)
         {
             var tariff = await _unitOfWork.Tariffs.GetEntity(rentDTO.TariffId);
             var balance = await GetBalance();
@@ -73,6 +73,7 @@ namespace Rents.Service.Services
             await UpdateRentCar(rent.CarId, true);
             await _unitOfWork.Rents.AddEntities(rent);
             await _unitOfWork.Rents.SaveChanges();
+            return rent.Id;
         }
         public async Task CancelBookingCar()
         {

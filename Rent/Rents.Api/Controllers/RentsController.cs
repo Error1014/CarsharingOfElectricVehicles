@@ -39,29 +39,29 @@ namespace Rents.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRent([FromQuery] AddRentDTO rentDTO)
         {
-            await _rentsService.AddRent(rentDTO);
-            return Ok();
+            var id = await _rentsService.AddRent(rentDTO);
+            return Created(new Uri("/api/Rents", UriKind.Relative), id);
         }
         [RoleAuthorize("Client")]
         [HttpPut(nameof(CancelBooking))]
         public async Task<IActionResult> CancelBooking()
         {
             await _rentsService.CancelBookingCar();
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Client")]
         [HttpPut(nameof(StartTrip))]
         public async Task<IActionResult> StartTrip()
         {
             await _rentsService.StartTrip();
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Client")]
         [HttpPut(nameof(EndTrip))]
         public async Task<IActionResult> EndTrip([FromQuery] decimal kilometers)
         {
             await _rentsService.EndTrip(kilometers);
-            return Ok();
+            return NoContent();
         }
     }
 }
