@@ -43,23 +43,23 @@ namespace TransactionsSystem.Api.Controllers
             return Ok(result);
         }
         [HttpPost]
-        public async Task<IActionResult> AddTransaction([FromBody] TransactionItemDTO transactionItemDTO)
+        public async Task<IActionResult> AddTransaction([FromForm] TransactionItemDTO transactionItemDTO)
         {
-            await _transactionService.AddTransaction(transactionItemDTO);
-            return Ok();
+            var id = await _transactionService.AddTransaction(transactionItemDTO);
+            return Created(new Uri("/api/Transaction", UriKind.Relative), id);
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTransaction(Guid id, [FromQuery] TransactionItemDTO transactionItemDTO)
         {
             await _transactionService.UpdateTransactionItem(id, transactionItemDTO);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveTransaction(Guid id)
         {
             await _transactionService.RemoveTransaction(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

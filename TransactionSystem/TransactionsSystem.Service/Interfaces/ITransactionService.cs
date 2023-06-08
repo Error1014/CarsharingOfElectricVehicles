@@ -14,7 +14,7 @@ namespace TransactionsSystem.Service.Interfaces
         Task<decimal> GetBalance(Guid id);
         Task<TransactionItemDTO> GetTransaction(Guid id);
         Task<Dictionary<Guid, TransactionItemDTO>> GetTransactions(TransactionFilter filter);
-        Task AddTransaction(TransactionItemDTO transactionItemDTO);
+        Task<Guid> AddTransaction(TransactionItemDTO transactionItemDTO);
         Task RemoveTransaction(Guid id);
         Task UpdateTransactionItem(Guid id, TransactionItemDTO transactionItemDTO);
     }

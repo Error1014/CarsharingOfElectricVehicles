@@ -101,6 +101,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TransactionSystem", "TransactionSystem", "{9AA103A8-94C8-474B-8773-DCBF275B01B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionsSystem.Api", "TransactionSystem\TransactionsSystem.Api\TransactionsSystem.Api.csproj", "{5E679F92-076C-4E41-AECE-806AEA16B058}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7C038EE6-C4B3-4A7A-B354-C0602BD1A604} = {7C038EE6-C4B3-4A7A-B354-C0602BD1A604}
+		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionsSystem.Repository", "TransactionSystem\TransactionsSystem.Repository\TransactionsSystem.Repository.csproj", "{A211E8A6-A4BE-4150-98CD-B33FA8225980}"
 EndProject

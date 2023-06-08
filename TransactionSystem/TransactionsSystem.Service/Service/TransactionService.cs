@@ -26,11 +26,12 @@ namespace TransactionsSystem.Service.Service
             _userSessionGetter = userSessionGetter;
         }
 
-        public async Task AddTransaction(TransactionItemDTO transactionItemDTO)
+        public async Task<Guid> AddTransaction(TransactionItemDTO transactionItemDTO)
         {
             var transaction = _map.Map<TransactionItem>(transactionItemDTO);
             await _unitOfWork.Transactions.AddEntities(transaction);
             await _unitOfWork.Transactions.SaveChanges();
+            return transaction.Id;
         }
 
         public async Task<TransactionItemDTO> GetTransaction(Guid id)
