@@ -7,6 +7,6 @@ namespace Chats.Service.Interfaces
     public interface IMessageService
     {
         Task<IEnumerable<MessageDTO>> GetMessages(Guid chatId, PageFilter pageFilter);
-        Task SendMessage(MessageDTO messageDTO);
+        Task<Guid> SendMessage(MessageDTO messageDTO);
     }
 }

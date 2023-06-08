@@ -25,8 +25,8 @@ namespace Chats.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> PostMessages([FromForm]MessageDTO messageDTO)
         {
-            await _messageService.SendMessage(messageDTO);
-            return Ok();
+            var id = await _messageService.SendMessage(messageDTO);
+            return Created(new Uri("/api/Messages", UriKind.Relative), id);
         }
     }
 }

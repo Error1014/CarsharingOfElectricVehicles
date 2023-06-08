@@ -39,21 +39,21 @@ namespace Chats.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddChat()
         {
-            await _chatService.AddChat();
-            return Ok();
+            var id =  await _chatService.AddChat();
+            return Created(new Uri("/api/Chats", UriKind.Relative), id);
         }
         [HttpPut]
         public async Task<IActionResult> UpdateChat(Guid id, ChatDTO chatDTO)
         {
             await _chatService.UpdateChat(id, chatDTO);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete]
         public async Task<IActionResult> RemoveChat(Guid id)
         {
             await _chatService.RemoveChat(id);
-            return Ok();
+            return NoContent();
         }
     }
 }
