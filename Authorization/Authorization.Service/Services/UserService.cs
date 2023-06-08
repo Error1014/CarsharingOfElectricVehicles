@@ -33,7 +33,7 @@ namespace Authorization.Service.Services
             _map = mapper;
             _configuration = configuration;
         }
-        public async Task AddUser(UserDTO userDTO)
+        public async Task<Guid> AddUser(UserDTO userDTO)
         {
             var user = await _unitOfWork.Users.Find(u => u.Login == userDTO.Login);
             if (user !=null)
@@ -44,6 +44,7 @@ namespace Authorization.Service.Services
             user.Password = GeneratorHash.GetHash(userDTO.Password);
             await _unitOfWork.Users.AddEntities(user);
             await _unitOfWork.Users.SaveChanges();
+            return user.Id;
         }
 
         public async Task<Dictionary<Guid, UserDTO>> GetUsers(PageFilter pageFilter)

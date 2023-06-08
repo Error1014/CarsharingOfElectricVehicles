@@ -10,6 +10,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authorization", "Authorization", "{EF0847CD-2595-489E-8E5B-9616E7870A79}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization.Api", "Authorization\Authorization.Api\Authorization.Api.csproj", "{7C038EE6-C4B3-4A7A-B354-C0602BD1A604}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8} = {D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization.Repository", "Authorization\Authorization.Repository\Authorization.Repository.csproj", "{49D2A101-F101-40BA-AE70-D985538B1351}"
 EndProject
@@ -31,11 +34,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{B3DB73BA-72FA-47B9-A62D-0534AA280F44}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Api", "Configuration\Configuration.Api\Configuration.Api.csproj", "{D9B2E146-6368-41EF-931B-8DEA6E9EBFD8}"
-	ProjectSection(ProjectDependencies) = postProject
-		{05F9274C-499B-4C46-BEFC-8F4C8CB0982B} = {05F9274C-499B-4C46-BEFC-8F4C8CB0982B}
-		{49D2A101-F101-40BA-AE70-D985538B1351} = {49D2A101-F101-40BA-AE70-D985538B1351}
-		{7C038EE6-C4B3-4A7A-B354-C0602BD1A604} = {7C038EE6-C4B3-4A7A-B354-C0602BD1A604}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Repository", "Configuration\Configuration.Repository\Configuration.Repository.csproj", "{3D8ACC74-0881-41C4-881B-A4576E6AAEE7}"
 EndProject

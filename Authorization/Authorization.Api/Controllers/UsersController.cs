@@ -39,8 +39,8 @@ namespace Authorization.Api.Controllers
         {
             UserDTO userDTO = new UserDTO(loginDTO.Login, loginDTO.Password);
             userDTO.RoleId = 3;
-            await _userService.AddUser(userDTO);
-            return Ok();
+            var id = await _userService.AddUser(userDTO);
+            return Created(new Uri("/api/BrandModels", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin")]
         [HttpPost(nameof(RegistrationOperator))]
@@ -48,29 +48,29 @@ namespace Authorization.Api.Controllers
         {
             UserDTO userDTO = new UserDTO(loginDTO.Login, loginDTO.Password);
             userDTO.RoleId = 2;
-            await _userService.AddUser(userDTO);
-            return Ok();
+            var id = await _userService.AddUser(userDTO);
+            return Created(new Uri("/api/BrandModels", UriKind.Relative), id);
         }
         [RoleAuthorize("Operator Client")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, LoginDTO userDTO)
         {
             await _userService.UpdateUser(id, userDTO);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Operator")]
         [HttpPut(nameof(SetClientRole)+"/{id}")]
         public async Task<IActionResult> SetClientRole(Guid id)
         {
             await _userService.SetClientRole(id);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remove(Guid id)
         {
             await _userService.RemoveUser(id);
-            return Ok();
+            return NoContent();
         }
         #endregion
     }
