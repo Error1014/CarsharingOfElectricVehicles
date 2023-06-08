@@ -10,7 +10,7 @@ namespace TransactionsSystem.Service.Interfaces
     {
         Task<string> GetTypeTransaction(int transactionId);
         Task<Dictionary<int, string>> GetTypeTransactions();
-        Task AddTypeTransaction(string typeTransaction);
+        Task<int> AddTypeTransaction(string typeTransaction);
         Task UpdateTypeTransaction(int id, string value);
         Task RemoveTypeTransiction(int transactionId);
     }

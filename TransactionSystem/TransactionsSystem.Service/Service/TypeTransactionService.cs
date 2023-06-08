@@ -20,11 +20,12 @@ namespace TransactionsSystem.Service.Service
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddTypeTransaction(string typeTransaction)
+        public async Task<int> AddTypeTransaction(string typeTransaction)
         {
             var type = new TypeTransaction(typeTransaction);
             await _unitOfWork.TypeTransactions.AddEntities(type);
             await _unitOfWork.TypeTransactions.SaveChanges();
+            return type.Id;
         }
 
         public async Task<string> GetTypeTransaction(int transactionId)

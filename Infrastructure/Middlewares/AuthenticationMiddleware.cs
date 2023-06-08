@@ -35,7 +35,7 @@ namespace Infrastructure.Middlewares
             var roles = attribute?.Roles;
 
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            if (attribute != null && !token.IsNullOrEmpty())
+            if (attribute != null || !token.IsNullOrEmpty())
             {
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
