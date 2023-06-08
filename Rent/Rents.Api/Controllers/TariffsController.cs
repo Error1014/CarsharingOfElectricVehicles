@@ -32,22 +32,22 @@ namespace Rents.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddTariff([FromQuery] TariffDTO tarifDTO)
         {
-            await _tariffService.AddTariff(tarifDTO);
-            return Ok();
+            var id = await _tariffService.AddTariff(tarifDTO);
+            return Created(new Uri("/api/Tariffs", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTariff(Guid id, [FromQuery] TariffDTO tarifDTO)
         {
             await _tariffService.UpdateTarif(id, tarifDTO);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveTariff(Guid id)
         {
             await _tariffService.RemoveTariff(id);
-            return Ok();
+            return NoContent();
         }
     }
 }
