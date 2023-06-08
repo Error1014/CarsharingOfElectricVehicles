@@ -44,7 +44,7 @@ namespace Subscriptions.Service.Services
             return result;
         }
 
-        public async Task Subscribe(SubscribleDTO subscribleDTO)
+        public async Task<Guid> Subscribe(SubscribleDTO subscribleDTO)
         {
             var subscription = await _unitOfWork.Subscriptions.GetEntity(subscribleDTO.SubscriptionId);
             if (subscription == null)
@@ -59,6 +59,7 @@ namespace Subscriptions.Service.Services
             var subscrible= new ClientSubscription(_userSessionGetter.UserId, subscribleDTO.SubscriptionId, subscribleDTO.QuntityMonths);
             await _unitOfWork.ClientSubscriptions.AddEntities(subscrible);
             await _unitOfWork.ClientSubscriptions.SaveChanges();
+            return subscrible.Id;
         }
 
         private async Task<decimal?> GetBalance()
