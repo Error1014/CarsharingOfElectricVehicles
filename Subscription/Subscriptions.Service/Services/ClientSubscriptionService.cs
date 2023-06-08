@@ -2,7 +2,9 @@
 using Infrastructure.DTO;
 using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.Exceptions;
+using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Subscriptions.Repository.Entities;
 using Subscriptions.Repository.Interfaces;
 using Subscriptions.Service.Interfaces;
@@ -22,11 +24,13 @@ namespace Subscriptions.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
-        public ClientSubscriptionService(IUnitOfWork unitOfWork, IMapper map, IUserSessionGetter userSessionGetter)
+        private readonly UriEndPoint _getBalanceEndPoint;
+        public ClientSubscriptionService(IUnitOfWork unitOfWork, IMapper map, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = map;
             _userSessionGetter = userSessionGetter;
+            _getBalanceEndPoint = configuration.GetSection("EndPoint:GetBalance").Get<UriEndPoint>();
         }
 
         public async Task<ClientSubscriptionDTO> GetActualSubscription()
@@ -42,14 +46,30 @@ namespace Subscriptions.Service.Services
 
         public async Task Subscribe(SubscribleDTO subscribleDTO)
         {
-            var subscriptionDTO = await _unitOfWork.Subscriptions.GetEntity(subscribleDTO.SubscriptionId);
-            if (subscriptionDTO == null)
+            var subscription = await _unitOfWork.Subscriptions.GetEntity(subscribleDTO.SubscriptionId);
+            if (subscription == null)
             {
                 throw new NotFoundException("Абонимент не найден");
             }
-            var subscription = new ClientSubscription(_userSessionGetter.UserId, subscribleDTO.SubscriptionId, subscribleDTO.QuntityMonths);
-            await _unitOfWork.ClientSubscriptions.AddEntities(subscription);
+            var balance = await GetBalance();
+            if (balance<subscription.Price)
+            {
+                throw new BadRequestException("Недостаточно средств");
+            }
+            var subscrible= new ClientSubscription(_userSessionGetter.UserId, subscribleDTO.SubscriptionId, subscribleDTO.QuntityMonths);
+            await _unitOfWork.ClientSubscriptions.AddEntities(subscrible);
             await _unitOfWork.ClientSubscriptions.SaveChanges();
+        }
+
+        private async Task<decimal?> GetBalance()
+        {
+            HttpClient _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri(_getBalanceEndPoint.BaseAddress);
+            var response = await _httpClient.GetAsync(_getBalanceEndPoint.Uri + _userSessionGetter.UserId);
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
+            return balance;
         }
 
     }

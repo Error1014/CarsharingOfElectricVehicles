@@ -20,7 +20,7 @@ namespace Rents.Repository.Repositories
 
         public async Task<Rent> GetActualRent(Guid clientId)
         {
-            var rent = Set.Where(x => x.ClientId == clientId).OrderBy(x => x.DateTimeBeginBoocking).FirstOrDefault();
+            var rent = await Set.Where(x => x.ClientId == clientId).OrderBy(x => x.DateTimeBeginBoocking).LastAsync();
             return rent;
         }
 
