@@ -35,21 +35,21 @@ namespace Clients.Api.Controllers
         public async Task<IActionResult> AddPassport([FromQuery] PassportDTO passportDTO)
         {
             var id = await _passportService.AddPassport(passportDTO);
-            return Ok(id);
+            return Created(new Uri("/api/Passports", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin Operator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePassport(Guid id, [FromQuery] PassportDTO passportDTO)
         {
             await _passportService.UpdatePassport(id, passportDTO);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemovePassport(Guid id)
         {
             await _passportService.RemovePassport(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Configuration.Api.Controllers
         public async Task<IActionResult> AddConfigurationItem(ConfigurationItemDTO configurationItem)
         {
             var id = await _configurationService.AddConfiguration(configurationItem);
-            return Created(new Uri("/api/Tariffs", UriKind.Relative), id);
+            return Created(new Uri("/api/Configurations", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin")]
         [HttpPut("{id}")]
