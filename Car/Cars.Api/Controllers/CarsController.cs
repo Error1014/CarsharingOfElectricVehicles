@@ -34,36 +34,36 @@ namespace Cars.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCar([FromQuery] CarDTO carDTO)
         {
-            await _carService.AddCar(carDTO);
-            return Ok();
+            var id = await _carService.AddCar(carDTO);
+            return Created(new Uri("/api/Cars", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin")]
         [HttpPut(nameof(UpdateCar) + ("/{id}"))]
         public async Task<IActionResult> UpdateCar(Guid id, [FromQuery] CarDTO carDTO)
         {
             await _carService.UpdateCar(id, carDTO);
-            return Ok();
+            return NoContent();
         }
         [HttpPut(nameof(BookingCar) + ("/{id}"))]
         public async Task<IActionResult> BookingCar(Guid id)
         {
             await _carService.BookingCar(id);
             var car = await _carService.GetCar(id);
-            return Ok(car.IsRent);
+            return NoContent();
         }
         [HttpPut(nameof(CancelBookingCar) + ("/{id}"))]
         public async Task<IActionResult> CancelBookingCar(Guid id)
         {
             await _carService.CancelBookingCar(id);
             var car = await _carService.GetCar(id);
-            return Ok(car.IsRent);
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveCar(Guid id)
         {
             await _carService.RemoveCar(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

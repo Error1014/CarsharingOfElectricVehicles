@@ -29,7 +29,7 @@ namespace Configuration.Service
 
         }
 
-        public async Task AddConfiguration(ConfigurationItemDTO configurationItem)
+        public async Task<Guid> AddConfiguration(ConfigurationItemDTO configurationItem)
         {
             var item = await _unitOfWork.ConfigurationItems.Find(x=>x.Key==configurationItem.key);
             if (item != null)
@@ -39,6 +39,7 @@ namespace Configuration.Service
             var result = _map.Map<ConfigurationItem>(configurationItem);
             await _unitOfWork.ConfigurationItems.AddEntities(result);
             await _unitOfWork.ConfigurationItems.SaveChanges();
+            return result.Id;
         }
 
         public async Task UpdateConfiguration(Guid id, ConfigurationItemDTO configurationItem)
@@ -63,6 +64,28 @@ namespace Configuration.Service
             var result = _map.Map<ConfigurationItem>(configurationItem);
             result.Id = item.Id;
             _unitOfWork.ConfigurationItems.UpdateEntities(result);
+            await _unitOfWork.ConfigurationItems.SaveChanges();
+        }
+
+        public async Task RemoveConfiguration(Guid id)
+        {
+            var item = await _unitOfWork.ConfigurationItems.GetEntity(id);
+            if (item == null)
+            {
+                throw new NotFoundException("Запись не найдена");
+            }
+            _unitOfWork.ConfigurationItems.RemoveEntities(item);
+            await _unitOfWork.ConfigurationItems.SaveChanges();
+        }
+
+        public async Task RemoveConfiguration(string key)
+        {
+            var item = await _unitOfWork.ConfigurationItems.Find(x => x.Key == key);
+            if (item == null)
+            {
+                throw new NotFoundException("Запись не найдена");
+            }
+            _unitOfWork.ConfigurationItems.RemoveEntities(item);
             await _unitOfWork.ConfigurationItems.SaveChanges();
         }
     }

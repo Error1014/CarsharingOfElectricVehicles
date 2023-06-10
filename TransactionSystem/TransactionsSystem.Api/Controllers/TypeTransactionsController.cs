@@ -30,22 +30,22 @@ namespace TransactionsSystem.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddType(string value)
         {
-            await _transactionService.AddTypeTransaction(value);
-            return Ok();
+            var id = await _transactionService.AddTypeTransaction(value);
+            return Created(new Uri("/api/TypeTransaction", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateType(int id, string value)
         {
             await _transactionService.UpdateTypeTransaction(id, value);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveType(int id)
         {
             await _transactionService.RemoveTypeTransiction(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

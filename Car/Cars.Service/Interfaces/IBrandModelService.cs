@@ -11,7 +11,7 @@ namespace Cars.Service.Interfaces
     {
         Task<BrandModelDTO> GetBrandModel(Guid id);
         Task<Dictionary<Guid,BrandModelDTO>> GetBrandModels();
-        Task AddBrandModel(BrandModelDTO brandModelDTO);
+        Task<Guid> AddBrandModel(BrandModelDTO brandModelDTO);
         Task UpdateBrandModel(Guid id,BrandModelDTO brandModelDTO);
         Task RemodeBrandModel(Guid Id);
     }

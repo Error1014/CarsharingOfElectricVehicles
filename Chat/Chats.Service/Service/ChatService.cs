@@ -26,7 +26,7 @@ namespace Chats.Service.Service
             _userSessionGetter = userSessionGetter;
         }
 
-        public async Task AddChat()
+        public async Task<Guid> AddChat()
         {
             var chat = await _unitOfWork.Chats.Find(x=>x.ClientId == _userSessionGetter.UserId);
             if (chat!=null)
@@ -37,6 +37,7 @@ namespace Chats.Service.Service
             chat.ClientId = _userSessionGetter.UserId;  
             await _unitOfWork.Chats.AddEntities(chat);
             await _unitOfWork.Chats.SaveChanges();
+            return chat.Id;
         }
 
         public async Task<ChatDTO> GetChat(Guid id)

@@ -11,6 +11,6 @@ namespace Subscriptions.Service.Interfaces
     public interface IClientSubscriptionService
     {
         Task<ClientSubscriptionDTO> GetActualSubscription();
-        Task Subscribe(SubscribleDTO subscribleDTO);
+        Task<Guid> Subscribe(SubscribleDTO subscribleDTO);
     }
 }

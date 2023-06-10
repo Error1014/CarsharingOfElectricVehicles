@@ -27,22 +27,36 @@ namespace Configuration.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddConfigurationItem(ConfigurationItemDTO configurationItem)
         {
-            await _configurationService.AddConfiguration(configurationItem);
-            return Ok();
+            var id = await _configurationService.AddConfiguration(configurationItem);
+            return Created(new Uri("/api/Configurations", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateConfigurationItem(Guid id, ConfigurationItemDTO configurationItem)
         {
             await _configurationService.UpdateConfiguration(id, configurationItem);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Admin")]
         [HttpPut("{key}")]
         public async Task<IActionResult> UpdateConfigurationItem(string key, ConfigurationItemDTO configurationItem)
         {
             await _configurationService.UpdateConfiguration(key, configurationItem);
-            return Ok();
+            return NoContent();
+        }
+        [RoleAuthorize("Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveConfigurationItem(Guid id)
+        {
+            await _configurationService.RemoveConfiguration(id);
+            return NoContent();
+        }
+        [RoleAuthorize("Admin")]
+        [HttpDelete("{key}")]
+        public async Task<IActionResult> RemoveConfigurationItem(string key)
+        {
+            await _configurationService.RemoveConfiguration(key);
+            return NoContent();
         }
     }
 }

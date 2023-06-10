@@ -37,8 +37,8 @@ namespace Cars.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBrandModel([FromQuery]BrandModelDTO brandModel)
         {
-            await _brandModelService.AddBrandModel(brandModel);
-            return Ok();
+            var id = await _brandModelService.AddBrandModel(brandModel);
+            return Created(new Uri("/api/BrandModels", UriKind.Relative), id);
         }
 
         [RoleAuthorize("Admin Operator")]
@@ -46,7 +46,7 @@ namespace Cars.Api.Controllers
         public async Task<IActionResult> UpdateBrandModel(Guid id, BrandModelDTO brandModel)
         {
             await _brandModelService.UpdateBrandModel(id, brandModel);
-            return Ok();
+            return NoContent();
         }
 
         [RoleAuthorize("Admin Operator")]
@@ -54,7 +54,7 @@ namespace Cars.Api.Controllers
         public async Task<IActionResult> RemoveBrandModel(Guid id)
         {
             await _brandModelService.RemodeBrandModel(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

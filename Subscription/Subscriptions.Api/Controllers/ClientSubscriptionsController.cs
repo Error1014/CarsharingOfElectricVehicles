@@ -26,8 +26,8 @@ namespace Subscriptions.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddClientSubscribtion([FromQuery] SubscribleDTO subscribleDTO)
         {
-            await _clientSubscriptionService.Subscribe(subscribleDTO);
-            return Ok();
+            var id = await _clientSubscriptionService.Subscribe(subscribleDTO);
+            return Created(new Uri("/api/ClientSubscriptions", UriKind.Relative), id);
         }
 
     }

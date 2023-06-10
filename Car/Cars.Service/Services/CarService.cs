@@ -24,11 +24,12 @@ namespace Cars.Service.Services
             _map = mapper;
         }
 
-        public async Task AddCar(CarDTO carDTO)
+        public async Task<Guid> AddCar(CarDTO carDTO)
         {
             var car = _map.Map<Car>(carDTO);
             await _unitOfWork.Cars.AddEntities(car);
             await _unitOfWork.Cars.SaveChanges();
+            return car.Id;
         }
 
         public async Task<CarDTO> GetCar(Guid id)

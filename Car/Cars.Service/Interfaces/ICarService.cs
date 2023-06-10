@@ -12,7 +12,7 @@ namespace Cars.Service.Interfaces
     {
         Task<CarDTO> GetCar(Guid id);
         Task<Dictionary<Guid, CarDTO>> GetCars(CarFilter carFilter);
-        Task AddCar(CarDTO carDTO);
+        Task<Guid> AddCar(CarDTO carDTO);
         Task UpdateCar(Guid id, CarDTO carDTO);
         Task BookingCar(Guid id);
         Task CancelBookingCar(Guid id);

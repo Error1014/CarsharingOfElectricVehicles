@@ -11,7 +11,7 @@ namespace Rents.Service.Interfaces
     {
         Task<TariffDTO> GetTariff(Guid Id);
         Task<Dictionary<Guid,TariffDTO>> GetTariffs();
-        Task AddTariff(TariffDTO tariffDTO);
+        Task<Guid> AddTariff(TariffDTO tariffDTO);
         Task RemoveTariff(Guid Id);
         Task UpdateTarif(Guid Id,TariffDTO tariffDTO);
     }

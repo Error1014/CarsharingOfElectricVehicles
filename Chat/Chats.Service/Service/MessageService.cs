@@ -25,13 +25,11 @@ namespace Chats.Service.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
-        private readonly IBufferedFileUploadService _bufferedFileUploadService;
-        public MessageService(IUnitOfWork unitOfWork, IMapper map, IUserSessionGetter userSessionGetter, IBufferedFileUploadService bufferedFileUploadService)
+        public MessageService(IUnitOfWork unitOfWork, IMapper map, IUserSessionGetter userSessionGetter)
         {
             _unitOfWork = unitOfWork;
             _map = map;
             _userSessionGetter = userSessionGetter;
-            _bufferedFileUploadService = bufferedFileUploadService;
         }
 
         public async Task<IEnumerable<MessageDTO>> GetMessages(Guid chatId, PageFilter pageFilter)
@@ -40,7 +38,7 @@ namespace Chats.Service.Service
             var result = _map.Map<IEnumerable<MessageDTO>>(list);
             return result;
         }
-        public async Task SendMessage(MessageDTO messageDTO)
+        public async Task<Guid> SendMessage(MessageDTO messageDTO)
         {
             var message = _map.Map<Message>(messageDTO);
             message.DateTime = DateTime.Now;
@@ -68,6 +66,7 @@ namespace Chats.Service.Service
             }
             await _unitOfWork.Messages.AddEntities(message);
             await _unitOfWork.Messages.SaveChanges();
+            return message.Id;
         }
     }
 

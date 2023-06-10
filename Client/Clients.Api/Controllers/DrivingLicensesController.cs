@@ -35,14 +35,14 @@ namespace Clients.Api.Controllers
         public async Task<IActionResult> AddDrivingLicense([FromQuery] DrivingLicenseDTO drivingLicenseDTO)
         {
             var id = await _drivingLicenseService.AddDrivingLicense(drivingLicenseDTO);
-            return Ok(id);
+            return Created(new Uri("/api/DrivingLicenses", UriKind.Relative), id);
         }
         [RoleAuthorize("Admin Operator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDrivingLicense(Guid id, [FromQuery] DrivingLicenseDTO drivingLicenseDTO)
         {
             await _drivingLicenseService.UpdateDrivingLicense(id, drivingLicenseDTO);
-            return Ok();
+            return NoContent();
         }
 
         [RoleAuthorize("Admin")]
@@ -50,7 +50,7 @@ namespace Clients.Api.Controllers
         public async Task<IActionResult> RemoveDrivingLicense(Guid id)
         {
             await _drivingLicenseService.RemoveDrivingLicense(id);
-            return Ok();
+            return NoContent();
         }
     }
 }

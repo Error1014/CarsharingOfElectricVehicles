@@ -26,11 +26,12 @@ namespace Subscriptions.Service.Services
             _userSessionGetter = userSessionGetter;
         }
 
-        public async Task AddSubscripton(SubscriptionDTO subscriptionDTO)
+        public async Task<Guid> AddSubscripton(SubscriptionDTO subscriptionDTO)
         {
             var subscription = _map.Map<Subscription>(subscriptionDTO);
             await _unitOfWork.Subscriptions.AddEntities(subscription);
             await _unitOfWork.Subscriptions.SaveChanges();
+            return subscription.Id;
         }
         public async Task<SubscriptionDTO> GetActualSubscription()
         {

@@ -50,34 +50,34 @@ namespace Clients.Api.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> AddClient(Guid id, ClientDocumentDTO clientDTO)
         {
-            await _clientService.AddClient(id, clientDTO);
-            return Ok();
+           await _clientService.AddClient(id, clientDTO);
+            return Created(new Uri("/api/Configurations", UriKind.Relative), id);
         }
         [RoleAuthorize("Operator")]
         [HttpPut(nameof(UpdateClientByOperator) + "/{id}")]
         public async Task<IActionResult> UpdateClientByOperator(Guid id, ClientDocumentDTO clientDTO)
         {
             await _clientService.UpdateClient(id, clientDTO);
-            return Ok();
+            return NoContent();
         }
         [RoleAuthorize("Client")]
         [HttpPut(nameof(UpdateClientByClient))]
         public async Task<IActionResult> UpdateClientByClient(ClientContactDTO clientDTO)
         {
             await _clientService.UpdateClient(clientDTO);
-            return Ok();
+            return NoContent();
         }
         [HttpPut(nameof(UpdateBalance))]
         public async Task<IActionResult> UpdateBalanse(decimal summ)
         {
             await _clientService.UpdateBalance(summ);
-            return Ok();
+            return NoContent();
         }
         [HttpPut(nameof(UpdateBalance) + "/{id}")]
         public async Task<IActionResult> UpdateBalance(decimal summ)
         {
             await _clientService.UpdateBalance(summ);
-            return Ok();
+            return NoContent();
         }
 
         [RoleAuthorize("Admin")]
@@ -85,7 +85,7 @@ namespace Clients.Api.Controllers
         public async Task<IActionResult> RemoveClient(Guid Id)
         {
             await _clientService.RemoveClient(Id);
-            return Ok();
+            return NoContent();
         }
     }
 }

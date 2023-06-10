@@ -23,11 +23,12 @@ namespace Rents.Service.Services
             _map = mapper;
         }
 
-        public async Task AddTariff(TariffDTO tariffDTO)
+        public async Task<Guid> AddTariff(TariffDTO tariffDTO)
         {
             var tariff = _map.Map<Tariff>(tariffDTO);
             await _unitOfWork.Tariffs.AddEntities(tariff);
             await _unitOfWork.Tariffs.SaveChanges();
+            return tariff.Id;
         }
 
         public async Task<TariffDTO> GetTariff(Guid Id)

@@ -99,17 +99,26 @@ namespace Authorization.Api.Controllers
                 return new StatusCodeResult(401);
             }
             bool isAuthorize = false;
-
-            foreach (var item in roles)
+            if (roles.IsNullOrEmpty() ) 
             {
-                if (item == myRole)
+                userSession.Role = myRole;
+                userSession.UserId = accountId;
+                isAuthorize = true;
+            }
+            else
+            {
+                foreach (var item in roles)
                 {
-                    userSession.Role = myRole;
-                    userSession.UserId = accountId;
-                    isAuthorize = true;
-                    break;
+                    if (item == myRole)
+                    {
+                        userSession.Role = myRole;
+                        userSession.UserId = accountId;
+                        isAuthorize = true;
+                        break;
+                    }
                 }
             }
+            
             if (!isAuthorize) return new StatusCodeResult(403);
             return Ok(userSession);
         }
