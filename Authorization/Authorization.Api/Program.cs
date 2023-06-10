@@ -12,11 +12,12 @@ using Infrastructure.Middlewares;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.SetJwtOptions(builder.Configuration);
+
 builder.Services.RegistrationDbContext<UserContext>(builder.Configuration);
 await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.Configure<JwtOptions>(
     builder.Configuration.GetSection("JwtOptions"));
+//builder.Services.SetJwtOptions(builder.Configuration);
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
