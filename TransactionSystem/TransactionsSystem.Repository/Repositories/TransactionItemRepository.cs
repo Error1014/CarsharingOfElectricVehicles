@@ -77,7 +77,7 @@ namespace TransactionsSystem.Repository.Repositories
             }
             list = list
                 .OrderBy(x => x.Id)
-                .Skip((transactionFilter.NumPage - 1) * transactionFilter.SizePage)
+                .Skip(transactionFilter.Offset)
                 .Take(transactionFilter.SizePage).ToList();
             return list;
         }

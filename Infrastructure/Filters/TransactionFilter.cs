@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Filters
 {
-    public class TransactionFilter:PageFilter
+    public class TransactionFilter:DefoltFilter
     {
         public Guid? ClientId { get; set; }
         public decimal? MinSumm { get; set; }

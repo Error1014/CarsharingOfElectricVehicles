@@ -8,7 +8,7 @@ namespace Infrastructure.Filters
 {
     public class CarFilter
     {
-        public PageFilter? PageFilter { get; set; }
+        public DefoltFilter? PageFilter { get; set; }
         public string? Brand { get; set; }
         public string? Model { get; set; }
         public int? MinYearOfRelease { get; set; }
@@ -22,9 +22,9 @@ namespace Infrastructure.Filters
         public bool? IsRepair { get; set; }//в ремонте
         public CarFilter()
         {
-            PageFilter = new PageFilter();
+            PageFilter = new DefoltFilter();
         }
-        public CarFilter(PageFilter? pageFilter, string? brand, string? model, int? minYearOfRelease, int? maxYearOfRelease, int? minMileage, int? maxMileage, string? transmission, string? wheelDrive, string? rudder, bool? isRent, bool isRepair)
+        public CarFilter(DefoltFilter? pageFilter, string? brand, string? model, int? minYearOfRelease, int? maxYearOfRelease, int? minMileage, int? maxMileage, string? transmission, string? wheelDrive, string? rudder, bool? isRent, bool isRepair)
         {
             PageFilter = pageFilter;
             Brand = brand;

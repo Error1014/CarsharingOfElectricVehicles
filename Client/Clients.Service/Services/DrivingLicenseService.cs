@@ -43,7 +43,7 @@ namespace Clients.Service.Services
             return drivingLicenseDTO;
         }
 
-        public async Task<Dictionary<Guid, DrivingLicenseDTO>> GetDrivingLicenses(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, DrivingLicenseDTO>> GetDrivingLicenses(DefoltFilter pageFilter)
         {
             var drivingLicenses = await _unitOfWork.DrivingLicenses.GetPage(pageFilter);
             Dictionary<Guid, DrivingLicenseDTO> result = new Dictionary<Guid, DrivingLicenseDTO>();

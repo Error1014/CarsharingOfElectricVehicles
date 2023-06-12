@@ -25,7 +25,7 @@ namespace Clients.Api.Controllers
         }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
-        public async Task<IActionResult> GetPassports([FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetPassports([FromQuery] DefoltFilter pageFilter)
         {
             var passport = await _passportService.GetPassports(pageFilter);
             return Ok(passport);

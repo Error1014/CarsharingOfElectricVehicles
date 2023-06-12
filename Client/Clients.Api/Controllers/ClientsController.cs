@@ -24,7 +24,7 @@ namespace Clients.Api.Controllers
         }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
-        public async Task<IActionResult> GetClients([FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetClients([FromQuery] DefoltFilter pageFilter)
         {
             var list = await _clientService.GetClients(pageFilter);
             return Ok(list);

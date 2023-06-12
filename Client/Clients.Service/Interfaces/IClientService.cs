@@ -15,7 +15,7 @@ namespace Clients.Service.Interfaces
         Task<FIODTO> GetFIO();
         Task<decimal?> GetBalance(Guid id);
         Task<ClientContactDTO> GetClient(Guid Id);
-        Task<Dictionary<Guid, ClientContactDTO>> GetClients(PageFilter pageFilter);
+        Task<Dictionary<Guid, ClientContactDTO>> GetClients(DefoltFilter pageFilter);
         Task AddClient(Guid id,ClientDocumentDTO clientDTO);
         Task UpdateClient(Guid id,ClientDocumentDTO clientDTO);
         Task UpdateClient(ClientContactDTO clientDTO);

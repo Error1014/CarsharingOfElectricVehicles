@@ -25,7 +25,7 @@ namespace Clients.Api.Controllers
         }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
-        public async Task<IActionResult> GetDrivingLicenses([FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetDrivingLicenses([FromQuery] DefoltFilter pageFilter)
         {
             var drivingLicense = await _drivingLicenseService.GetDrivingLicenses(pageFilter);
             return Ok(drivingLicense);

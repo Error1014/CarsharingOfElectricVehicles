@@ -43,7 +43,7 @@ namespace Clients.Service.Services
             return passportDTO;
         }
 
-        public async Task<Dictionary<Guid, PassportDTO>> GetPassports(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, PassportDTO>> GetPassports(DefoltFilter pageFilter)
         {
             var passports = await _unitOfWork.Passports.GetPage(pageFilter);
             Dictionary<Guid, PassportDTO> result = new Dictionary<Guid, PassportDTO>();

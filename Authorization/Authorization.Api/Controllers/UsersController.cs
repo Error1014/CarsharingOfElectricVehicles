@@ -31,7 +31,7 @@ namespace Authorization.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var list = await _userService.GetUsers(new PageFilter(1, 10));
+            var list = await _userService.GetUsers(new DefoltFilter(1, 10));
             return Ok(list);
         }
         [HttpPost]

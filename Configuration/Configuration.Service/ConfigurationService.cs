@@ -20,6 +20,7 @@ namespace Configuration.Service
         public async Task<Dictionary<Guid, ConfigurationItemDTO>> GetConfiguration()
         {
             var list = await _unitOfWork.ConfigurationItems.GetAll();
+            list = list.OrderBy(x => x.Key).ToList();
             Dictionary<Guid, ConfigurationItemDTO> result = new Dictionary<Guid, ConfigurationItemDTO>();
             foreach (var item in list)
             {

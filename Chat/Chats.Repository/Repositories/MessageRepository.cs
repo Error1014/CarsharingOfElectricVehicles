@@ -17,10 +17,10 @@ namespace Chats.Repository.Repositories
         {
         }
 
-        public async Task<IEnumerable<Message>> GetMessages(Guid chatId, PageFilter pageFilter)
+        public async Task<IEnumerable<Message>> GetMessages(Guid chatId, DefoltFilter pageFilter)
         {
             var list = Set.Where(x => x.ChatId == chatId).OrderByDescending(x => x.DateTime).AsQueryable();
-            list = list.Skip((pageFilter.NumPage - 1) * pageFilter.SizePage).Take(pageFilter.SizePage);
+            list = list.Skip(pageFilter.Offset).Take(pageFilter.SizePage);
             return list;
 
         }

@@ -47,7 +47,7 @@ namespace Authorization.Service.Services
             return user.Id;
         }
 
-        public async Task<Dictionary<Guid, UserDTO>> GetUsers(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, UserDTO>> GetUsers(DefoltFilter pageFilter)
         {
             var list = await _unitOfWork.Users.GetPage(pageFilter);
             Dictionary<Guid, UserDTO> result = new Dictionary<Guid, UserDTO>();

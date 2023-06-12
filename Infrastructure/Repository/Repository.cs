@@ -29,12 +29,12 @@ namespace Infrastructure.Repository
         {
             return await context.Set<TEntity>().ToListAsync();
         }
-        public async Task<IEnumerable<TEntity>> GetPage(PageFilter pageFilter)
+        public async Task<IEnumerable<TEntity>> GetPage(DefoltFilter pageFilter)
         {
             var query = context.Set<TEntity>().AsQueryable();
             query = query
                 .OrderBy(x => x.Id)
-                .Skip((pageFilter.NumPage - 1) * pageFilter.SizePage)
+                .Skip(pageFilter.Offset)
                 .Take(pageFilter.SizePage);
             return await query.ToListAsync();
         }

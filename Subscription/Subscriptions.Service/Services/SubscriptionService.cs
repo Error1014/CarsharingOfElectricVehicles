@@ -59,7 +59,7 @@ namespace Subscriptions.Service.Services
             return result;
         }
 
-        public async Task<Dictionary<Guid, SubscriptionDTO>> GetSubscriptions(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, SubscriptionDTO>> GetSubscriptions(DefoltFilter pageFilter)
         {
             var subscription = await _unitOfWork.Subscriptions.GetPage(pageFilter);
             Dictionary<Guid, SubscriptionDTO> result = new Dictionary<Guid, SubscriptionDTO>();

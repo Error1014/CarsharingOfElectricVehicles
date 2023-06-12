@@ -18,7 +18,7 @@ namespace Infrastructure.Repository
         void RemoveEntities(TEntity entity);
         Task SaveChanges();
         Task<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
-        Task<IEnumerable<TEntity>> GetPage(PageFilter pageFilter);
+        Task<IEnumerable<TEntity>> GetPage(DefoltFilter pageFilter);
 
     }
 }

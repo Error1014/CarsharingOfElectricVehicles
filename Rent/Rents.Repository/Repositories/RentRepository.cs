@@ -57,7 +57,7 @@ namespace Rents.Repository.Repositories
             }
             query = query
                 .OrderBy(x => x.Id)
-                .Skip((filter.NumPage - 1) * filter.SizePage)
+                .Skip(filter.Offset)
                 .Take(filter.SizePage);
             return await query.ToListAsync();
         }

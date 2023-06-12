@@ -30,7 +30,7 @@ namespace Subscriptions.Api.Controllers
             return Ok(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetSubscriptions([FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetSubscriptions([FromQuery] DefoltFilter pageFilter)
         {
             var result = await _subscriptionService.GetSubscriptions(pageFilter);
             return Ok(result);

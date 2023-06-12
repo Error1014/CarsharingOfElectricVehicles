@@ -30,7 +30,7 @@ namespace Chats.Api.Controllers
             return Ok(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetChats([FromQuery]PageFilter pageFilter)
+        public async Task<IActionResult> GetChats([FromQuery]DefoltFilter pageFilter)
         {
             var result = await _chatService.GetChats(pageFilter);
             return Ok(result);

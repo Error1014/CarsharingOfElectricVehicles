@@ -67,7 +67,7 @@ namespace Chats.Service.Service
             return result;
         }
 
-        public async Task<Dictionary<Guid, ChatDTO>> GetChats(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, ChatDTO>> GetChats(DefoltFilter pageFilter)
         {
             var chats = await _unitOfWork.Chats.GetPage(pageFilter);
             Dictionary<Guid, ChatDTO> result = new Dictionary<Guid, ChatDTO>();

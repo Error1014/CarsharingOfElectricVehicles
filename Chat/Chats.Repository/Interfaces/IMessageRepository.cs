@@ -11,6 +11,6 @@ namespace Chats.Repository.Interfaces
 {
     public interface IMessageRepository : IRepository<Message, Guid>
     {
-        Task<IEnumerable<Message>> GetMessages(Guid chatId, PageFilter pageFilter);
+        Task<IEnumerable<Message>> GetMessages(Guid chatId, DefoltFilter pageFilter);
     }
 }

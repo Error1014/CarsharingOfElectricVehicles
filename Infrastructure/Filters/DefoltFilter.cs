@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Filters
 {
-    public class PageFilter
+    public class DefoltFilter
     {
-        public int NumPage { get; set; }
+        public int Offset { get; set; }
         public int SizePage { get; set; }
 
-        public PageFilter()
+        public DefoltFilter()
         {
-            NumPage = 1;
+            Offset = 0;
             SizePage = 10;
         }
-        public PageFilter(int numPage, int sizePage)
+        public DefoltFilter(int numPage, int sizePage)
         {
-            NumPage = numPage;
+            Offset = numPage;
             SizePage = sizePage;
         }
     }

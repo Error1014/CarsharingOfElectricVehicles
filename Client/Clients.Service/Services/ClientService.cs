@@ -55,7 +55,7 @@ namespace Clients.Service.Services
             return _map.Map<ClientContactDTO>(client);
         }
 
-        public async Task<Dictionary<Guid, ClientContactDTO>> GetClients(PageFilter pageFilter)
+        public async Task<Dictionary<Guid, ClientContactDTO>> GetClients(DefoltFilter pageFilter)
         {
             var clients = await _unitOfWork.Clients.GetAll();
             Dictionary<Guid, ClientContactDTO> result = new Dictionary<Guid, ClientContactDTO>();

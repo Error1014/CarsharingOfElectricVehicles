@@ -17,7 +17,7 @@ namespace Chats.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMessages(Guid chatId, [FromQuery] PageFilter pageFilter)
+        public async Task<IActionResult> GetMessages(Guid chatId, [FromQuery] DefoltFilter pageFilter)
         {
             var result = await _messageService.GetMessages(chatId, pageFilter);
             return Ok(result);

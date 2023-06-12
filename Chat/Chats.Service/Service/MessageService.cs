@@ -32,7 +32,7 @@ namespace Chats.Service.Service
             _userSessionGetter = userSessionGetter;
         }
 
-        public async Task<IEnumerable<MessageDTO>> GetMessages(Guid chatId, PageFilter pageFilter)
+        public async Task<IEnumerable<MessageDTO>> GetMessages(Guid chatId, DefoltFilter pageFilter)
         {
             var list = await _unitOfWork.Messages.GetMessages(chatId, pageFilter);
             var result = _map.Map<IEnumerable<MessageDTO>>(list);

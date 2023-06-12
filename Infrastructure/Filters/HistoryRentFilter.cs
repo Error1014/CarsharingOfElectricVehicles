@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Filters
 {
-    public class HistoryRentFilter : PageFilter
+    public class HistoryRentFilter : DefoltFilter
     {
         public Guid? ClientId { get; set; }
         public DateTime? DateTimeBeginRent { get; set; }
