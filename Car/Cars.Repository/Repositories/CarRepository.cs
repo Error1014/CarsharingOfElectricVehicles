@@ -67,8 +67,8 @@ namespace Cars.Repository.Repositories
             }
             query = query
                 .OrderBy(x => x.Id)
-                .Skip((carFilter.PageFilter.Offset - 1) * carFilter.PageFilter.SizePage)
-                .Take(carFilter.PageFilter.SizePage);
+                .Skip(carFilter.Offset)
+                .Take(carFilter.SizePage);
             return await query.ToListAsync();
         }
     }

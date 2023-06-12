@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Filters
 {
-    public class CarFilter
+    public class CarFilter: DefoltFilter
     {
-        public DefoltFilter? PageFilter { get; set; }
         public string? Brand { get; set; }
         public string? Model { get; set; }
         public int? MinYearOfRelease { get; set; }
@@ -22,11 +21,13 @@ namespace Infrastructure.Filters
         public bool? IsRepair { get; set; }//в ремонте
         public CarFilter()
         {
-            PageFilter = new DefoltFilter();
+            Offset = 0;
+            SizePage = 20;
         }
-        public CarFilter(DefoltFilter? pageFilter, string? brand, string? model, int? minYearOfRelease, int? maxYearOfRelease, int? minMileage, int? maxMileage, string? transmission, string? wheelDrive, string? rudder, bool? isRent, bool isRepair)
+        public CarFilter(int offset, int sizePage, string? brand, string? model, int? minYearOfRelease, int? maxYearOfRelease, int? minMileage, int? maxMileage, string? transmission, string? wheelDrive, string? rudder, bool? isRent, bool isRepair)
         {
-            PageFilter = pageFilter;
+            Offset = offset;
+            SizePage = sizePage;
             Brand = brand;
             Model = model;
             MinMileage = minMileage;

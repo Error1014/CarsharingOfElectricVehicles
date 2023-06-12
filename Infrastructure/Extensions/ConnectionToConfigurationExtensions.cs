@@ -10,6 +10,7 @@ namespace Infrastructure.Extensions
     {
         public static async Task AddConfigurationApiSource(this IConfigurationBuilder builder, IConfiguration configuration)
         {
+            
             HttpClient httpClient = new HttpClient();
             UriEndPoint uriEndPoint = new UriEndPoint();
             uriEndPoint = configuration.GetSection("Configuration")

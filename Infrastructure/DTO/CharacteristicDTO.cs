@@ -8,7 +8,7 @@ namespace Infrastructure.DTO
 {
     public class CharacteristicDTO
     {
-        public Guid CarId { get; private set; }
+        public Guid CarId { get; set; }
         public int YearOfRelease { get; set; }
         public string Color { get; set; }
         public int Mileage { get; set; }
@@ -18,10 +18,6 @@ namespace Infrastructure.DTO
 
         public CharacteristicDTO() 
         {
-        }
-        public CharacteristicDTO(Guid carId)
-        {
-            CarId = carId;
         }
     }
 }

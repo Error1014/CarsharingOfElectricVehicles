@@ -32,7 +32,6 @@ namespace Cars.Service.Services
             else
             {
                 characteristic = _map.Map<Characteristic>(characteristicDTO);
-                characteristic.CarId = characteristicDTO.CarId;
                 await _unitOfWork.Characteristics.AddEntities(characteristic);
                 await _unitOfWork.Characteristics.SaveChanges();
             }
