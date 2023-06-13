@@ -180,6 +180,12 @@ namespace Rents.Service.Services
         {
             HttpClient _httpClient = new HttpClient();
             var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId.Value);
+            if (tariff==null)
+            {
+                tariff = new Tariff();
+                tariff.Price = 0;
+                tariff.AdditionalPrice = 0;
+            }
             var minutNoTariff = rent.DateTimeEndRent - rent.DateTimeBeginRent;
             int totalMin = minutNoTariff.Value.Minutes;
 
@@ -193,13 +199,20 @@ namespace Rents.Service.Services
             };
             var clientSubscription = JsonSerializer.Deserialize<SubscriptionDTO>(responseBody, options);
             var timeSubscription = clientSubscription.QuantityMinutsInDay; // нужно найти оставшиеся минуты
-
-            int min = 0;
-            if (totalMin > timeSubscription)
+            var filter =new HistoryRentFilter();
+            filter.DateTimeBeginRent = DateTime.Today;
+            filter.DateTimeEndRent = DateTime.Now;
+            var listRentToday = (await _unitOfWork.Rents.GetRentHistoryPage(filter)).ToList();
+            int minutRentToday = 0;
+            foreach (var item in listRentToday)
             {
-                min = totalMin - timeSubscription;
+                minutRentToday += (item.DateTimeEndRent - item.DateTimeBeginRent).Value.Minutes;
             }
-            
+            int min = 0;
+            timeSubscription = timeSubscription - minutRentToday < 0 ? 0 : timeSubscription - minutRentToday;
+
+            min = totalMin - timeSubscription;
+
             var tariffTime = tariff.Duration == null ? 0 : tariff.Duration.Value.Minutes;
 
             if (totalMin > tariffTime)

@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.RegistrationDbContext<ClientContext>(builder.Configuration);
 
-//await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
+await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
@@ -74,8 +74,8 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseMiddleware<AuthenticationMiddleware>();
-//app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<AuthenticationMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseStatusCodePages();
 app.MapControllers();
 app.Run();

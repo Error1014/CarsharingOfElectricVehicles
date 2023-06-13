@@ -22,7 +22,7 @@ namespace Clients.Api.Controllers
             var client = await _clientService.GetClient(id);
             return Ok(client);
         }
-        //[RoleAuthorize("Admin Operator")]
+        [RoleAuthorize("Admin Operator")]
         [HttpGet]
         public async Task<IActionResult> GetClients([FromQuery] ClientFilter clientFilter)
         {
