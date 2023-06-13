@@ -18,12 +18,15 @@ namespace Clients.Service
             CreateMap<Client, ClientContactDTO>().ReverseMap();
             CreateMap<Client, ClientDocumentDTO>();
             CreateMap<Client, ClientDocumentDTO>().ReverseMap();
+            CreateMap<Client, ClientDTO>();
+            CreateMap<Client, ClientDTO>().ReverseMap();
             CreateMap<Passport, PassportDTO>();
             CreateMap<Passport, PassportDTO>().ReverseMap();
             CreateMap<Passport, FIODTO>();
             CreateMap<Passport, FIODTO>().ReverseMap();
             CreateMap<DrivingLicense, DrivingLicenseDTO>();
             CreateMap<DrivingLicense, DrivingLicenseDTO>().ReverseMap();
+
         }
     }
 }

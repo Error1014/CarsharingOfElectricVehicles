@@ -11,15 +11,12 @@ namespace Clients.Service.Interfaces
 {
     public interface IClientService
     {
-        Task<decimal?> GetBalance();
         Task<FIODTO> GetFIO();
-        Task<decimal?> GetBalance(Guid id);
         Task<ClientContactDTO> GetClient(Guid Id);
-        Task<Dictionary<Guid, ClientContactDTO>> GetClients(DefoltFilter pageFilter);
+        Task<Dictionary<Guid, ClientDTO>> GetClients(ClientFilter clientFilter);
         Task AddClient(Guid id,ClientDocumentDTO clientDTO);
         Task UpdateClient(Guid id,ClientDocumentDTO clientDTO);
         Task UpdateClient(ClientContactDTO clientDTO);
-        Task UpdateBalance(decimal summ);
         Task RemoveClient(Guid Id);
     }
 }

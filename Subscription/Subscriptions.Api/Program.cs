@@ -19,7 +19,7 @@ builder.Services.AddControllers();
 
 builder.Services.RegistrationDbContext<SubscriptionContext>(builder.Configuration);
 
-//await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
+await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -72,8 +72,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-//app.UseMiddleware<AuthenticationMiddleware>();
-//app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<AuthenticationMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();

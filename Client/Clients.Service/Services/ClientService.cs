@@ -28,22 +28,12 @@ namespace Clients.Service.Services
             _userSessionGetter = userSessionGetter;
         }
 
-        public async Task<decimal?> GetBalance()
-        {
-            var user = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
-            return user.Balance;
-        }
         public async Task<FIODTO> GetFIO()
         {
             var user = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
             var passport = await _unitOfWork.Passports.GetEntity(user.PassportId);
             var fio = _map.Map<FIODTO>(passport);
             return fio;
-        }
-        public async Task<decimal?> GetBalance(Guid id)
-        {
-            var user = await _unitOfWork.Clients.GetEntity(id);
-            return user.Balance;
         }
         public async Task<ClientContactDTO> GetClient(Guid Id)
         {
@@ -55,13 +45,13 @@ namespace Clients.Service.Services
             return _map.Map<ClientContactDTO>(client);
         }
 
-        public async Task<Dictionary<Guid, ClientContactDTO>> GetClients(DefoltFilter pageFilter)
+        public async Task<Dictionary<Guid, ClientDTO>> GetClients(ClientFilter clientFilter)
         {
-            var clients = await _unitOfWork.Clients.GetAll();
-            Dictionary<Guid, ClientContactDTO> result = new Dictionary<Guid, ClientContactDTO>();
+            var clients = await _unitOfWork.Clients.GetClients(clientFilter);
+            Dictionary<Guid, ClientDTO> result = new Dictionary<Guid, ClientDTO>();
             foreach (var item in clients)
             {
-                result.Add(item.Id, _map.Map<ClientContactDTO>(item));
+                result.Add(item.Id, _map.Map<ClientDTO>(item));
             }
             return result;
         }
@@ -93,14 +83,6 @@ namespace Clients.Service.Services
             var entityDTO = await GetClient(Id);
             var entity = _map.Map<Client>(entityDTO);
             _unitOfWork.Clients.RemoveEntities(entity);
-            await _unitOfWork.Clients.SaveChanges();
-        }
-
-        public async Task UpdateBalance(decimal summ)
-        {
-            var client = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
-            client.Balance += summ;
-            _unitOfWork.Clients.UpdateEntities(client);
             await _unitOfWork.Clients.SaveChanges();
         }
     }

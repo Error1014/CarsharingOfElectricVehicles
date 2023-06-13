@@ -22,31 +22,14 @@ namespace Clients.Api.Controllers
             var client = await _clientService.GetClient(id);
             return Ok(client);
         }
-        [RoleAuthorize("Admin Operator")]
+        //[RoleAuthorize("Admin Operator")]
         [HttpGet]
-        public async Task<IActionResult> GetClients([FromQuery] DefoltFilter pageFilter)
+        public async Task<IActionResult> GetClients([FromQuery] ClientFilter clientFilter)
         {
-            var list = await _clientService.GetClients(pageFilter);
+            var list = await _clientService.GetClients(clientFilter);
             return Ok(list);
         }
-        [HttpGet(nameof(GetBalance))]
-        public async Task<IActionResult> GetBalance()
-        {
-            var list = await _clientService.GetBalance();
-            return Ok(list);
-        }
-        [HttpGet(nameof(GetFIO))]
-        public async Task<IActionResult> GetFIO()
-        {
-            var list = await _clientService.GetBalance();
-            return Ok(list);
-        }
-        [HttpGet(nameof(GetBalance)+"/{id}")]
-        public async Task<IActionResult> GetBalance(Guid id)
-        {
-            var list = await _clientService.GetBalance(id);
-            return Ok(list);
-        }
+       
         [HttpPost("{id}")]
         public async Task<IActionResult> AddClient(Guid id, ClientDocumentDTO clientDTO)
         {
@@ -65,18 +48,6 @@ namespace Clients.Api.Controllers
         public async Task<IActionResult> UpdateClientByClient(ClientContactDTO clientDTO)
         {
             await _clientService.UpdateClient(clientDTO);
-            return NoContent();
-        }
-        [HttpPut(nameof(UpdateBalance))]
-        public async Task<IActionResult> UpdateBalanse(decimal summ)
-        {
-            await _clientService.UpdateBalance(summ);
-            return NoContent();
-        }
-        [HttpPut(nameof(UpdateBalance) + "/{id}")]
-        public async Task<IActionResult> UpdateBalance(decimal summ)
-        {
-            await _clientService.UpdateBalance(summ);
             return NoContent();
         }
 
