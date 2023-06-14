@@ -58,7 +58,7 @@ namespace Rents.Api.Controllers
         }
         [RoleAuthorize("Client")]
         [HttpPut(nameof(EndTrip))]
-        public async Task<IActionResult> EndTrip([FromQuery] decimal kilometers)
+        public async Task<IActionResult> EndTrip(decimal kilometers)
         {
             await _rentsService.EndTrip(kilometers);
             return NoContent();

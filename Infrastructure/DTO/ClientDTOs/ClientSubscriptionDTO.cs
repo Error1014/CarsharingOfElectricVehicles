@@ -13,5 +13,6 @@ namespace Infrastructure.DTO.ClientDTOs
         public DateTime DateSubscription { get; set; }
         public int QuantityMonths { get; set; }
         public DateTime DateEndSubscription { get { return DateSubscription.AddMonths(QuantityMonths); } }
+        public SubscriptionDTO Subscription { get; set; }
     }
 }

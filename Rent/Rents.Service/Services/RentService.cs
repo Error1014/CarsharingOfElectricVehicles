@@ -30,6 +30,7 @@ namespace Rents.Service.Services
         private readonly UriEndPoint _updateBalanceUri;
         private readonly UriEndPoint _boockingCarUri;
         private readonly UriEndPoint _cancelBoockingCarUri;
+        private readonly UriEndPoint _mySubscription;
         public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
@@ -40,6 +41,7 @@ namespace Rents.Service.Services
             _updateBalanceUri = configuration.GetSection("EndPoint:UpdateBalance").Get<UriEndPoint>();
             _boockingCarUri = configuration.GetSection("EndPoint:BoockingCar").Get<UriEndPoint>();
             _cancelBoockingCarUri = configuration.GetSection("EndPoint:CancelBoockingCar").Get<UriEndPoint>();
+            _mySubscription = configuration.GetSection("EndPoint:GetMySubscription").Get<UriEndPoint>();
 
         }
 
@@ -157,7 +159,7 @@ namespace Rents.Service.Services
             response.EnsureSuccessStatusCode();
         }
 
-        private async Task<bool> UpdateRentCar(Guid? carId, bool isRent)
+        private async Task UpdateRentCar(Guid? carId, bool isRent)
         {
             HttpClient _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(_boockingCarUri.BaseAddress);
@@ -172,8 +174,6 @@ namespace Rents.Service.Services
             }
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
-            isRent = JsonSerializer.Deserialize<bool>(responseBody);
-            return isRent;
         }
 
         private async Task<decimal> GetTotalPrice(Rent rent)
@@ -189,8 +189,8 @@ namespace Rents.Service.Services
             var minutNoTariff = rent.DateTimeEndRent - rent.DateTimeBeginRent;
             int totalMin = minutNoTariff.Value.Minutes;
 
-            _httpClient.BaseAddress = new Uri("https://localhost:7217");
-            var response = await _httpClient.GetAsync("/api/Subscriptions");
+            _httpClient.BaseAddress = new Uri(_mySubscription.BaseAddress);
+            var response = await _httpClient.GetAsync(_mySubscription.Uri+_userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
