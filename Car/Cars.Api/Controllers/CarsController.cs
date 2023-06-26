@@ -48,14 +48,12 @@ namespace Cars.Api.Controllers
         public async Task<IActionResult> BookingCar(Guid id)
         {
             await _carService.BookingCar(id);
-            var car = await _carService.GetCar(id);
             return NoContent();
         }
         [HttpPut(nameof(CancelBookingCar) + ("/{id}"))]
         public async Task<IActionResult> CancelBookingCar(Guid id)
         {
             await _carService.CancelBookingCar(id);
-            var car = await _carService.GetCar(id);
             return NoContent();
         }
         [RoleAuthorize("Admin")]

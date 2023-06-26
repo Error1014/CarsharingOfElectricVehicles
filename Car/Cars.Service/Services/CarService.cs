@@ -82,11 +82,11 @@ namespace Cars.Service.Services
             var car = await _unitOfWork.Cars.GetEntity(id);
             if (car.IsRent == true && isRent == true)
             {
-                throw new NotFoundException("Машина уже арендована");
+                throw new BadRequestException("Машина уже арендована");
             }
             if (car.IsRepair && isRent == true)
             {
-                throw new NotFoundException("Машина на техобслуживании");
+                throw new BadRequestException("Машина на техобслуживании");
             }
             car.IsRent = isRent;
             _unitOfWork.Cars.UpdateEntities(car);
@@ -101,11 +101,11 @@ namespace Cars.Service.Services
             }
             if (car.IsRent == true)
             {
-                throw new NotFoundException("Автомобиль уже арендован");
+                throw new BadRequestException("Автомобиль уже арендован");
             }
             else if (car.IsRepair == true)
             {
-                throw new NotFoundException("Автомобиль на данный момент на техобслуживании");
+                throw new BadRequestException("Автомобиль на данный момент на техобслуживании");
             }
             car.IsRent = true;
             _unitOfWork.Cars.UpdateEntities(car);

@@ -38,7 +38,17 @@ namespace Subscriptions.Service.Services
             var clientSub = await _unitOfWork.ClientSubscriptions.GetActualSubsciption(_userSessionGetter.UserId);
             if (clientSub == null)
             {
-                throw new NotFoundException("У вас нет действующего абониметна");
+                throw new NotFoundException("У вас нет текущей подписки");
+            }
+            var result = _map.Map<ClientSubscriptionDTO>(clientSub);
+            return result;
+        }
+        public async Task<ClientSubscriptionDTO> GetActualSubscription(Guid id)
+        {
+            var clientSub = await _unitOfWork.ClientSubscriptions.GetActualSubsciption(id);
+            if (clientSub == null)
+            {
+                throw new NotFoundException("Нет текущей подписки");
             }
             var result = _map.Map<ClientSubscriptionDTO>(clientSub);
             return result;
@@ -49,7 +59,7 @@ namespace Subscriptions.Service.Services
             var subscription = await _unitOfWork.Subscriptions.GetEntity(subscribleDTO.SubscriptionId);
             if (subscription == null)
             {
-                throw new NotFoundException("Абонимент не найден");
+                throw new NotFoundException("Подписка не найдена");
             }
             var balance = await GetBalance();
             if (balance<subscription.Price)

@@ -12,9 +12,6 @@ using Infrastructure.Middlewares;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
 builder.Services.AddControllers();
 
 builder.Services.RegistrationDbContext<CarContext>(builder.Configuration);
@@ -72,7 +69,7 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<AuthenticationMiddleware>();
+app.UseMiddleware<AuthentificationMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseStatusCodePages();
 app.MapControllers();

@@ -16,12 +16,12 @@ using XAct;
 
 namespace Infrastructure.Middlewares
 {
-    public class AuthenticationMiddleware
+    public class AuthentificationMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly UriEndPoint _authorizeEndPoint;
         private readonly IConfiguration _configuration;
-        public AuthenticationMiddleware(RequestDelegate next, IConfiguration configuration)
+        public AuthentificationMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
             _configuration = configuration;

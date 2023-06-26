@@ -27,7 +27,7 @@ namespace Cars.Repository.Repositories
             }
             if (!carFilter.Model.IsNullOrEmpty())
             {
-                query = query.Where(x => x.BrandModel.Brand == carFilter.Model);
+                query = query.Where(x => x.BrandModel.Model == carFilter.Model);
             }
             if (carFilter.MinYearOfRelease.HasValue)
             {

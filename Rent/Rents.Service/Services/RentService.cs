@@ -30,6 +30,7 @@ namespace Rents.Service.Services
         private readonly UriEndPoint _updateBalanceUri;
         private readonly UriEndPoint _boockingCarUri;
         private readonly UriEndPoint _cancelBoockingCarUri;
+        private readonly UriEndPoint _mySubscription;
         public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
@@ -40,6 +41,7 @@ namespace Rents.Service.Services
             _updateBalanceUri = configuration.GetSection("EndPoint:UpdateBalance").Get<UriEndPoint>();
             _boockingCarUri = configuration.GetSection("EndPoint:BoockingCar").Get<UriEndPoint>();
             _cancelBoockingCarUri = configuration.GetSection("EndPoint:CancelBoockingCar").Get<UriEndPoint>();
+            _mySubscription = configuration.GetSection("EndPoint:GetMySubscription").Get<UriEndPoint>();
 
         }
 
@@ -157,7 +159,7 @@ namespace Rents.Service.Services
             response.EnsureSuccessStatusCode();
         }
 
-        private async Task<bool> UpdateRentCar(Guid? carId, bool isRent)
+        private async Task UpdateRentCar(Guid? carId, bool isRent)
         {
             HttpClient _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(_boockingCarUri.BaseAddress);
@@ -172,19 +174,23 @@ namespace Rents.Service.Services
             }
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
-            isRent = JsonSerializer.Deserialize<bool>(responseBody);
-            return isRent;
         }
 
         private async Task<decimal> GetTotalPrice(Rent rent)
         {
             HttpClient _httpClient = new HttpClient();
             var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId.Value);
+            if (tariff==null)
+            {
+                tariff = new Tariff();
+                tariff.Price = 0;
+                tariff.AdditionalPrice = 0;
+            }
             var minutNoTariff = rent.DateTimeEndRent - rent.DateTimeBeginRent;
             int totalMin = minutNoTariff.Value.Minutes;
 
-            _httpClient.BaseAddress = new Uri("https://localhost:7217");
-            var response = await _httpClient.GetAsync("/api/Subscriptions");
+            _httpClient.BaseAddress = new Uri(_mySubscription.BaseAddress);
+            var response = await _httpClient.GetAsync(_mySubscription.Uri+_userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
@@ -193,13 +199,20 @@ namespace Rents.Service.Services
             };
             var clientSubscription = JsonSerializer.Deserialize<SubscriptionDTO>(responseBody, options);
             var timeSubscription = clientSubscription.QuantityMinutsInDay; // нужно найти оставшиеся минуты
-
-            int min = 0;
-            if (totalMin > timeSubscription)
+            var filter =new HistoryRentFilter();
+            filter.DateTimeBeginRent = DateTime.Today;
+            filter.DateTimeEndRent = DateTime.Now;
+            var listRentToday = (await _unitOfWork.Rents.GetRentHistoryPage(filter)).ToList();
+            int minutRentToday = 0;
+            foreach (var item in listRentToday)
             {
-                min = totalMin - timeSubscription;
+                minutRentToday += (item.DateTimeEndRent - item.DateTimeBeginRent).Value.Minutes;
             }
-            
+            int min = 0;
+            timeSubscription = timeSubscription - minutRentToday < 0 ? 0 : timeSubscription - minutRentToday;
+
+            min = totalMin - timeSubscription;
+
             var tariffTime = tariff.Duration == null ? 0 : tariff.Duration.Value.Minutes;
 
             if (totalMin > tariffTime)
