@@ -19,6 +19,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using XAct;
+using System.ComponentModel.DataAnnotations;
 
 namespace Authorization.Service.Services
 {
@@ -35,6 +36,11 @@ namespace Authorization.Service.Services
         }
         public async Task<Guid> AddUser(UserDTO userDTO)
         {
+            var email = new EmailAddressAttribute();
+            if (!email.IsValid(userDTO.Login))
+            {
+                throw new BadRequestException("Неверный адрес электронной почты");
+            }
             var user = await _unitOfWork.Users.Find(u => u.Login == userDTO.Login);
             if (user !=null)
             {

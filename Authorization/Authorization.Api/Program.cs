@@ -71,7 +71,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseStatusCodePages();
-app.UseMiddleware<AuthenticationMiddleware>();
+app.UseMiddleware<AuthentificationMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 app.Run();
