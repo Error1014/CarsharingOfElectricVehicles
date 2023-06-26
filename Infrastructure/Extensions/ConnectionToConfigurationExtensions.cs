@@ -16,17 +16,31 @@ namespace Infrastructure.Extensions
             uriEndPoint = configuration.GetSection("Configuration")
                                                      .Get<UriEndPoint>();
             httpClient.BaseAddress = new Uri(uriEndPoint.BaseAddress);
-            
-            var response = await httpClient.GetAsync(uriEndPoint.Uri);
-            response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var configurationItemsList = JsonSerializer.Deserialize<Dictionary<Guid, ConfigurationItemDTO>>(responseBody);
-            Dictionary<string, string> dictonary = new Dictionary<string, string>();
-            foreach (var item in configurationItemsList)
+            var isOk = false;
+            while (isOk == false)
             {
-                dictonary.Add(item.Value.key, item.Value.value);
+                try
+                {
+                    var response = await httpClient.GetAsync(uriEndPoint.Uri);
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var configurationItemsList = JsonSerializer.Deserialize<Dictionary<Guid, ConfigurationItemDTO>>(responseBody);
+                    Dictionary<string, string> dictonary = new Dictionary<string, string>();
+                    foreach (var item in configurationItemsList)
+                    {
+                        dictonary.Add(item.Value.key, item.Value.value);
+                    }
+                    builder.Add(new DictionaryConfigurationSource(dictonary));
+                    isOk = true;
+                }
+                catch (HttpRequestException ex)
+                {
+                    
+                }
             }
-            builder.Add(new DictionaryConfigurationSource(dictonary));
+            
+           
+            
         }
     }
 }

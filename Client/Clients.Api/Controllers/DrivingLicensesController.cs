@@ -23,6 +23,13 @@ namespace Clients.Api.Controllers
             var drivingLicense = await _drivingLicenseService.GetDrivingLicense(id);
             return Ok(drivingLicense);
         }
+        [RoleAuthorize("Client")]
+        [HttpGet("my")]
+        public async Task<IActionResult> GetDrivingLicense()
+        {
+            var drivingLicense = await _drivingLicenseService.GetDrivingLicense();
+            return Ok(drivingLicense);
+        }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
         public async Task<IActionResult> GetDrivingLicenses([FromQuery] DefoltFilter pageFilter)

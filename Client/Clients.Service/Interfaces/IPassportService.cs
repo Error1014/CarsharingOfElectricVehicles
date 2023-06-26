@@ -10,6 +10,7 @@ namespace Clients.Service.Interfaces
 {
     public interface IPassportService
     {
+        Task<PassportDTO> GetPassport();
         Task<PassportDTO> GetPassport(Guid id);
         Task<Dictionary<Guid,PassportDTO>> GetPassports(DefoltFilter pageFilter);
         Task<Guid> AddPassport(PassportDTO passportDTO);
