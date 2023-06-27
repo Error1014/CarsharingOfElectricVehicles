@@ -33,7 +33,7 @@ namespace Cars.Repository.Repositories
             {
                 query = query.Where(x => x.Characteristic.YearOfRelease >= carFilter.MinYearOfRelease);
             }
-            if (carFilter.MinYearOfRelease.HasValue)
+            if (carFilter.MaxYearOfRelease.HasValue)
             {
                 query = query.Where(x => x.Characteristic.YearOfRelease <= carFilter.MaxYearOfRelease);
             }

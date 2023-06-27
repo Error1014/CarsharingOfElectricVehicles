@@ -4,6 +4,7 @@ using Infrastructure.DTO.ClientDTOs;
 using Infrastructure.Exceptions;
 using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Subscriptions.Repository.Entities;
 using Subscriptions.Repository.Interfaces;
@@ -62,13 +63,25 @@ namespace Subscriptions.Service.Services
                 throw new NotFoundException("Подписка не найдена");
             }
             var balance = await GetBalance();
-            if (balance<subscription.Price)
+            
+            var subscrible= new ClientSubscription(_userSessionGetter.UserId, subscribleDTO.SubscriptionId, subscribleDTO.QuntityMonths);
+            if (balance < subscription.Price * subscrible.QuantityMonths)
             {
                 throw new BadRequestException("Недостаточно средств");
             }
-            var subscrible= new ClientSubscription(_userSessionGetter.UserId, subscribleDTO.SubscriptionId, subscribleDTO.QuntityMonths);
             await _unitOfWork.ClientSubscriptions.AddEntities(subscrible);
             await _unitOfWork.ClientSubscriptions.SaveChanges();
+            HttpClient _httpClient = new HttpClient();
+           
+            var updateBalanceUri = _configuration.GetSection("EndPoint:UpdateBalance").Get<UriEndPoint>();
+            _httpClient.BaseAddress = new Uri(updateBalanceUri.BaseAddress);
+            var transact = new TransactionItemDTO();
+            transact.ClientId = _userSessionGetter.UserId;
+            transact.Summ = -(subscription.Price*subscrible.QuantityMonths);
+            transact.DateTime = DateTime.Now;
+            transact.TypeTransactionId = 5;
+            var response = await _httpClient.PostAsync(updateBalanceUri.Uri, JsonContent.Create(transact));
+            response.EnsureSuccessStatusCode();
             return subscrible.Id;
         }
 

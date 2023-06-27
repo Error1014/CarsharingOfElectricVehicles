@@ -28,6 +28,10 @@ namespace TransactionsSystem.Service.Service
 
         public async Task<Guid> AddTransaction(TransactionAddDTO transactionItemDTO)
         {
+            if (transactionItemDTO.ClientId==null || transactionItemDTO.ClientId == new Guid())
+            {
+                transactionItemDTO.ClientId = _userSessionGetter.UserId;
+            }
             var transaction = _map.Map<TransactionItem>(transactionItemDTO);
             transaction.DateTime = DateTime.Now;
             await _unitOfWork.Transactions.AddEntities(transaction);

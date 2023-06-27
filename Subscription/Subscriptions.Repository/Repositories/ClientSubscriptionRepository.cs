@@ -20,7 +20,7 @@ namespace Subscriptions.Repository.Repositories
         {
             var result = await Set.Where(x => x.ClientId == clientId).OrderBy(x => x.DateSubscription).LastOrDefaultAsync();
             if (result == null) return null;
-            else if (result.DateSubscription.AddMonths(1) > DateTime.Today) return result;
+            else if (result.DateSubscription.AddMonths(result.QuantityMonths) > DateTime.Today) return result;
             else return null;
         }
     }

@@ -28,7 +28,6 @@ namespace Rents.Service.Services
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
         private readonly IConfiguration _configuration;
-        private readonly Guid _minutTariffId;
         public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
@@ -188,7 +187,7 @@ namespace Rents.Service.Services
             var mySubscription = _configuration.GetSection("EndPoint:GetMySubscription").Get<UriEndPoint>();
             _httpClient.BaseAddress = new Uri(mySubscription.BaseAddress);
             var response = await _httpClient.GetAsync(mySubscription.Uri + _userSessionGetter.UserId);
-            response.EnsureSuccessStatusCode();
+            
             string responseBody = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
@@ -203,13 +202,13 @@ namespace Rents.Service.Services
 
             var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId.Value);
 
-            if (subscription == null && isMinutTariff)
+            if (subscription.Name==null && isMinutTariff)
             {
                 totalPrice = minutRent * tariff.PriceMinut;
             }
-            else if (subscription == null && !isMinutTariff)
+            else if (subscription.Name==null && !isMinutTariff)
             {
-                var minutesOutsideTariff = tariff.Duration - minutRent > 0 ? tariff.Duration - minutRent : 0;
+                var minutesOutsideTariff = minutRent - tariff.Duration > 0 ? tariff.Duration - minutRent : 0;
                 totalPrice = tariff.Price + minutesOutsideTariff * tariff.PriceMinut;
             }
             else
@@ -223,11 +222,11 @@ namespace Rents.Service.Services
                 {
                     minutRentToday += (item.DateTimeEndRent - item.DateTimeBeginRent).Value.Minutes;
                 }
-                var minutesOutsideSubscription = subscription.QuantityMinutsInDay - minutRentToday < 0 ? 0 : subscription.QuantityMinutsInDay - minutRentToday;
-                var minTariff = await _unitOfWork.Tariffs.GetEntity(_minutTariffId);
-                totalPrice = minutesOutsideSubscription * minTariff.PriceMinut;
+                var minutesOutsideSubscription = minutRentToday - subscription.QuantityMinutsInDay < 0 ? 0 : subscription.QuantityMinutsInDay - minutRentToday;
+                var minutTariff = await _unitOfWork.Tariffs.GetEntity(minutTariffId);
+                totalPrice = minutesOutsideSubscription * minutTariff.PriceMinut;
             }
-            return 0;
+            return totalPrice;
         }
 
 
