@@ -10,6 +10,7 @@ namespace Clients.Service.Interfaces
 {
     public interface IDrivingLicenseService
     {
+        Task<DrivingLicenseDTO> GetDrivingLicense();
         Task<DrivingLicenseDTO> GetDrivingLicense(Guid id);
         Task<Dictionary<Guid, DrivingLicenseDTO>> GetDrivingLicenses(DefoltFilter pageFilter);
         Task<Guid> AddDrivingLicense(DrivingLicenseDTO drivingLicenseDTO);

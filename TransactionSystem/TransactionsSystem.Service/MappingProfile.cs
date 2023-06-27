@@ -10,6 +10,8 @@ namespace TransactionsSystem.Service
         {
             CreateMap<TransactionItem, TransactionItemDTO>();
             CreateMap<TransactionItem, TransactionItemDTO>().ReverseMap();
+            CreateMap<TransactionItem, TransactionAddDTO>();
+            CreateMap<TransactionItem, TransactionAddDTO>().ReverseMap();
         }
     }
 }

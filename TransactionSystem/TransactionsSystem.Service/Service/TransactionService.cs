@@ -26,9 +26,14 @@ namespace TransactionsSystem.Service.Service
             _userSessionGetter = userSessionGetter;
         }
 
-        public async Task<Guid> AddTransaction(TransactionItemDTO transactionItemDTO)
+        public async Task<Guid> AddTransaction(TransactionAddDTO transactionItemDTO)
         {
+            if (transactionItemDTO.ClientId==null || transactionItemDTO.ClientId == new Guid())
+            {
+                transactionItemDTO.ClientId = _userSessionGetter.UserId;
+            }
             var transaction = _map.Map<TransactionItem>(transactionItemDTO);
+            transaction.DateTime = DateTime.Now;
             await _unitOfWork.Transactions.AddEntities(transaction);
             await _unitOfWork.Transactions.SaveChanges();
             return transaction.Id;
@@ -60,7 +65,7 @@ namespace TransactionsSystem.Service.Service
             return result;
         }
 
-        public async Task UpdateTransactionItem(Guid id, TransactionItemDTO transactionItemDTO)
+        public async Task UpdateTransactionItem(Guid id, TransactionAddDTO transactionItemDTO)
         {
             var transaction = await _unitOfWork.Transactions.GetEntity(id);
             if (transaction == null)

@@ -20,5 +20,6 @@ namespace Authorization.Service.Interfaces
         Task SetClientRole(Guid id);
         Task RemoveUser(Guid Id);
         Task<string> GetRole(Guid userId);
+        Task ConfirmationEmail(Guid userId, string code);
     }
 }

@@ -5,6 +5,7 @@ using Clients.Service.Interfaces;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
+using Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,14 @@ namespace Clients.Service.Services
     public class DrivingLicenseService: IDrivingLicenseService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserSessionGetter _userSessionGetter;
         private readonly IMapper _map;
 
-        public DrivingLicenseService(IUnitOfWork unitOfWork, IMapper mapper)
+        public DrivingLicenseService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
+            _userSessionGetter = userSessionGetter;
         }
 
         public async Task<Guid> AddDrivingLicense(DrivingLicenseDTO drivingLicenseDTO)
@@ -30,6 +33,18 @@ namespace Clients.Service.Services
             await _unitOfWork.DrivingLicenses.AddEntities(drivingLicense);
             await _unitOfWork.DrivingLicenses.SaveChanges();
             return drivingLicense.Id;
+        }
+
+        public async Task<DrivingLicenseDTO> GetDrivingLicense()
+        {
+            var client = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
+            var drivingLicense = await _unitOfWork.DrivingLicenses.GetEntity(client.DrivingLicenseId);
+            if (drivingLicense == null)
+            {
+                throw new NotFoundException("Водительские права не найдены");
+            }
+            var drivingLicenseDTO = _map.Map<DrivingLicenseDTO>(drivingLicense);
+            return drivingLicenseDTO;
         }
 
         public async Task<DrivingLicenseDTO> GetDrivingLicense(Guid id)

@@ -5,6 +5,7 @@ using Clients.Service.Interfaces;
 using Infrastructure.DTO;
 using Infrastructure.Exceptions;
 using Infrastructure.Filters;
+using Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace Clients.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
+        private readonly IUserSessionGetter _userSessionGetter;
 
-        public PassportService(IUnitOfWork unitOfWork, IMapper mapper)
+        public PassportService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
+            _userSessionGetter = userSessionGetter;
         }
 
         public async Task<Guid> AddPassport(PassportDTO passportDTO)
@@ -30,6 +33,17 @@ namespace Clients.Service.Services
             await _unitOfWork.Passports.AddEntities(passport);
             await _unitOfWork.Passports.SaveChanges();
             return passport.Id;
+        }
+        public async Task<PassportDTO> GetPassport()
+        {
+            var client = await _unitOfWork.Clients.GetEntity(_userSessionGetter.UserId);
+            var passport = await _unitOfWork.Passports.GetEntity(client.PassportId);
+            if (passport == null)
+            {
+                throw new NotFoundException("Пасспорт не найден");
+            }
+            var passportDTO = _map.Map<PassportDTO>(passport);
+            return passportDTO;
         }
 
         public async Task<PassportDTO> GetPassport(Guid id)

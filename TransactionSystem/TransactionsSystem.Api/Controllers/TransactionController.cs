@@ -23,6 +23,7 @@ namespace TransactionsSystem.Api.Controllers
             var result = await _transactionService.GetTransaction(id);
             return Ok(result);
         }
+        [RoleAuthorize("Client Admin Operator")]
         [HttpGet]
         public async Task<IActionResult> GetTransactions([FromQuery] TransactionFilter pageFilter)
         {
@@ -43,13 +44,13 @@ namespace TransactionsSystem.Api.Controllers
             return Ok(result);
         }
         [HttpPost]
-        public async Task<IActionResult> AddTransaction([FromForm] TransactionItemDTO transactionItemDTO)
+        public async Task<IActionResult> AddTransaction([FromBody] TransactionAddDTO transactionItemDTO)
         {
             var id = await _transactionService.AddTransaction(transactionItemDTO);
             return Created(new Uri("/api/Transaction", UriKind.Relative), id);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTransaction(Guid id, [FromQuery] TransactionItemDTO transactionItemDTO)
+        public async Task<IActionResult> UpdateTransaction(Guid id, [FromQuery] TransactionAddDTO transactionItemDTO)
         {
             await _transactionService.UpdateTransactionItem(id, transactionItemDTO);
             return NoContent();

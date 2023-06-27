@@ -2,27 +2,27 @@
 
 #nullable disable
 
-namespace Rents.Repository.Migrations
+namespace Authorization.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class FixRentKilometr : Migration
+    public partial class FixIsEmailConfirmed2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "KilometersOutsideTariff",
-                table: "Rents",
-                newName: "Kilometers");
+                name: "isEmailСonfirmed",
+                table: "User",
+                newName: "IsEmailСonfirmed");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "Kilometers",
-                table: "Rents",
-                newName: "KilometersOutsideTariff");
+                name: "IsEmailСonfirmed",
+                table: "User",
+                newName: "isEmailСonfirmed");
         }
     }
 }

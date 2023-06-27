@@ -9,6 +9,6 @@ namespace Infrastructure.DTO.Rent
     public class AddRentDTO
     {
         public Guid CarId { get; set; }
-        public Guid TariffId { get; set; }
+        public Guid? TariffId { get; set; }
     }
 }

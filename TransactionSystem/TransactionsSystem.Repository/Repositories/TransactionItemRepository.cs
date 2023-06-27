@@ -55,28 +55,35 @@ namespace TransactionsSystem.Repository.Repositories
             {
                 typesInt.Add(int.Parse(item));
             }
-            if (transactionFilter.TypeTransaction!=null)
+            if (typesInt.Count>0)
             {
-                foreach(var item in query)
+                if (transactionFilter.TypeTransaction != null)
                 {
-                    bool isOk = false;
-                    for (int j = 0; j < typesInt.Count; j++)
+                    foreach (var item in query)
                     {
-                        if (item.TypeTransactionId == typesInt[j])
+                        bool isOk = false;
+                        for (int j = 0; j < typesInt.Count; j++)
                         {
-                            isOk = true;
-                            break;
+                            if (item.TypeTransactionId == typesInt[j])
+                            {
+                                isOk = true;
+                                break;
+                            }
                         }
+                        if (isOk)
+                        {
+                            list.Add(item);
+                        }
+
                     }
-                    if (isOk)
-                    {
-                        list.Add(item);
-                    }
-                    
                 }
             }
+            else
+            {
+                list = await query.ToListAsync();
+            }
             list = list
-                .OrderBy(x => x.Id)
+                .OrderByDescending(x => x.DateTime)
                 .Skip(transactionFilter.Offset)
                 .Take(transactionFilter.SizePage).ToList();
             return list;

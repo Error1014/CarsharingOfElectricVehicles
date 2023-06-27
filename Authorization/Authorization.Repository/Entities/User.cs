@@ -12,6 +12,7 @@ namespace Authorization.Repository.Entities
         public string Login { get; set; }
         public string Password { get; set; }
         public int? RoleId { get; set; }
+        public bool IsEmailСonfirmed { get; set; }
         public virtual Role? Role { get; set; }
     }
 }

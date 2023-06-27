@@ -23,6 +23,13 @@ namespace Clients.Api.Controllers
             var passport = await _passportService.GetPassport(id);
             return Ok(passport);
         }
+        [RoleAuthorize("Client")]
+        [HttpGet("my")]
+        public async Task<IActionResult> GetPassport()
+        {
+            var passport = await _passportService.GetPassport();
+            return Ok(passport);
+        }
         [RoleAuthorize("Admin Operator")]
         [HttpGet]
         public async Task<IActionResult> GetPassports([FromQuery] DefoltFilter pageFilter)

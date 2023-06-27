@@ -22,7 +22,6 @@ namespace Subscriptions.Api.Controllers
         public async Task<IActionResult> GetActualSubscription()
         {
             var result = await _clientSubscriptionService.GetActualSubscription();
-            result.Subscription = await _subscriptionService.GetSubscription(result.SubscriptionId);
             return Ok(result);
         }
 
@@ -30,7 +29,6 @@ namespace Subscriptions.Api.Controllers
         public async Task<IActionResult> GetActualSubscription(Guid id)
         {
             var result = await _clientSubscriptionService.GetActualSubscription(id);
-            result.Subscription = await _subscriptionService.GetSubscription(result.SubscriptionId);
             return Ok(result);
         }
 

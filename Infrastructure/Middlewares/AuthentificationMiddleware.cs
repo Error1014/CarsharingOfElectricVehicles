@@ -20,18 +20,22 @@ namespace Infrastructure.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly UriEndPoint _authorizeEndPoint;
-        private readonly IConfiguration _configuration;
         public AuthentificationMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
-            _configuration = configuration;
             _authorizeEndPoint = configuration.GetSection("EndPoint:AuthorizationService").Get<UriEndPoint>();
         }
 
         public async Task Invoke(HttpContext context, IUserSessionSetter userSession)
         {
-            var controllerActionDescriptor = context.GetEndpoint().Metadata.GetMetadata<ControllerActionDescriptor>();
-            var controllerName = controllerActionDescriptor.ControllerName;
+            var endPoint = context.GetEndpoint();
+            var controllerName = string.Empty;
+            if (endPoint != null)
+            {
+                var controllerActionDescriptor = endPoint.Metadata.GetMetadata<ControllerActionDescriptor>();
+
+                controllerName = controllerActionDescriptor.ControllerName;
+            }
             if (controllerName == "Autorization")
             {
                 await _next(context);

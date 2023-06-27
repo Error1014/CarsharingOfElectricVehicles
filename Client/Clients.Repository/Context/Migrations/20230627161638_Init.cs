@@ -15,7 +15,7 @@ namespace Clients.Repository.Migrations
                 name: "DrivingLicense",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValue: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     DateIssued = table.Column<DateTime>(type: "Date", nullable: true),
                     Series = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Number = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -29,7 +29,7 @@ namespace Clients.Repository.Migrations
                 name: "Passport",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValue: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Patronymic = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -48,10 +48,9 @@ namespace Clients.Repository.Migrations
                 name: "Client",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValue: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     DateRegistration = table.Column<DateTime>(type: "Date", nullable: false),
                     PassportId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DrivingLicenseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)

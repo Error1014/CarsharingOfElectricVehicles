@@ -20,6 +20,11 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using XAct;
 using System.ComponentModel.DataAnnotations;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using static System.Net.WebRequestMethods;
 
 namespace Authorization.Service.Services
 {
@@ -27,11 +32,13 @@ namespace Authorization.Service.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
+        private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration configuration)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
+            _emailService = emailService;
             _configuration = configuration;
         }
         public async Task<Guid> AddUser(UserDTO userDTO)
@@ -48,9 +55,31 @@ namespace Authorization.Service.Services
             }
             user = _map.Map<User>(userDTO);
             user.Password = GeneratorHash.GetHash(userDTO.Password);
+            user.IsEmailСonfirmed = false;
             await _unitOfWork.Users.AddEntities(user);
             await _unitOfWork.Users.SaveChanges();
+            HttpClient httpClient = new HttpClient();
+            var getToken = _configuration.GetSection("EndPoint:Authorize").Get<UriEndPoint>();
+            httpClient.BaseAddress = new Uri(getToken.BaseAddress);
+            var loginDTO = new LoginDTO() { Login = userDTO.Login, Password = userDTO.Password};
+            var response = await httpClient.PostAsync(getToken.Uri, JsonContent.Create(loginDTO));
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            var authorizeToken = JsonSerializer.Deserialize<AuthorizeDTO>(responseBody, options);
+            var emailConfirmation = _configuration.GetSection("EndPoint:EmailConfirmation").Get<UriEndPoint>();
+            await _emailService.SendEmailAsync(userDTO.Login, "Каршеринг. Подтверждение электронной почты", $"Подтвердите регистрацию, перейдя по ссылке: <a href='{emailConfirmation.BaseAddress+emailConfirmation.Uri}?userId={user.Id}&token={authorizeToken.Token}'>link</a>");
             return user.Id;
+        }
+        public async Task ConfirmationEmail(Guid userId, string code)
+        {
+            var user = await _unitOfWork.Users.GetEntity(userId);
+            user.IsEmailСonfirmed = true;
+            _unitOfWork.Users.UpdateEntities(user);
+            await _unitOfWork.Users.SaveChanges();
         }
 
         public async Task<Dictionary<Guid, UserDTO>> GetUsers(DefoltFilter pageFilter)
