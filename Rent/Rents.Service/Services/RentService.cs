@@ -58,16 +58,24 @@ namespace Rents.Service.Services
 
         public async Task<Guid> AddRent(AddRentDTO rentDTO)
         {
-            var tariff = await _unitOfWork.Tariffs.GetEntity(rentDTO.TariffId);
             var balance = await GetBalance();
-            if (balance <= 0)
+            if (balance < 0)
             {
                 throw new BadRequestException("Недостаточно средств");
             }
-            if (tariff.Price > balance)
+            if (rentDTO.TariffId==null)
             {
-                throw new BadRequestException("Недостаточно средств");
+
             }
+            else
+            {
+                var tariff = await _unitOfWork.Tariffs.GetEntity(rentDTO.TariffId.Value);
+                if (tariff.Price > balance)
+                {
+                    throw new BadRequestException("Недостаточно средств");
+                }
+            }
+            
             var rent = _map.Map<Rent>(rentDTO);
             rent.ClientId = _userSessionGetter.UserId;
             rent.IsFinalSelectCar = false;

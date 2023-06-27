@@ -44,7 +44,7 @@ namespace TransactionsSystem.Api.Controllers
             return Ok(result);
         }
         [HttpPost]
-        public async Task<IActionResult> AddTransaction([FromQuery] TransactionAddDTO transactionItemDTO)
+        public async Task<IActionResult> AddTransaction([FromBody] TransactionAddDTO transactionItemDTO)
         {
             var id = await _transactionService.AddTransaction(transactionItemDTO);
             return Created(new Uri("/api/Transaction", UriKind.Relative), id);
