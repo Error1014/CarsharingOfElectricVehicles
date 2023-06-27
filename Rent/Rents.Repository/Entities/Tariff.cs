@@ -11,7 +11,7 @@ namespace Rents.Repository.Entities
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
-        public TimeSpan? Duration { get; set; }
-        public decimal AdditionalPrice { get; set; } //цена за минуту если время вышло
+        public int Duration { get; set; }
+        public decimal PriceMinut { get; set; } //цена за минуту если время вышло
     }
 }

@@ -5,24 +5,24 @@
 namespace Rents.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class FixRentKilometr : Migration
+    public partial class FixPriceMinut : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "KilometersOutsideTariff",
-                table: "Rents",
-                newName: "Kilometers");
+                name: "AdditionalPrice",
+                table: "Tariffs",
+                newName: "PriceMinut");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "Kilometers",
-                table: "Rents",
-                newName: "KilometersOutsideTariff");
+                name: "PriceMinut",
+                table: "Tariffs",
+                newName: "AdditionalPrice");
         }
     }
 }

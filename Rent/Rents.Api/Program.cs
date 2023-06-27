@@ -14,7 +14,7 @@ using Rents.Service.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegistrationDbContext<RentContext>(builder.Configuration);
-await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
+//await builder.Configuration.AddConfigurationApiSource(builder.Configuration);
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
@@ -67,8 +67,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-app.UseMiddleware<AuthentificationMiddleware>();
-app.UseMiddleware<ExceptionMiddleware>();
-app.MapControllers();
+//app.UseMiddleware<AuthentificationMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
+//app.MapControllers();
 
 app.Run();

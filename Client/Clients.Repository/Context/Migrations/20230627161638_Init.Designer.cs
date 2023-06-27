@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clients.Repository.Migrations
 {
     [DbContext(typeof(ClientContext))]
-    [Migration("20230516151949_FixNewTable")]
-    partial class FixNewTable
+    [Migration("20230627161638_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,9 +30,6 @@ namespace Clients.Repository.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal?>("Balance")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("DateRegistration")
                         .HasColumnType("Date");

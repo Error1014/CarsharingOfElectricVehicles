@@ -12,8 +12,8 @@ using Rents.Repository.Context;
 namespace Rents.Repository.Migrations
 {
     [DbContext(typeof(RentContext))]
-    [Migration("20230510191728_FixIsNull")]
-    partial class FixIsNull
+    [Migration("20230627164334_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,10 +49,10 @@ namespace Rents.Repository.Migrations
                     b.Property<bool>("IsFinalSelectCar")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("KilometersOutsideTariff")
+                    b.Property<decimal>("Kilometers")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("TariffId")
+                    b.Property<Guid?>("TariffId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("TotalPrice")
@@ -74,14 +74,14 @@ namespace Rents.Repository.Migrations
                     b.Property<decimal>("AdditionalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<TimeSpan?>("Duration")
-                        .HasColumnType("time");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -93,9 +93,7 @@ namespace Rents.Repository.Migrations
                 {
                     b.HasOne("Rents.Repository.Entities.Tariff", "Tariff")
                         .WithMany()
-                        .HasForeignKey("TariffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TariffId");
 
                     b.Navigation("Tariff");
                 });

@@ -6,6 +6,7 @@ using Infrastructure.Exceptions;
 using Infrastructure.Filters;
 using Infrastructure.HelperModels;
 using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Rents.Repository.Entities;
 using Rents.Repository.Interfaces;
@@ -26,22 +27,26 @@ namespace Rents.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
+        private readonly IConfiguration _configuration;
         private readonly UriEndPoint _getBalanceUri;
         private readonly UriEndPoint _updateBalanceUri;
         private readonly UriEndPoint _boockingCarUri;
         private readonly UriEndPoint _cancelBoockingCarUri;
         private readonly UriEndPoint _mySubscription;
+        private readonly Guid _minutTariffId;
         public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
             _userSessionGetter = userSessionGetter;
+            _configuration = configuration;
 
             _getBalanceUri = configuration.GetSection("EndPoint:GetBalance").Get<UriEndPoint>();
             _updateBalanceUri = configuration.GetSection("EndPoint:UpdateBalance").Get<UriEndPoint>();
             _boockingCarUri = configuration.GetSection("EndPoint:BoockingCar").Get<UriEndPoint>();
             _cancelBoockingCarUri = configuration.GetSection("EndPoint:CancelBoockingCar").Get<UriEndPoint>();
             _mySubscription = configuration.GetSection("EndPoint:GetMySubscription").Get<UriEndPoint>();
+            _minutTariffId = configuration.GetSection("MinutTariff").Get<Guid>();
 
         }
 
@@ -63,7 +68,7 @@ namespace Rents.Service.Services
             {
                 throw new BadRequestException("Недостаточно средств");
             }
-            if (rentDTO.TariffId==null)
+            if (rentDTO.TariffId == null)
             {
 
             }
@@ -75,7 +80,7 @@ namespace Rents.Service.Services
                     throw new BadRequestException("Недостаточно средств");
                 }
             }
-            
+
             var rent = _map.Map<Rent>(rentDTO);
             rent.ClientId = _userSessionGetter.UserId;
             rent.IsFinalSelectCar = false;
@@ -183,53 +188,55 @@ namespace Rents.Service.Services
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
         }
-
         private async Task<decimal> GetTotalPrice(Rent rent)
         {
             HttpClient _httpClient = new HttpClient();
-            var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId.Value);
-            if (tariff==null)
-            {
-                tariff = new Tariff();
-                tariff.Price = 0;
-                tariff.AdditionalPrice = 0;
-            }
-            var minutNoTariff = rent.DateTimeEndRent - rent.DateTimeBeginRent;
-            int totalMin = minutNoTariff.Value.Minutes;
-
+            #region поиск подписки
             _httpClient.BaseAddress = new Uri(_mySubscription.BaseAddress);
-            var response = await _httpClient.GetAsync(_mySubscription.Uri+_userSessionGetter.UserId);
+            var response = await _httpClient.GetAsync(_mySubscription.Uri + _userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
-            var clientSubscription = JsonSerializer.Deserialize<SubscriptionDTO>(responseBody, options);
-            var timeSubscription = clientSubscription.QuantityMinutsInDay; // нужно найти оставшиеся минуты
-            var filter =new HistoryRentFilter();
-            filter.DateTimeBeginRent = DateTime.Today;
-            filter.DateTimeEndRent = DateTime.Now;
-            var listRentToday = (await _unitOfWork.Rents.GetRentHistoryPage(filter)).ToList();
-            int minutRentToday = 0;
-            foreach (var item in listRentToday)
+            var subscription = JsonSerializer.Deserialize<SubscriptionDTO>(responseBody, options);
+            #endregion
+            decimal totalPrice = 0;
+            bool isMinutTariff = _minutTariffId == rent.TariffId ? true : false;
+            int minutRent = (rent.DateTimeEndRent - rent.DateTimeBeginRent).Value.Minutes;
+
+            var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId.Value);
+
+            if (subscription == null && isMinutTariff)
             {
-                minutRentToday += (item.DateTimeEndRent - item.DateTimeBeginRent).Value.Minutes;
+                totalPrice = minutRent * tariff.PriceMinut;
             }
-            int min = 0;
-            timeSubscription = timeSubscription - minutRentToday < 0 ? 0 : timeSubscription - minutRentToday;
-
-            min = totalMin - timeSubscription;
-
-            var tariffTime = tariff.Duration == null ? 0 : tariff.Duration.Value.Minutes;
-
-            if (totalMin > tariffTime)
+            else if (subscription == null && !isMinutTariff)
             {
-                min = totalMin - tariffTime;
+                var minutesOutsideTariff = tariff.Duration - minutRent > 0 ? tariff.Duration - minutRent : 0;
+                totalPrice = tariff.Price + minutesOutsideTariff * tariff.PriceMinut;
             }
-
-            var result = min * tariff.AdditionalPrice + tariff.Price;
-            return result;
+            else
+            {
+                var filter = new HistoryRentFilter();
+                filter.DateTimeBeginRent = DateTime.Today;
+                filter.DateTimeEndRent = DateTime.Now;
+                var listRentToday = (await _unitOfWork.Rents.GetRentHistoryPage(filter)).ToList();
+                int minutRentToday = 0;
+                foreach (var item in listRentToday)
+                {
+                    minutRentToday += (item.DateTimeEndRent - item.DateTimeBeginRent).Value.Minutes;
+                }
+                var minutesOutsideSubscription = subscription.QuantityMinutsInDay - minutRentToday < 0 ? 0 : subscription.QuantityMinutsInDay - minutRentToday;
+                var minTariff = await _unitOfWork.Tariffs.GetEntity(_minutTariffId);
+                totalPrice = minutesOutsideSubscription * minTariff.PriceMinut;
+            }
+            return 0;
         }
+
+
+
+
     }
 }

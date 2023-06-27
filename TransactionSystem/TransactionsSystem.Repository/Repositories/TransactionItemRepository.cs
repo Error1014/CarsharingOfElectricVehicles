@@ -83,7 +83,7 @@ namespace TransactionsSystem.Repository.Repositories
                 list = await query.ToListAsync();
             }
             list = list
-                .OrderBy(x => x.Id)
+                .OrderByDescending(x => x.DateTime)
                 .Skip(transactionFilter.Offset)
                 .Take(transactionFilter.SizePage).ToList();
             return list;
