@@ -33,16 +33,13 @@ namespace Authorization.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         private readonly IEmailService _emailService;
-        private readonly UriEndPoint _getToken;
-        private readonly UriEndPoint _emailConfirmation;
+        private readonly IConfiguration _configuration;
         public UserService(IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = mapper;
             _emailService = emailService;
-            _getToken = configuration.GetSection("EndPoint:Authorize").Get<UriEndPoint>();
-            _emailConfirmation = configuration.GetSection("EndPoint:EmailConfirmation").Get<UriEndPoint>();
-
+            _configuration = configuration;
         }
         public async Task<Guid> AddUser(UserDTO userDTO)
         {
@@ -62,9 +59,10 @@ namespace Authorization.Service.Services
             await _unitOfWork.Users.AddEntities(user);
             await _unitOfWork.Users.SaveChanges();
             HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(_getToken.BaseAddress);
+            var getToken = _configuration.GetSection("EndPoint:Authorize").Get<UriEndPoint>();
+            httpClient.BaseAddress = new Uri(getToken.BaseAddress);
             var loginDTO = new LoginDTO() { Login = userDTO.Login, Password = userDTO.Password};
-            var response = await httpClient.PostAsync(_getToken.Uri, JsonContent.Create(loginDTO));
+            var response = await httpClient.PostAsync(getToken.Uri, JsonContent.Create(loginDTO));
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
@@ -72,7 +70,8 @@ namespace Authorization.Service.Services
                 PropertyNameCaseInsensitive = true
             };
             var authorizeToken = JsonSerializer.Deserialize<AuthorizeDTO>(responseBody, options);
-            await _emailService.SendEmailAsync(userDTO.Login, "Каршеринг. Подтверждение электронной почты", $"Подтвердите регистрацию, перейдя по ссылке: <a href='{_emailConfirmation.BaseAddress+_emailConfirmation.Uri}?userId={user.Id}&token={authorizeToken.Token}'>link</a>");
+            var emailConfirmation = _configuration.GetSection("EndPoint:EmailConfirmation").Get<UriEndPoint>();
+            await _emailService.SendEmailAsync(userDTO.Login, "Каршеринг. Подтверждение электронной почты", $"Подтвердите регистрацию, перейдя по ссылке: <a href='{emailConfirmation.BaseAddress+emailConfirmation.Uri}?userId={user.Id}&token={authorizeToken.Token}'>link</a>");
             return user.Id;
         }
         public async Task ConfirmationEmail(Guid userId, string code)

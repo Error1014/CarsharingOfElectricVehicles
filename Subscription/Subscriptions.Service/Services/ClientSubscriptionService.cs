@@ -24,13 +24,13 @@ namespace Subscriptions.Service.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
-        private readonly UriEndPoint _getBalanceEndPoint;
+        private readonly IConfiguration _configuration;
         public ClientSubscriptionService(IUnitOfWork unitOfWork, IMapper map, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _map = map;
             _userSessionGetter = userSessionGetter;
-            _getBalanceEndPoint = configuration.GetSection("EndPoint:GetBalance").Get<UriEndPoint>();
+            _configuration = configuration;
         }
 
         public async Task<ClientSubscriptionDTO> GetActualSubscription()
@@ -75,8 +75,9 @@ namespace Subscriptions.Service.Services
         private async Task<decimal?> GetBalance()
         {
             HttpClient _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(_getBalanceEndPoint.BaseAddress);
-            var response = await _httpClient.GetAsync(_getBalanceEndPoint.Uri + _userSessionGetter.UserId);
+            var getBalanceEndPoint = _configuration.GetSection("EndPoint:GetBalance").Get<UriEndPoint>();
+            _httpClient.BaseAddress = new Uri(getBalanceEndPoint.BaseAddress);
+            var response = await _httpClient.GetAsync(getBalanceEndPoint.Uri + _userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);

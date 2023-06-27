@@ -28,11 +28,6 @@ namespace Rents.Service.Services
         private readonly IMapper _map;
         private readonly IUserSessionGetter _userSessionGetter;
         private readonly IConfiguration _configuration;
-        private readonly UriEndPoint _getBalanceUri;
-        private readonly UriEndPoint _updateBalanceUri;
-        private readonly UriEndPoint _boockingCarUri;
-        private readonly UriEndPoint _cancelBoockingCarUri;
-        private readonly UriEndPoint _mySubscription;
         private readonly Guid _minutTariffId;
         public RentService(IUnitOfWork unitOfWork, IMapper mapper, IUserSessionGetter userSessionGetter, IConfiguration configuration)
         {
@@ -40,21 +35,14 @@ namespace Rents.Service.Services
             _map = mapper;
             _userSessionGetter = userSessionGetter;
             _configuration = configuration;
-
-            _getBalanceUri = configuration.GetSection("EndPoint:GetBalance").Get<UriEndPoint>();
-            _updateBalanceUri = configuration.GetSection("EndPoint:UpdateBalance").Get<UriEndPoint>();
-            _boockingCarUri = configuration.GetSection("EndPoint:BoockingCar").Get<UriEndPoint>();
-            _cancelBoockingCarUri = configuration.GetSection("EndPoint:CancelBoockingCar").Get<UriEndPoint>();
-            _mySubscription = configuration.GetSection("EndPoint:GetMySubscription").Get<UriEndPoint>();
-            _minutTariffId = configuration.GetSection("MinutTariff").Get<Guid>();
-
         }
 
         private async Task<decimal?> GetBalance()
         {
             HttpClient _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(_getBalanceUri.BaseAddress);
-            var response = await _httpClient.GetAsync(_getBalanceUri.Uri + _userSessionGetter.UserId);
+            var getBalanceUri = _configuration.GetSection("EndPoint:GetBalance").Get<UriEndPoint>();
+            _httpClient.BaseAddress = new Uri(getBalanceUri.BaseAddress);
+            var response = await _httpClient.GetAsync(getBalanceUri.Uri + _userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             decimal? balance = JsonSerializer.Deserialize<decimal?>(responseBody);
@@ -161,29 +149,34 @@ namespace Rents.Service.Services
         private async Task PayRent(decimal summ)
         {
             HttpClient _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(_updateBalanceUri.BaseAddress);
+            var updateBalanceUri = _configuration.GetSection("EndPoint:UpdateBalance").Get<UriEndPoint>();
+            _httpClient.BaseAddress = new Uri(updateBalanceUri.BaseAddress);
             summ = 0 - summ;
             var transact = new TransactionItemDTO();
             transact.ClientId = _userSessionGetter.UserId;
             transact.Summ = summ;
             transact.DateTime = DateTime.Now;
             transact.TypeTransactionId = 3;
-            var response = await _httpClient.PostAsync(_updateBalanceUri.Uri, JsonContent.Create(transact));
+            var response = await _httpClient.PostAsync(updateBalanceUri.Uri, JsonContent.Create(transact));
             response.EnsureSuccessStatusCode();
         }
 
         private async Task UpdateRentCar(Guid? carId, bool isRent)
         {
             HttpClient _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(_boockingCarUri.BaseAddress);
+            
             HttpResponseMessage response = new HttpResponseMessage();
             if (isRent)
             {
-                response = await _httpClient.PutAsync(_boockingCarUri.Uri + carId, JsonContent.Create(""));
+                var boockingCarUri = _configuration.GetSection("EndPoint:BoockingCar").Get<UriEndPoint>();
+                _httpClient.BaseAddress = new Uri(boockingCarUri.BaseAddress);
+                response = await _httpClient.PutAsync(boockingCarUri.Uri + carId, JsonContent.Create(""));
             }
             else
             {
-                response = await _httpClient.PutAsync(_cancelBoockingCarUri.Uri + carId, JsonContent.Create(""));
+                var cancelBoockingCarUri = _configuration.GetSection("EndPoint:CancelBoockingCar").Get<UriEndPoint>();
+                _httpClient.BaseAddress = new Uri(cancelBoockingCarUri.BaseAddress);
+                response = await _httpClient.PutAsync(cancelBoockingCarUri.Uri + carId, JsonContent.Create(""));
             }
             response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
@@ -192,8 +185,9 @@ namespace Rents.Service.Services
         {
             HttpClient _httpClient = new HttpClient();
             #region поиск подписки
-            _httpClient.BaseAddress = new Uri(_mySubscription.BaseAddress);
-            var response = await _httpClient.GetAsync(_mySubscription.Uri + _userSessionGetter.UserId);
+            var mySubscription = _configuration.GetSection("EndPoint:GetMySubscription").Get<UriEndPoint>();
+            _httpClient.BaseAddress = new Uri(mySubscription.BaseAddress);
+            var response = await _httpClient.GetAsync(mySubscription.Uri + _userSessionGetter.UserId);
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions
@@ -203,7 +197,8 @@ namespace Rents.Service.Services
             var subscription = JsonSerializer.Deserialize<SubscriptionDTO>(responseBody, options);
             #endregion
             decimal totalPrice = 0;
-            bool isMinutTariff = _minutTariffId == rent.TariffId ? true : false;
+            Guid minutTariffId = _configuration.GetSection("MinutTariff").Get<Guid>();
+            bool isMinutTariff = minutTariffId == rent.TariffId ? true : false;
             int minutRent = (rent.DateTimeEndRent - rent.DateTimeBeginRent).Value.Minutes;
 
             var tariff = await _unitOfWork.Tariffs.GetEntity(rent.TariffId.Value);
