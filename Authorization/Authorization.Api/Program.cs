@@ -4,6 +4,7 @@ using Authorization.Repository.Repositories;
 using Authorization.Service;
 using Authorization.Service.Interfaces;
 using Authorization.Service.Services;
+using Infrastructure;
 using Infrastructure.DTO;
 using Infrastructure.Extensions;
 using Infrastructure.HelperModels;
@@ -50,7 +51,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>()
-    .AddScoped<IUserService, UserService>();
+    .AddScoped<IUserService, UserService>()
+    .AddScoped<IEmailService, EmailService>()
+    .AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<UserSession>();
 builder.Services.AddScoped<IUserSessionGetter>(serv => serv.GetRequiredService<UserSession>());
 builder.Services.AddScoped<IUserSessionSetter>(serv => serv.GetRequiredService<UserSession>());
